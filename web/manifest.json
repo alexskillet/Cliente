@@ -1,0 +1,23 @@
+{
+    "name": "LavaGo",
+    "short_name": "LavaGo",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#2A9849",
+    "theme_color": "#2A9849",
+    "description": "Lavamos con amor, para que tu ropa siempre luzca impecable.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "favicon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "favicon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
