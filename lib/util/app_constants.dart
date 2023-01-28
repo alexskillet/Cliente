@@ -4,7 +4,7 @@ import 'package:sixam_mart/util/images.dart';
 
 class AppConstants {
   static const String APP_NAME = 'LavaGo';
-  static const double APP_VERSION = 1.7;
+  static const double APP_VERSION = 1.8;
 
   static const String BASE_URL = 'https://socio.lavago.app';
   static const String CATEGORY_URI = '/api/v1/categories';
@@ -29,6 +29,7 @@ class AppConstants {
   static const String LOGIN_URI = '/api/v1/auth/login';
   static const String TOKEN_URI = '/api/v1/customer/cm-firebase-token';
   static const String PLACE_ORDER_URI = '/api/v1/customer/order/place';
+  static const String PLACE_PRESCRIPTION_ORDER_URI = '/api/v1/customer/order/prescription/place';
   static const String ADDRESS_LIST_URI = '/api/v1/customer/address/list';
   static const String ZONE_URI = '/api/v1/config/get-zone-id';
   static const String REMOVE_ADDRESS_URI = '/api/v1/customer/address/delete?address_id=';
@@ -131,5 +132,4 @@ class AppConstants {
   static List<LanguageModel> languages = [
     LanguageModel(imageUrl: Images.english, languageName: 'Español', countryCode: 'MX', languageCode: 'es'),
   ];
-
 }
