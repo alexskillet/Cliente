@@ -56,6 +56,7 @@ class ConfigModel {
   int refundPolicyStatus;
   int cancellationPolicyStatus;
   int shippingPolicyStatus;
+  bool prescriptionStatus;
 
   ConfigModel(
       {this.businessName,
@@ -113,6 +114,7 @@ class ConfigModel {
         this.refundPolicyStatus,
         this.cancellationPolicyStatus,
         this.shippingPolicyStatus,
+        this.prescriptionStatus,
       });
 
   ConfigModel.fromJson(Map<String, dynamic> json) {
@@ -196,6 +198,7 @@ class ConfigModel {
     refundPolicyStatus = json['refund_policy'];
     cancellationPolicyStatus = json['cancelation_policy'];
     shippingPolicyStatus = json['shipping_policy'];
+    prescriptionStatus = json['prescription_order_status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -292,6 +295,7 @@ class BaseUrls {
   String parcelCategoryImageUrl;
   String landingPageImageUrl;
   String businessLogoUrl;
+  String refundImageUrl;
 
   BaseUrls(
       {this.itemImageUrl,
@@ -311,6 +315,7 @@ class BaseUrls {
         this.parcelCategoryImageUrl,
         this.landingPageImageUrl,
         this.businessLogoUrl,
+        this.refundImageUrl,
       });
 
   BaseUrls.fromJson(Map<String, dynamic> json) {
@@ -331,6 +336,7 @@ class BaseUrls {
     parcelCategoryImageUrl = json['parcel_category_image_url'];
     landingPageImageUrl = json['landing_page_image_url'];
     businessLogoUrl = json['business_logo_url'];
+    refundImageUrl = json['refund_image_url'];
   }
 
   Map<String, dynamic> toJson() {
@@ -352,6 +358,7 @@ class BaseUrls {
     data['parcel_category_image_url'] = this.parcelCategoryImageUrl;
     data['landing_page_image_url'] = this.landingPageImageUrl;
     data['business_logo_url'] = this.businessLogoUrl;
+    data['refund_image_url'] = this.refundImageUrl;
     return data;
   }
 }
@@ -424,6 +431,7 @@ class Module {
   bool orderAttachment;
   bool showRestaurantText;
   bool isParcel;
+  bool newVariation;
   String description;
 
   Module(
@@ -436,6 +444,7 @@ class Module {
         this.orderAttachment,
         this.showRestaurantText,
         this.isParcel,
+        this.newVariation,
         this.description,
       });
 
@@ -448,6 +457,7 @@ class Module {
     orderAttachment = json['order_attachment'];
     showRestaurantText = json['show_restaurant_text'];
     isParcel = json['is_parcel'];
+    newVariation = json['new_variation'];
     description = json['description'];
   }
 
@@ -462,6 +472,7 @@ class Module {
     data['order_attachment'] = this.orderAttachment;
     data['show_restaurant_text'] = this.showRestaurantText;
     data['is_parcel'] = this.isParcel;
+    data['new_variation'] = this.newVariation;
     data['description'] = this.description;
     return data;
   }

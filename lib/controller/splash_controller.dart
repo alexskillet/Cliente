@@ -1,5 +1,6 @@
 import 'package:sixam_mart/controller/auth_controller.dart';
 import 'package:sixam_mart/controller/banner_controller.dart';
+import 'package:sixam_mart/controller/campaign_controller.dart';
 import 'package:sixam_mart/controller/cart_controller.dart';
 import 'package:sixam_mart/controller/location_controller.dart';
 import 'package:sixam_mart/controller/store_controller.dart';
@@ -12,8 +13,6 @@ import 'package:sixam_mart/data/repository/splash_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sixam_mart/util/html_type.dart';
-import 'package:sixam_mart/util/images.dart';
-import 'package:sixam_mart/view/base/confirmation_dialog.dart';
 import 'package:sixam_mart/view/base/custom_snackbar.dart';
 import 'package:sixam_mart/view/screens/home/home_screen.dart';
 
@@ -48,7 +47,7 @@ class SplashController extends GetxController implements GetxService {
     update();
   }
 
-  Future<bool> getConfigData() async {
+  Future<bool> getConfigData({bool loadModuleData = false}) async {
     _hasConnection = true;
     _moduleIndex = 0;
     Response response = await splashRepo.getConfigData();
@@ -58,8 +57,8 @@ class SplashController extends GetxController implements GetxService {
       _configModel = ConfigModel.fromJson(response.body);
       if(_configModel.module != null) {
         setModule(_configModel.module);
-      }else if(GetPlatform.isWeb) {
-        setModule(splashRepo.getModule());
+      }else if(GetPlatform.isWeb || (loadModuleData && _module != null)) {
+        setModule(GetPlatform.isWeb ? splashRepo.getModule() : _module);
       }
       _isSuccess = true;
     }else {
@@ -109,7 +108,15 @@ class SplashController extends GetxController implements GetxService {
     }
   }
 
-  Module getModule(String moduleType) => Module.fromJson(_data['module_config'][moduleType]);
+  Module getModuleConfig(String moduleType) {
+    Module _module = Module.fromJson(_data['module_config'][moduleType]);
+    if(moduleType == 'food') {
+      _module.newVariation = true;
+    }else {
+      _module.newVariation = false;
+    }
+    return _module;
+  }
 
   Future<void> getModules({Map<String, String> headers}) async {
     _moduleIndex = 0;
@@ -125,24 +132,9 @@ class SplashController extends GetxController implements GetxService {
 
   void switchModule(int index, bool fromPhone) async {
     if(_module == null || _module.id != _moduleList[index].id) {
-      bool _clearData = (Get.find<CartController>().cartList.length > 0
-          && Get.find<CartController>().cartList[0].item.moduleId != _moduleList[index].id);
-      bool _switch = _module != null && _module.id != _moduleList[index].id;
-      if(_clearData || (_switch && !fromPhone)) {
-        Get.dialog(ConfirmationDialog(
-          icon: Images.warning, title: _clearData ? 'are_you_sure_to_reset'.tr : null,
-          description: 'if_you_continue_without_another_store'.tr,
-          onYesPressed: () async {
-            Get.back();
-            Get.find<CartController>().clearCartList();
-            await Get.find<SplashController>().setModule(_moduleList[index]);
-            HomeScreen.loadData(true);
-          },
-        ));
-      }else {
         await Get.find<SplashController>().setModule(_moduleList[index]);
+        Get.find<CartController>().getCartData();
         HomeScreen.loadData(true);
-      }
     }
   }
 
@@ -154,11 +146,13 @@ class SplashController extends GetxController implements GetxService {
   void removeModule() {
     setModule(null);
     Get.find<BannerController>().getFeaturedBanner();
+    Get.find<CartController>().getCartData();
     getModules();
     if(Get.find<AuthController>().isLoggedIn()) {
       Get.find<LocationController>().getAddressList();
     }
     Get.find<StoreController>().getFeaturedStoreList();
+    Get.find<CampaignController>().itemCampaignNull();
   }
 
   Future<void> getHtmlText(HtmlType htmlType) async {

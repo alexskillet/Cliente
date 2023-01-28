@@ -9,7 +9,8 @@ import 'package:sixam_mart/view/base/rating_bar.dart';
 
 class ReviewDialog extends StatelessWidget {
   final ReviewModel review;
-  const ReviewDialog({@required this.review});
+  final bool fromOrderDetails;
+  const ReviewDialog({@required this.review, this.fromOrderDetails = false});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class ReviewDialog extends StatelessWidget {
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: SizedBox(width: 500, child: SingleChildScrollView(
         padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        child: !fromOrderDetails ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
           ClipOval(
             child: CustomImage(
@@ -51,7 +52,10 @@ class ReviewDialog extends StatelessWidget {
 
           ])),
 
-        ]),
+        ]) : Text(
+          review.comment,
+          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyText1.color),
+        ),
       )),
     );
   }

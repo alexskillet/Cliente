@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sixam_mart/controller/auth_controller.dart';
 import 'package:sixam_mart/controller/cart_controller.dart';
 import 'package:sixam_mart/controller/coupon_controller.dart';
@@ -39,13 +42,15 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sixam_mart/view/screens/checkout/widget/tips_widget.dart';
 import 'package:sixam_mart/view/screens/home/home_screen.dart';
+import 'package:sixam_mart/view/screens/store/widget/camera_button_sheet.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:flutter/material.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final List<CartModel> cartList;
   final bool fromCart;
-  CheckoutScreen({@required this.fromCart, @required this.cartList});
+  final int storeId;
+  CheckoutScreen({@required this.fromCart, @required this.cartList, @required this.storeId});
 
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
@@ -84,12 +89,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       if(Get.find<LocationController>().addressList == null) {
         Get.find<LocationController>().getAddressList();
       }
-      _cartList = [];
-      widget.fromCart ? _cartList.addAll(Get.find<CartController>().cartList) : _cartList.addAll(widget.cartList);
-      Get.find<StoreController>().initCheckoutData(_cartList[0].item.storeId);
+      if(widget.storeId == null){
+        _cartList = [];
+        widget.fromCart ? _cartList.addAll(Get.find<CartController>().cartList) : _cartList.addAll(widget.cartList);
+        Get.find<StoreController>().initCheckoutData(_cartList[0].item.storeId);
+      }
+      print('store id= ${widget.storeId}');
+      if(widget.storeId != null){
+        Get.find<StoreController>().initCheckoutData(widget.storeId);
+        Get.find<StoreController>().pickPrescriptionImage(isRemove: true, isCamera: false);
+        Get.find<CouponController>().removeCouponData(false);
+      }
       _isWalletActive = Get.find<SplashController>().configModel.customerWalletStatus == 1;
       Get.find<OrderController>().updateTips(-1, notify: false);
-
     }
   }
 
@@ -151,9 +163,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   break;
                 }
               }
-              // if(_moduleData != null) {
-              //   break;
-              // }
             }
             _todayClosed = storeController.isStoreClosed(true, storeController.store.active, storeController.store.schedules);
             _tomorrowClosed = storeController.isStoreClosed(false, storeController.store.active, storeController.store.schedules);
@@ -186,7 +195,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               double _addOns = 0;
               double _subTotal = 0;
               double _orderAmount = 0;
-              if(storeController.store != null) {
+              if(storeController.store != null && _cartList != null) {
                 _cartList.forEach((cartModel) {
                   List<AddOns> _addOnList = [];
                   cartModel.addOnIds.forEach((addOnId) {
@@ -220,18 +229,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 }
                 _subTotal = _price + _addOns;
                 _orderAmount = (_price - _discount) + _addOns - _couponDiscount;
+              }
 
-                if (orderController.orderType == 'take_away' || storeController.store.freeDelivery
-                    || (Get.find<SplashController>().configModel.freeDeliveryOver != null && _orderAmount
-                        >= Get.find<SplashController>().configModel.freeDeliveryOver) || couponController.freeDelivery) {
-                  _deliveryCharge = 0;
-                }
+              if (orderController.orderType == 'take_away' || (storeController.store != null && storeController.store.freeDelivery)
+                  || (Get.find<SplashController>().configModel.freeDeliveryOver != null && _orderAmount
+                      >= Get.find<SplashController>().configModel.freeDeliveryOver) || couponController.freeDelivery) {
+                _deliveryCharge = 0;
               }
 
               _tax = PriceConverter.calculation(_orderAmount, _taxPercent, 'percent', 1);
               double _total = _subTotal + _deliveryCharge - _discount - _couponDiscount + _tax + orderController.tips;
 
-              return (orderController.distance != null && locationController.addressList != null) ? Column(
+              return (orderController.distance != null && locationController.addressList != null && storeController.store != null) ? Column(
                 children: [
 
                   Expanded(child: Scrollbar(child: SingleChildScrollView(
@@ -241,14 +250,84 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       width: Dimensions.WEB_MAX_WIDTH,
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
+                        widget.storeId != null ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Text('your_prescription'.tr, style: robotoMedium),
+                          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+                          SizedBox(
+                            height: 120,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              physics: BouncingScrollPhysics(),
+                              itemCount: storeController.pickedPrescriptions.length+1,
+                              itemBuilder: (context, index) {
+                                XFile _file = index == storeController.pickedPrescriptions.length ? null : storeController.pickedPrescriptions[index];
+                                if(index == storeController.pickedPrescriptions.length) {
+                                  return InkWell(
+                                    onTap: () => Get.bottomSheet(CameraButtonSheet()),
+                                    child: Container(
+                                      height: 120, width: 150, alignment: Alignment.center, decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                      border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+                                    ),
+                                      child: Container(
+                                        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(width: 2, color: Theme.of(context).primaryColor),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(Icons.camera_alt, color: Theme.of(context).primaryColor),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return Container(
+                                  margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+                                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                  ),
+                                  child: Stack(children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                      child: GetPlatform.isWeb ? Image.network(
+                                        _file.path, width: 150, height: 120, fit: BoxFit.cover,
+                                      ) : Image.file(
+                                        File(_file.path), width: 150, height: 120, fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      right: 0, top: 0,
+                                      child: InkWell(
+                                        onTap: () => storeController.removePrescriptionImage(index),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                                          child: Icon(Icons.delete_forever, color: Colors.red),
+                                        ),
+                                      ),
+                                    ),
+                                  ]),
+                                );
+                              },
+                            ),
+                          ),
+
+                          // Image.memory(orderController.rawPrescription, height: 200, width: double.infinity, fit: BoxFit.cover),
+                        ]) : SizedBox(),
+                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
                         // Order type
                         Text('delivery_option'.tr, style: robotoMedium),
-                        storeController.store.delivery ? DeliveryOptionButton(
+                        widget.storeId != null ? DeliveryOptionButton(
                           value: 'delivery', title: 'home_delivery'.tr, charge: _charge, isFree: storeController.store.freeDelivery,
-                        ) : SizedBox(),
-                        storeController.store.takeAway ? DeliveryOptionButton(
-                          value: 'take_away', title: 'take_away'.tr, charge: _deliveryCharge, isFree: true,
-                        ) : SizedBox(),
+                        ) : Column(children: [
+                          storeController.store.delivery ? DeliveryOptionButton(
+                            value: 'delivery', title: 'home_delivery'.tr, charge: _charge, isFree: storeController.store.freeDelivery,
+                          ) : SizedBox(),
+                          storeController.store.takeAway ? DeliveryOptionButton(
+                            value: 'take_away', title: 'take_away'.tr, charge: _deliveryCharge, isFree: true,
+                          ) : SizedBox(),
+                        ]),
                         SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                         orderController.orderType != 'take_away' ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -344,7 +423,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ]) : SizedBox(),
 
                         // Time Slot
-                        storeController.store.scheduleOrder ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        widget.storeId == null && storeController.store.scheduleOrder ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text('preference_time'.tr, style: robotoMedium),
                           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                           SizedBox(
@@ -392,7 +471,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ]) : SizedBox(),
 
                         // Coupon
-                        GetBuilder<CouponController>(
+                        widget.storeId == null ? GetBuilder<CouponController>(
                           builder: (couponController) {
                             return Row(children: [
                               Expanded(
@@ -460,10 +539,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               ),
                             ]);
                           },
-                        ),
-                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                        ) : SizedBox(),
+                        SizedBox(height: widget.storeId == null ? Dimensions.PADDING_SIZE_LARGE : 0),
 
-                        (orderController.orderType != 'take_away' && Get.find<SplashController>().configModel.dmTipsStatus == 1) ?
+                        ( widget.storeId == null && orderController.orderType != 'take_away' && Get.find<SplashController>().configModel.dmTipsStatus == 1) ?
                         Container(
                           color: Theme.of(context).cardColor,
                           padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_LARGE, horizontal: Dimensions.PADDING_SIZE_SMALL),
@@ -538,14 +617,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           isSelected: orderController.paymentMethodIndex == 0,
                           onTap: () => orderController.setPaymentMethod(0),
                         ) : SizedBox(),
-                        _isDigitalPaymentActive ? PaymentButton(
+                        widget.storeId == null && _isDigitalPaymentActive ? PaymentButton(
                           icon: Images.digital_payment,
                           title: 'digital_payment'.tr,
                           subtitle: 'faster_and_safe_way'.tr,
                           isSelected: orderController.paymentMethodIndex == 1,
                           onTap: () => orderController.setPaymentMethod(1),
                         ) : SizedBox(),
-                        _isWalletActive ? PaymentButton(
+                        widget.storeId == null && _isWalletActive ? PaymentButton(
                           icon: Images.wallet,
                           title: 'wallet_payment'.tr,
                           subtitle: 'pay_from_your_existing_balance'.tr,
@@ -565,7 +644,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                         SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
-                        Get.find<SplashController>().configModel.moduleConfig.module.orderAttachment ? Column(
+                        widget.storeId == null && Get.find<SplashController>().configModel.moduleConfig.module.orderAttachment ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(children: [
@@ -587,16 +666,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           ],
                         ) : SizedBox(),
 
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                        widget.storeId == null ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                           Text(_module.addOn ? 'subtotal'.tr : 'item_price'.tr, style: robotoMedium),
                           Text(PriceConverter.convertPrice(_subTotal), style: robotoMedium),
-                        ]),
-                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                        ]) : SizedBox(),
+                        SizedBox(height: widget.storeId == null ? Dimensions.PADDING_SIZE_SMALL : 0),
+
+                        widget.storeId == null ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                           Text('discount'.tr, style: robotoRegular),
                           Text('(-) ${PriceConverter.convertPrice(_discount)}', style: robotoRegular),
-                        ]),
+                        ]) : SizedBox(),
                         SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
                         (couponController.discount > 0 || couponController.freeDelivery) ? Column(children: [
                           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                             Text('coupon_discount'.tr, style: robotoRegular),
@@ -609,13 +690,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           ]),
                           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                         ]) : SizedBox(),
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                        widget.storeId == null ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                           Text('vat_tax'.tr, style: robotoRegular),
                           Text('(+) ${PriceConverter.convertPrice(_tax)}', style: robotoRegular),
-                        ]),
-                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                        ]) : SizedBox(),
+                        SizedBox(height: widget.storeId == null ? Dimensions.PADDING_SIZE_SMALL : 0),
 
-                        (Get.find<SplashController>().configModel.dmTipsStatus == 1) ? Row(
+                        (widget.storeId == null && Get.find<SplashController>().configModel.dmTipsStatus == 1) ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('delivery_man_tips'.tr, style: robotoRegular),
@@ -634,6 +715,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             '(+) ${PriceConverter.convertPrice(_deliveryCharge)}', style: robotoRegular,
                           ),
                         ]),
+
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
                           child: Divider(thickness: 1, color: Theme.of(context).hintColor.withOpacity(0.5)),
@@ -725,16 +807,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           DateTime _endTime = orderController.timeSlots[orderController.selectedTimeSlot].endTime;
           _scheduleStartDate = DateTime(_date.year, _date.month, _date.day, _startTime.hour, _startTime.minute+1);
           _scheduleEndDate = DateTime(_date.year, _date.month, _date.day, _endTime.hour, _endTime.minute+1);
-          for (CartModel cart in _cartList) {
-            if (!DateConverter.isAvailable(
-              cart.item.availableTimeStarts, cart.item.availableTimeEnds,
-              time: storeController.store.scheduleOrder ? _scheduleStartDate : null,
-            ) && !DateConverter.isAvailable(
-              cart.item.availableTimeStarts, cart.item.availableTimeEnds,
-              time: storeController.store.scheduleOrder ? _scheduleEndDate : null,
-            )) {
-              _isAvailable = false;
-              break;
+          if(_cartList != null){
+            for (CartModel cart in _cartList) {
+              if (!DateConverter.isAvailable(
+                cart.item.availableTimeStarts, cart.item.availableTimeEnds,
+                time: storeController.store.scheduleOrder ? _scheduleStartDate : null,
+              ) && !DateConverter.isAvailable(
+                cart.item.availableTimeStarts, cart.item.availableTimeEnds,
+                time: storeController.store.scheduleOrder ? _scheduleEndDate : null,
+              )) {
+                _isAvailable = false;
+                break;
+              }
             }
           }
         }
@@ -756,43 +840,72 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           showCustomSnackBar('one_or_more_products_are_not_available_for_this_selected_time'.tr);
         }else if (orderController.orderType != 'take_away' && orderController.distance == -1 && deliveryCharge == -1) {
           showCustomSnackBar('delivery_fee_not_set_yet'.tr);
+        }else if (widget.storeId != null && storeController.pickedPrescriptions.isEmpty) {
+          showCustomSnackBar('please_upload_your_prescription_images'.tr);
         }
         else {
-          List<Cart> carts = [];
-          for (int index = 0; index < _cartList.length; index++) {
-            CartModel cart = _cartList[index];
-            List<int> _addOnIdList = [];
-            List<int> _addOnQtyList = [];
-            cart.addOnIds.forEach((addOn) {
-              _addOnIdList.add(addOn.id);
-              _addOnQtyList.add(addOn.quantity);
-            });
-            carts.add(Cart(
-              cart.isCampaign ? null : cart.item.id, cart.isCampaign ? cart.item.id : null,
-              cart.discountedPrice.toString(), '', cart.variation,
-              cart.quantity, _addOnIdList, cart.addOns, _addOnQtyList,
-            ));
-          }
+
           AddressModel _address = orderController.addressIndex == -1 ? Get.find<LocationController>().getUserAddress()
               : locationController.addressList[orderController.addressIndex];
-          orderController.placeOrder(PlaceOrderBody(
-            cart: carts, couponDiscountAmount: Get.find<CouponController>().discount, distance: orderController.distance,
-            scheduleAt: !storeController.store.scheduleOrder ? null : (orderController.selectedDateSlot == 0
-                && orderController.selectedTimeSlot == 0) ? null : DateConverter.dateToDateAndTime(_scheduleEndDate),
-            orderAmount: total, orderNote: _noteController.text, orderType: orderController.orderType,
-            paymentMethod: orderController.paymentMethodIndex == 0 ? 'cash_on_delivery'
-                : orderController.paymentMethodIndex == 1 ? 'digital_payment' : 'wallet',
-            couponCode: (Get.find<CouponController>().discount > 0 || (Get.find<CouponController>().coupon != null
-                && Get.find<CouponController>().freeDelivery)) ? Get.find<CouponController>().coupon.code : null,
-            storeId: _cartList[0].item.storeId,
-            address: _address.address, latitude: _address.latitude, longitude: _address.longitude, addressType: _address.addressType,
-            contactPersonName: _address.contactPersonName ?? '${Get.find<UserController>().userInfoModel.fName} '
-                '${Get.find<UserController>().userInfoModel.lName}',
-            contactPersonNumber: _address.contactPersonNumber ?? Get.find<UserController>().userInfoModel.phone,
-            streetNumber: _streetNumberController.text.trim() ?? '', house: _houseController.text.trim(), floor: _floorController.text.trim(),
-            discountAmount: discount, taxAmount: tax, receiverDetails: null, parcelCategoryId: null,
-            chargePayer: null, dmTips: _tipController.text.trim(),
-          ), storeController.store.zoneId, _callback);
+
+          if(widget.storeId == null){
+            List<Cart> carts = [];
+            for (int index = 0; index < _cartList.length; index++) {
+              CartModel cart = _cartList[index];
+              List<int> _addOnIdList = [];
+              List<int> _addOnQtyList = [];
+              cart.addOnIds.forEach((addOn) {
+                _addOnIdList.add(addOn.id);
+                _addOnQtyList.add(addOn.quantity);
+              });
+
+              List<OrderVariation> _variations = [];
+              if(Get.find<SplashController>().getModuleConfig(cart.item.moduleType).newVariation) {
+                for(int i=0; i<cart.item.foodVariations.length; i++) {
+                  if(cart.foodVariations[i].contains(true)) {
+                    _variations.add(OrderVariation(name: cart.item.foodVariations[i].name, values: OrderVariationValue(label: [])));
+                    for(int j=0; j<cart.item.foodVariations[i].variationValues.length; j++) {
+                      if(cart.foodVariations[i][j]) {
+                        _variations[_variations.length-1].values.label.add(cart.item.foodVariations[i].variationValues[j].level);
+                      }
+                    }
+                  }
+                }
+              }
+              carts.add(Cart(
+                cart.isCampaign ? null : cart.item.id, cart.isCampaign ? cart.item.id : null,
+                cart.discountedPrice.toString(), '',
+                Get.find<SplashController>().getModuleConfig(cart.item.moduleType).newVariation ? null : cart.variation,
+                Get.find<SplashController>().getModuleConfig(cart.item.moduleType).newVariation ? _variations : null,
+                cart.quantity, _addOnIdList, cart.addOns, _addOnQtyList,
+              ));
+            }
+
+            orderController.placeOrder(PlaceOrderBody(
+              cart: carts, couponDiscountAmount: Get.find<CouponController>().discount, distance: orderController.distance,
+              scheduleAt: !storeController.store.scheduleOrder ? null : (orderController.selectedDateSlot == 0
+                  && orderController.selectedTimeSlot == 0) ? null : DateConverter.dateToDateAndTime(_scheduleEndDate),
+              orderAmount: total, orderNote: _noteController.text, orderType: orderController.orderType,
+              paymentMethod: orderController.paymentMethodIndex == 0 ? 'cash_on_delivery'
+                  : orderController.paymentMethodIndex == 1 ? 'digital_payment' : 'wallet',
+              couponCode: (Get.find<CouponController>().discount > 0 || (Get.find<CouponController>().coupon != null
+                  && Get.find<CouponController>().freeDelivery)) ? Get.find<CouponController>().coupon.code : null,
+              storeId: _cartList[0].item.storeId,
+              address: _address.address, latitude: _address.latitude, longitude: _address.longitude, addressType: _address.addressType,
+              contactPersonName: _address.contactPersonName ?? '${Get.find<UserController>().userInfoModel.fName} '
+                  '${Get.find<UserController>().userInfoModel.lName}',
+              contactPersonNumber: _address.contactPersonNumber ?? Get.find<UserController>().userInfoModel.phone,
+              streetNumber: _streetNumberController.text.trim() ?? '', house: _houseController.text.trim(), floor: _floorController.text.trim(),
+              discountAmount: discount, taxAmount: tax, receiverDetails: null, parcelCategoryId: null,
+              chargePayer: null, dmTips: _tipController.text.trim(),
+            ), storeController.store.zoneId, _callback);
+          }else{
+
+            orderController.placePrescriptionOrder(widget.storeId, storeController.store.zoneId, orderController.distance,
+                _address.address, _address.longitude, _address.latitude, _noteController.text, storeController.pickedPrescriptions, _callback,
+            );
+          }
+
         }
       }) : Center(child: CircularProgressIndicator()),
     );

@@ -38,16 +38,32 @@ class CartItemWidget extends StatelessWidget {
     });
 
     String _variationText = '';
-    if(cart.variation.length > 0) {
-      List<String> _variationTypes = cart.variation[0].type.split('-');
-      if(_variationTypes.length == cart.item.choiceOptions.length) {
-        int _index = 0;
-        cart.item.choiceOptions.forEach((choice) {
-          _variationText = _variationText + '${(_index == 0) ? '' : ',  '}${choice.title} - ${_variationTypes[_index]}';
-          _index = _index + 1;
-        });
-      }else {
-        _variationText = cart.item.variations[0].type;
+    if(Get.find<SplashController>().getModuleConfig(cart.item.moduleType).newVariation) {
+      if(cart.foodVariations.length > 0) {
+        for(int index=0; index<cart.foodVariations.length; index++) {
+          if(cart.foodVariations[index].contains(true)) {
+            _variationText += '${_variationText.isNotEmpty ? ', ' : ''}${cart.item.foodVariations[index].name} (';
+            for(int i=0; i<cart.foodVariations[index].length; i++) {
+              if(cart.foodVariations[index][i]) {
+                _variationText += '${_variationText.endsWith('(') ? '' : ', '}${cart.item.foodVariations[index].variationValues[i].level}';
+              }
+            }
+            _variationText += ')';
+          }
+        }
+      }
+    }else {
+      if(cart.variation.length > 0) {
+        List<String> _variationTypes = cart.variation[0].type.split('-');
+        if(_variationTypes.length == cart.item.choiceOptions.length) {
+          int _index = 0;
+          cart.item.choiceOptions.forEach((choice) {
+            _variationText = _variationText + '${(_index == 0) ? '' : ',  '}${choice.title} - ${_variationTypes[_index]}';
+            _index = _index + 1;
+          });
+        }else {
+          _variationText = cart.item.variations[0].type;
+        }
       }
     }
 
@@ -186,7 +202,7 @@ class CartItemWidget extends StatelessWidget {
                       ]),
                     ) : SizedBox(),
 
-                    cart.item.variations.length > 0 ? Padding(
+                    _variationText.isNotEmpty ? Padding(
                       padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                       child: Row(children: [
                         SizedBox(width: 80),
@@ -197,43 +213,6 @@ class CartItemWidget extends StatelessWidget {
                         )),
                       ]),
                     ) : SizedBox(),
-
-                    /*addOns.length > 0 ? SizedBox(
-                      height: 30,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        physics: BouncingScrollPhysics(),
-                        padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_SMALL),
-                        itemCount: addOns.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
-                            child: Row(children: [
-                              InkWell(
-                                onTap: () {
-                                  Get.find<CartController>().removeAddOn(cartIndex, index);
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 2),
-                                  child: Icon(Icons.remove_circle, color: Theme.of(context).primaryColor, size: 18),
-                                ),
-                              ),
-                              Text(addOns[index].name, style: robotoRegular.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL)),
-                              SizedBox(width: 2),
-                              Text(
-                                PriceConverter.convertPrice(addOns[index].price),
-                                style: robotoMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL),
-                              ),
-                              SizedBox(width: 2),
-                              Text(
-                                '(${cart.addOnIds[index].quantity})',
-                                style: robotoRegular.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL),
-                              ),
-                            ]),
-                          );
-                        },
-                      ),
-                    ) : SizedBox(),*/
 
                   ],
                 ),

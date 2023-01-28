@@ -155,7 +155,7 @@ class CheckoutButton extends StatelessWidget {
         } else {
           if(Get.find<SplashController>().module == null) {
             int i = 0;
-            for(i ; i < Get.find<SplashController>().moduleList.length; i++){
+            for(i = 0; i < Get.find<SplashController>().moduleList.length; i++){
               if(cartController.cartList[0].item.moduleId == Get.find<SplashController>().moduleList[i].id){
                 break;
               }

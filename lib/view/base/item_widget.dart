@@ -94,7 +94,7 @@ class ItemWidget extends StatelessWidget {
                   child: CustomImage(
                     image: '${isCampaign ? _baseUrls.campaignImageUrl : isStore ? _baseUrls.storeImageUrl
                         : _baseUrls.itemImageUrl}'
-                        '/${isStore ? store.logo : item.image}',
+                        '/${isStore ? store != null ? store.logo : '' : item.image}',
                     height: _desktop ? 120 : 65, width: _desktop ? 120 : 80, fit: BoxFit.cover,
                   ),
                 ),
@@ -168,14 +168,14 @@ class ItemWidget extends StatelessWidget {
                   bool _isWished = isStore ? wishController.wishStoreIdList.contains(store.id)
                       : wishController.wishItemIdList.contains(item.id);
                   return InkWell(
-                    onTap: () {
+                    onTap: !wishController.isRemoving ? () {
                       if(Get.find<AuthController>().isLoggedIn()) {
                         _isWished ? wishController.removeFromWishList(isStore ? store.id : item.id, isStore)
                             : wishController.addToWishList(item, store, isStore);
                       }else {
                         showCustomSnackBar('you_are_not_logged_in'.tr);
                       }
-                    },
+                    } : null,
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: _desktop ? Dimensions.PADDING_SIZE_SMALL : 0),
                       child: Icon(

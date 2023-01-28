@@ -8,6 +8,7 @@ import 'package:sixam_mart/data/model/response/order_model.dart';
 import 'package:sixam_mart/helper/responsive_helper.dart';
 import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/view/base/cart_widget.dart';
+import 'package:sixam_mart/view/base/custom_snackbar.dart';
 import 'package:sixam_mart/view/screens/cart/cart_screen.dart';
 import 'package:sixam_mart/view/screens/dashboard/widget/bottom_nav_item.dart';
 import 'package:sixam_mart/view/screens/favourite/favourite_screen.dart';
@@ -45,7 +46,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _isLogin = Get.find<AuthController>().isLoggedIn();
 
     if(_isLogin){
-      Get.find<OrderController>().getRunningOrders(1, fromDashBoard: true);
+      Get.find<OrderController>().getRunningOrders(1);
     }
 
     _pageIndex = widget.pageIndex;
@@ -113,7 +114,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             (orderController.showBottomSheet && orderController.runningOrderModel != null && orderController.runningOrderModel.orders.isNotEmpty) ? SizedBox() : FloatingActionButton(
                   elevation: 5,
                   backgroundColor: _pageIndex == 2 ? Theme.of(context).primaryColor : Theme.of(context).cardColor,
-                  onPressed: () => _setPage(2),
+                  onPressed: () {
+                    if(Get.find<SplashController>().module != null) {
+                      _setPage(2);
+                    }else{
+                      showCustomSnackBar('please_select_any_module'.tr);
+                    }
+                  },
                   child: CartWidget(color: _pageIndex == 2 ? Theme.of(context).cardColor : Theme.of(context).disabledColor, size: 30),
                 ),
             floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

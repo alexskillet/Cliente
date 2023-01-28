@@ -198,6 +198,7 @@ class Cart {
   String _price;
   String _variant;
   List<Variation> _variation;
+  List<OrderVariation> _variations;
   int _quantity;
   List<int> _addOnIds;
   List<AddOns> _addOns;
@@ -209,6 +210,7 @@ class Cart {
         String price,
         String variant,
         List<Variation> variation,
+        List<OrderVariation> variations,
         int quantity,
         List<int> addOnIds,
         List<AddOns> addOns,
@@ -218,6 +220,7 @@ class Cart {
     this._price = price;
     this._variant = variant;
     this._variation = variation;
+    this._variations = variations;
     this._quantity = quantity;
     this._addOnIds = addOnIds;
     this._addOns = addOns;
@@ -239,10 +242,15 @@ class Cart {
     _itemCampaignId = json['item_campaign_id'];
     _price = json['price'];
     _variant = json['variant'];
-    if (json['variation'] != null) {
+    if (json['variation'] != null && json['variation'].isNotEmpty && json['variation'][0]['price'] != null) {
       _variation = [];
       json['variation'].forEach((v) {
         _variation.add(new Variation.fromJson(v));
+      });
+    }else if (json['variation'] != null) {
+      _variations = [];
+      json['variation'].forEach((v) {
+        _variations.add(new OrderVariation.fromJson(v));
       });
     }
     _quantity = json['quantity'];
@@ -264,6 +272,8 @@ class Cart {
     data['variant'] = this._variant;
     if (this._variation != null) {
       data['variation'] = this._variation.map((v) => v.toJson()).toList();
+    }else if(_variations != null) {
+      data['variation'] = this._variations.map((v) => v.toJson()).toList();
     }
     data['quantity'] = this._quantity;
     data['add_on_ids'] = this._addOnIds;
@@ -271,6 +281,44 @@ class Cart {
       data['add_ons'] = this._addOns.map((v) => v.toJson()).toList();
     }
     data['add_on_qtys'] = this._addOnQtys;
+    return data;
+  }
+}
+
+class OrderVariation {
+  String name;
+  OrderVariationValue values;
+
+  OrderVariation({this.name, this.values});
+
+  OrderVariation.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    values =
+    json['values'] != null ? new OrderVariationValue.fromJson(json['values']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    if (this.values != null) {
+      data['values'] = this.values.toJson();
+    }
+    return data;
+  }
+}
+
+class OrderVariationValue {
+  List<String> label;
+
+  OrderVariationValue({this.label});
+
+  OrderVariationValue.fromJson(Map<String, dynamic> json) {
+    label = json['label'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['label'] = this.label;
     return data;
   }
 }

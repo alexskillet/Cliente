@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:sixam_mart/data/model/response/address_model.dart';
 import 'package:sixam_mart/data/model/response/parcel_category_model.dart';
 import 'package:sixam_mart/data/model/response/store_model.dart';
@@ -67,7 +69,7 @@ class OrderModel {
   double storeDiscountAmount;
   String failed;
   int detailsCount;
-  String orderAttachment;
+  List<String> orderAttachment;
   String chargePayer;
   String moduleType;
   DeliveryMan deliveryMan;
@@ -78,6 +80,8 @@ class OrderModel {
   double dmTips;
   String refundCancellationNote;
   String refundCustomerNote;
+  Refund refund;
+  bool prescriptionOrder;
 
   OrderModel(
       {this.id,
@@ -122,6 +126,8 @@ class OrderModel {
         this.dmTips,
         this.refundCancellationNote,
         this.refundCustomerNote,
+        this.refund,
+        this.prescriptionOrder,
       });
 
   OrderModel.fromJson(Map<String, dynamic> json) {
@@ -156,7 +162,17 @@ class OrderModel {
     storeDiscountAmount = json['store_discount_amount'].toDouble();
     failed = json['failed'];
     detailsCount = json['details_count'];
-    orderAttachment = json['order_attachment'];
+    if (json['order_attachment'] != null) {
+      if(json['order_attachment'].toString().startsWith('["')){
+        orderAttachment = [];
+        jsonDecode(json['order_attachment']).forEach((v) {
+          orderAttachment.add(v);
+        });
+      }else{
+        orderAttachment = [];
+        orderAttachment.add(json['order_attachment']);
+      }
+    }
     chargePayer = json['charge_payer'];
     moduleType = json['module_type'];
     deliveryMan = json['delivery_man'] != null ? new DeliveryMan.fromJson(json['delivery_man']) : null;
@@ -167,6 +183,8 @@ class OrderModel {
     dmTips = json['dm_tips'].toDouble();
     refundCancellationNote = json['refund_cancellation_note'];
     refundCustomerNote = json['refund_customer_note'];
+    refund = json['refund'] != null ? new Refund.fromJson(json['refund']) : null;
+    prescriptionOrder = json['prescription_order'];
   }
 
   Map<String, dynamic> toJson() {
@@ -223,6 +241,10 @@ class OrderModel {
     data['dm_tips'] = this.dmTips;
     data['refund_cancellation_note'] = this.refundCancellationNote;
     data['refund_customer_note'] = this.refundCustomerNote;
+    if (this.deliveryAddress != null) {
+      data['refund'] = this.refund.toJson();
+    }
+    data['prescription_order'] = this.prescriptionOrder;
     return data;
   }
 }

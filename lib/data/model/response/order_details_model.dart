@@ -7,6 +7,7 @@ class OrderDetailsModel {
   double price;
   Item itemDetails;
   List<Variation> variation;
+  List<FoodVariation> foodVariation;
   List<AddOn> addOns;
   double discountOnItem;
   String discountType;
@@ -25,6 +26,7 @@ class OrderDetailsModel {
         this.price,
         this.itemDetails,
         this.variation,
+        this.foodVariation,
         this.addOns,
         this.discountOnItem,
         this.discountType,
@@ -41,14 +43,19 @@ class OrderDetailsModel {
     itemId = json['item_id'];
     orderId = json['order_id'];
     price = json['price'].toDouble();
-    itemDetails = json['item_details'] != null
-        ? new Item.fromJson(json['item_details'])
-        : null;
-    if (json['variation'] != null && json['variation'] != []) {
-      variation = [];
-      json['variation'].forEach((v) {
-        variation.add(new Variation.fromJson(v));
-      });
+    itemDetails = json['item_details'] != null ? new Item.fromJson(json['item_details']) : null;
+    variation = [];
+    foodVariation = [];
+    if (json['variation'] != null && json['variation'].isNotEmpty) {
+      if(json['variation'][0]['values'] != null) {
+        json['variation'].forEach((v) {
+          foodVariation.add(FoodVariation.fromJson(v));
+        });
+      }else {
+        json['variation'].forEach((v) {
+          variation.add(Variation.fromJson(v));
+        });
+      }
     }
     if (json['add_ons'] != null) {
       addOns = [];
@@ -78,6 +85,8 @@ class OrderDetailsModel {
     }
     if (this.variation != null) {
       data['variation'] = this.variation.map((v) => v.toJson()).toList();
+    }else if(this.foodVariation != null) {
+      data['variation'] = this.foodVariation.map((v) => v.toJson()).toList();
     }
     if (this.addOns != null) {
       data['add_ons'] = this.addOns.map((v) => v.toJson()).toList();

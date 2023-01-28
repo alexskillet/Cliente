@@ -7,6 +7,7 @@ import 'package:sixam_mart/data/model/body/notification_body.dart';
 import 'package:sixam_mart/data/model/response/conversation_model.dart';
 import 'package:sixam_mart/data/model/response/order_details_model.dart';
 import 'package:sixam_mart/data/model/response/order_model.dart';
+import 'package:sixam_mart/data/model/response/review_model.dart';
 import 'package:sixam_mart/helper/date_converter.dart';
 import 'package:sixam_mart/helper/price_converter.dart';
 import 'package:sixam_mart/helper/responsive_helper.dart';
@@ -21,12 +22,14 @@ import 'package:sixam_mart/view/base/custom_image.dart';
 import 'package:sixam_mart/view/base/custom_snackbar.dart';
 import 'package:sixam_mart/view/base/footer_view.dart';
 import 'package:sixam_mart/view/base/menu_drawer.dart';
+import 'package:sixam_mart/view/screens/chat/widget/image_dialog.dart';
 import 'package:sixam_mart/view/screens/order/widget/order_item_widget.dart';
 import 'package:sixam_mart/view/screens/parcel/widget/card_widget.dart';
 import 'package:sixam_mart/view/screens/parcel/widget/details_widget.dart';
 import 'package:sixam_mart/view/screens/review/rate_review_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sixam_mart/view/screens/store/widget/review_dialog.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
@@ -44,9 +47,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
   void _loadData(BuildContext context, bool reload) async {
     await Get.find<OrderController>().trackOrder(widget.orderId.toString(), reload ? null : widget.orderModel, false);
-    if(widget.orderModel == null) {
-      await Get.find<SplashController>().getConfigData();
-    }
+    Get.find<OrderController>().timerTrackOrder(widget.orderId.toString());
+    // if(widget.orderModel == null) {
+    //   await Get.find<SplashController>().getConfigData(loadModuleData: true);
+    // }
     Get.find<OrderController>().getOrderDetails(widget.orderId.toString());
   }
 
@@ -102,18 +106,25 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           double _dmTips = 0;
           OrderModel _order = orderController.trackModel;
           bool _parcel = false;
+          bool _prescriptionOrder = false;
           if(orderController.orderDetails != null) {
             _parcel = _order.orderType == 'parcel';
+            _prescriptionOrder = _order.prescriptionOrder;
             _deliveryCharge = _order.deliveryCharge;
             _couponDiscount = _order.couponDiscountAmount;
             _discount = _order.storeDiscountAmount;
             _tax = _order.totalTaxAmount;
             _dmTips = _order.dmTips;
-            for(OrderDetailsModel orderDetails in orderController.orderDetails) {
-              for(AddOn addOn in orderDetails.addOns) {
-                _addOns = _addOns + (addOn.price * addOn.quantity);
+            if(_prescriptionOrder){
+              double orderAmount = _order.orderAmount ?? 0;
+              _itemsPrice = (orderAmount + _discount) - (_tax + _deliveryCharge );
+            } else{
+              for(OrderDetailsModel orderDetails in orderController.orderDetails) {
+                for(AddOn addOn in orderDetails.addOns) {
+                  _addOns = _addOns + (addOn.price * addOn.quantity);
+                }
+                _itemsPrice = _itemsPrice + (orderDetails.price * orderDetails.quantity);
               }
-              _itemsPrice = _itemsPrice + (orderDetails.price * orderDetails.quantity);
             }
           }
           double _subTotal = _itemsPrice + _addOns;
@@ -182,39 +193,61 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     ),
                     Expanded(child: SizedBox()),
                     Container(height: 7, width: 7, decoration: BoxDecoration(
-                      color: (_order.orderStatus == 'failed' || _order.orderStatus == 'refunded'
-                          || _order.orderStatus == 'refund_request_canceled') ? Colors.red : Colors.green,
+                      color: (_order.orderStatus == 'failed' || _order.orderStatus == 'canceled' || _order.orderStatus == 'refund_request_canceled')
+                          ? Colors.red : _order.orderStatus == 'refund_requested' ? Colors.yellow : Colors.green,
                       shape: BoxShape.circle,
                     )),
                     SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                    GestureDetector(
-                      onTap: (){
-                        // if(_order.orderStatus == 'refunded' || _order.orderStatus == 'refund_request_canceled' || _order.orderStatus == 'refund_requested'){
-                        //   Get.dialog( RefundReasonDialogue(note: _order.refundCustomerNote), useSafeArea: false);
-                        // }
-                      },
-                      child: Text(
-                        _order.orderStatus == 'delivered' ? '${'delivered_at'.tr} ${DateConverter.dateTimeStringToDateTime(_order.delivered)}'
-                            : _order.orderStatus.tr,
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
-                      ),
+                    Text(
+                      _order.orderStatus == 'delivered' ? '${'delivered_at'.tr} ${DateConverter.dateTimeStringToDateTime(_order.delivered)}'
+                          : _order.orderStatus.tr,
+                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
                     ),
-                    // (_order.orderStatus == 'refunded' || _order.orderStatus == 'refund_request_canceled' || _order.orderStatus == 'refund_requested') ?
-                    // Icon(Icons.arrow_drop_down) : SizedBox(),
                   ]),
                 ),
 
-                (_order.orderStatus == 'refund_request_canceled' && _order.refundCancellationNote != null) ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                (_order.orderStatus == 'refund_requested' || _order.orderStatus == 'refund_request_canceled') ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Divider(height: Dimensions.PADDING_SIZE_LARGE),
 
-                  Text('refund_cancellation_note'.tr, style: robotoRegular),
-                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                  _order.orderStatus == 'refund_requested' ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
-                  Text(
-                    _order.refundCancellationNote,
-                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor),
-                  ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                    RichText(text: TextSpan(children: [
+                      TextSpan(text: '${'refund_note'.tr}:', style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyText1.color)),
+                      TextSpan(text: '(${(_order.refund != null) ? _order.refund.customerReason : ''})', style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyText1.color)),
+                    ])),
+                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+                    (_order.refund != null && _order.refund.customerNote != null) ? InkWell(
+                      onTap: () => Get.dialog(ReviewDialog(review: ReviewModel(comment: _order.refund.customerNote), fromOrderDetails: true)),
+                      child: Text(
+                        '${_order.refund.customerNote}', maxLines: 2, overflow: TextOverflow.ellipsis,
+                        style: robotoRegular.copyWith(color: Theme.of(context).disabledColor),
+                      ),
+                    ) : SizedBox(),
+                    SizedBox(height: (_order.refund != null && _order.refund.image != null) ? Dimensions.PADDING_SIZE_SMALL : 0),
+
+                    (_order.refund != null && _order.refund.image != null && _order.refund.image.isNotEmpty) ? InkWell(
+                      onTap: () => showDialog(context: context, builder: (context) {
+                        return ImageDialog(imageUrl: '${Get.find<SplashController>().configModel.baseUrls.refundImageUrl}/${_order.refund.image.isNotEmpty ? _order.refund.image[0] : ''}');
+                      }),
+                      child: CustomImage(
+                        height: 40, width: 40, fit: BoxFit.cover,
+                        image: _order.refund != null ? '${Get.find<SplashController>().configModel.baseUrls.refundImageUrl}/${_order.refund.image.isNotEmpty ? _order.refund.image[0] : ''}' : '',
+                      ),
+                    ) : SizedBox(),
+                  ]) : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text('${'refund_cancellation_note'.tr}:', style: robotoMedium),
+                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+                    InkWell(
+                      onTap: () => Get.dialog(ReviewDialog(review: ReviewModel(comment: _order.refund.adminNote), fromOrderDetails: true)),
+                      child: Text(
+                        '${_order.refund != null ? _order.refund.adminNote : ''}', maxLines: 2, overflow: TextOverflow.ellipsis,
+                        style: robotoRegular.copyWith(color: Theme.of(context).disabledColor),
+                      ),
+                    ),
+
+                  ]),
                 ]) : SizedBox(),
 
                 Divider(height: Dimensions.PADDING_SIZE_LARGE),
@@ -235,49 +268,61 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 ),
                 SizedBox(height: _parcel ? Dimensions.PADDING_SIZE_LARGE : 0),
 
-                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  (Get.find<SplashController>().getModule(_order.moduleType).orderAttachment && _order.orderAttachment != null
+                (Get.find<SplashController>().getModuleConfig(_order.moduleType).orderAttachment && _order.orderAttachment != null
                   && _order.orderAttachment.isNotEmpty) ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text('prescription'.tr, style: robotoRegular),
                     SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+                    SizedBox(
+                      child: GridView.builder(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 1,
+                            crossAxisCount: ResponsiveHelper.isDesktop(context) ? 8 : 3,
+                            mainAxisSpacing: 10,
+                            crossAxisSpacing: 5,
+                          ),
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: _order.orderAttachment.length,
+                          itemBuilder: (BuildContext context, index) {
+                            print('---> ${Get.find<SplashController>().configModel.baseUrls.orderAttachmentUrl}/${_order.orderAttachment}');
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: InkWell(
+                                onTap: () => openDialog(context, '${Get.find<SplashController>().configModel.baseUrls.orderAttachmentUrl}/${_order.orderAttachment[index]}'),
+                                child: Center(child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                  child: CustomImage(
+                                    image: '${Get.find<SplashController>().configModel.baseUrls.orderAttachmentUrl}/${_order.orderAttachment[index]}',
+                                    width: 100, height: 100,
+                                  ),
+                                )),
+                              ),
+                            );
+                          }),
+                    ),
+
+                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                  ]) : SizedBox(),
+                  SizedBox(width: (Get.find<SplashController>().getModuleConfig(_order.moduleType).orderAttachment
+                      && _order.orderAttachment != null && _order.orderAttachment.isNotEmpty) ? Dimensions.PADDING_SIZE_SMALL : 0),
+
+                  (_order.orderNote  != null && _order.orderNote.isNotEmpty) ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text('additional_note'.tr, style: robotoRegular),
+                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
                     InkWell(
-                      onTap: () => openDialog(context, '${Get.find<SplashController>().configModel.baseUrls.orderAttachmentUrl}/${_order.orderAttachment}'),
-                      child: Center(child: ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                        child: CustomImage(
-                          image: '${Get.find<SplashController>().configModel.baseUrls.orderAttachmentUrl}/${_order.orderAttachment}',
-                          width: 100, height: 100,
-                        ),
-                      )),
+                      onTap: () => Get.dialog(ReviewDialog(review: ReviewModel(comment: _order.orderNote), fromOrderDetails: true)),
+                      child: Text(
+                        _order.orderNote, overflow: TextOverflow.ellipsis, maxLines: 3,
+                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                      ),
                     ),
                     SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                   ]) : SizedBox(),
-                  SizedBox(width: (Get.find<SplashController>().getModule(_order.moduleType).orderAttachment
-                      && _order.orderAttachment != null && _order.orderAttachment.isNotEmpty) ? Dimensions.PADDING_SIZE_SMALL : 0),
-
-                  (_order.orderNote  != null && _order.orderNote.isNotEmpty) ? Expanded(
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text('additional_note'.tr, style: robotoRegular),
-                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                      Container(
-                        width: Dimensions.WEB_MAX_WIDTH,
-                        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                          border: Border.all(width: 1, color: Theme.of(context).disabledColor),
-                        ),
-                        child: Text(
-                          _order.orderNote,
-                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
-                        ),
-                      ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                    ]),
-                  ) : SizedBox(),
-                ]),
 
                 CardWidget(showCard: _parcel, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(_parcel ? 'parcel_category'.tr : Get.find<SplashController>().getModule(_order.moduleType).showRestaurantText
+                  Text(_parcel ? 'parcel_category'.tr : Get.find<SplashController>().getModuleConfig(_order.moduleType).showRestaurantText
                       ? 'restaurant_details'.tr : 'store_details'.tr, style: robotoRegular),
                   SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                   (_parcel && _order.parcelCategory == null) ? Text(
@@ -335,21 +380,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       ),
                     ) : SizedBox(),
 
-                    // !_parcel ? TextButton.icon(
-                    //   onPressed: () async {
-                    //     _timer?.cancel();
-                    //     await Get.toNamed(RouteHelper.getChatRoute(orderModel: widget.orderModel, isStore: true));
-                    //     _startApiCall();
-                    //   },
-                    //   icon: Icon(Icons.message, color: Theme.of(context).primaryColor, size: 20),
-                    //   label: Text(
-                    //     'message'.tr,
-                    //     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
-                    //   ),
-                    // ) : SizedBox(),
-
                     (Get.find<SplashController>().configModel.refundActiveStatus && _order.orderStatus == 'delivered' && !_parcel
-                    && (_parcel || orderController.orderDetails[0].itemCampaignId == null)) ? InkWell(
+                    && (_parcel || (orderController.orderDetails.isNotEmpty && orderController.orderDetails[0].itemCampaignId == null))) ? InkWell(
                       onTap: () => Get.toNamed(RouteHelper.getRefundRequestRoute(_order.id.toString())),
                       child: Container(
                         decoration: BoxDecoration(
@@ -373,7 +405,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   ]),
                   SizedBox(height: 10),
 
-                  Get.find<SplashController>().getModule(_order.moduleType).addOn ? Row(
+                  Get.find<SplashController>().getModuleConfig(_order.moduleType).addOn ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('addons'.tr, style: robotoRegular),
@@ -381,18 +413,18 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     ],
                   ) : SizedBox(),
 
-                  Get.find<SplashController>().getModule(_order.moduleType).addOn ? Divider(
+                  Get.find<SplashController>().getModuleConfig(_order.moduleType).addOn ? Divider(
                     thickness: 1, color: Theme.of(context).hintColor.withOpacity(0.5),
                   ) : SizedBox(),
 
-                  Get.find<SplashController>().getModule(_order.moduleType).addOn ? Row(
+                  Get.find<SplashController>().getModuleConfig(_order.moduleType).addOn ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('subtotal'.tr, style: robotoMedium),
                       Text(PriceConverter.convertPrice(_subTotal), style: robotoMedium),
                     ],
                   ) : SizedBox(),
-                  SizedBox(height: Get.find<SplashController>().getModule(_order.moduleType).addOn ? 10 : 0),
+                  SizedBox(height: Get.find<SplashController>().getModuleConfig(_order.moduleType).addOn ? 10 : 0),
 
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text('discount'.tr, style: robotoRegular),
@@ -541,7 +573,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         ),
       ),
 
-      (order.orderStatus == 'delivered' && (parcel ? order.deliveryMan != null : orderController.orderDetails[0].itemCampaignId == null)) ? Center(
+      (order.orderStatus == 'delivered' && (parcel ? order.deliveryMan != null : (orderController.orderDetails.isNotEmpty && orderController.orderDetails[0].itemCampaignId == null))) ? Center(
         child: Container(
           width: Dimensions.WEB_MAX_WIDTH,
           padding: ResponsiveHelper.isDesktop(context) ? null : EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),

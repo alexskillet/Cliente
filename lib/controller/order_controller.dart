@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sixam_mart/controller/location_controller.dart';
 import 'package:sixam_mart/controller/splash_controller.dart';
 import 'package:sixam_mart/data/api/api_checker.dart';
+import 'package:sixam_mart/data/api/api_client.dart';
 import 'package:sixam_mart/data/model/body/place_order_body.dart';
 import 'package:sixam_mart/data/model/response/distance_model.dart';
 import 'package:sixam_mart/data/model/response/order_details_model.dart';
@@ -51,6 +52,9 @@ class OrderController extends GetxController implements GetxService {
   List<String> _refundReasons;
   int _selectedReasonIndex = 0;
   XFile _refundImage;
+  // XFile _prescriptionImage;
+  // Uint8List _rawPrescription;
+
 
   PaginatedOrderModel get runningOrderModel => _runningOrderModel;
   PaginatedOrderModel get historyOrderModel => _historyOrderModel;
@@ -75,7 +79,9 @@ class OrderController extends GetxController implements GetxService {
   bool get showOneOrder => _showOneOrder;
   int get selectedReasonIndex => _selectedReasonIndex;
   XFile get refundImage => _refundImage;
+  // XFile get prescriptionImage => _prescriptionImage;
   List<String> get refundReasons => _refundReasons;
+  // Uint8List get rawPrescription => _rawPrescription;
 
   void selectReason(int index,{bool isUpdate = true}){
     _selectedReasonIndex = index;
@@ -102,6 +108,15 @@ class OrderController extends GetxController implements GetxService {
       update();
     }
   }
+
+  // Future<void> pickPrescriptionImage(bool isCamera) async {
+  //   _prescriptionImage = await ImagePicker().pickImage(source: isCamera ? ImageSource.camera : ImageSource.gallery, imageQuality: 50);
+  //   if(_prescriptionImage != null) {
+  //     _prescriptionImage = await NetworkInfo.compressImage(_prescriptionImage);
+  //     _rawPrescription = await _prescriptionImage.readAsBytes();
+  //   }
+  //   update();
+  // }
 
   Future<void> getRefundReasons()async {
     _selectedReasonIndex = 0;
@@ -144,14 +159,14 @@ class OrderController extends GetxController implements GetxService {
   }
 
 
-  Future<void> getRunningOrders(int offset, {bool isUpdate = false, bool fromDashBoard = false}) async {
+  Future<void> getRunningOrders(int offset, {bool isUpdate = false}) async {
     if(offset == 1) {
       _runningOrderModel = null;
       if(isUpdate) {
         update();
       }
     }
-    Response response = await orderRepo.getRunningOrderList(offset, fromDashBoard);
+    Response response = await orderRepo.getRunningOrderList(offset);
     if (response.statusCode == 200) {
       if (offset == 1) {
         _runningOrderModel = PaginatedOrderModel.fromJson(response.body);
@@ -193,7 +208,7 @@ class OrderController extends GetxController implements GetxService {
     _isLoading = true;
     _showCancelled = false;
 
-    if(_trackModel == null || _trackModel.orderType != 'parcel') {
+    if(_trackModel == null || (_trackModel.orderType != 'parcel' && !_trackModel.prescriptionOrder)) {
       Response response = await orderRepo.getOrderDetails(orderID);
       _isLoading = false;
       if (response.statusCode == 200) {
@@ -269,6 +284,30 @@ class OrderController extends GetxController implements GetxService {
     update();
     print(placeOrderBody.toJson());
     Response response = await orderRepo.placeOrder(placeOrderBody, _orderAttachment);
+    _isLoading = false;
+    if (response.statusCode == 200) {
+      String message = response.body['message'];
+      String orderID = response.body['order_id'].toString();
+      callback(true, message, orderID, zoneID);
+      _orderAttachment = null;
+      _rawAttachment = null;
+      print('-------- Order placed successfully $orderID ----------');
+    } else {
+      callback(false, response.statusText, '-1', zoneID);
+    }
+    update();
+  }
+
+  Future<void> placePrescriptionOrder(int storeId, int zoneID, double distance, String address, String longitude,
+      String latitude, String note, List<XFile> orderAttachment, Function(bool isSuccess, String message, String orderID, int zoneID) callback) async {
+
+    List<MultipartBody> _multiParts = [];
+    for(XFile file in orderAttachment) {
+      _multiParts.add(MultipartBody('order_attachment[]', file));
+    }
+    _isLoading = true;
+    update();
+    Response response = await orderRepo.placePrescriptionOrder(storeId, distance, address,longitude, latitude, note, _multiParts);
     _isLoading = false;
     if (response.statusCode == 200) {
       String message = response.body['message'];

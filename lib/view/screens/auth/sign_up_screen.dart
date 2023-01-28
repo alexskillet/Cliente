@@ -255,8 +255,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       showCustomSnackBar('password_should_be'.tr);
     }else if (_password != _confirmPassword) {
       showCustomSnackBar('confirm_password_does_not_matched'.tr);
-    }else if (_referCode.isNotEmpty && _referCode.length != 10) {
-      showCustomSnackBar('invalid_refer_code'.tr);
     }else {
       SignUpBody signUpBody = SignUpBody(
         fName: _firstName, lName: _lastName, email: _email, phone: _numberWithCountryCode,

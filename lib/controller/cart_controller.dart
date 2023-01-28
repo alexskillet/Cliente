@@ -13,6 +13,7 @@ class CartController extends GetxController implements GetxService {
   CartController({@required this.cartRepo});
 
   List<CartModel> _cartList = [];
+  List<CartModel> _allCartList = [];
 
   List<CartModel> get cartList => _cartList;
 
@@ -28,7 +29,7 @@ class CartController extends GetxController implements GetxService {
   List<List<AddOns>> get addOnsList => _addOnsList;
   List<bool> get availableList => _availableList;
 
-  double calculationCart(){
+  double calculationCart() {
     _addOnsList = [];
     _availableList = [];
     _itemPrice = 0;
@@ -60,7 +61,22 @@ class CartController extends GetxController implements GetxService {
 
   void getCartData() {
     _cartList = [];
-    _cartList.addAll(cartRepo.getCartList());
+    _allCartList = [];
+
+    _allCartList.addAll(cartRepo.getCartList());
+
+    if(Get.find<SplashController>().module != null){
+      _cartList = [];
+      for(CartModel cartItem in cartRepo.getCartList()){
+        if(cartItem.item.moduleId == Get.find<SplashController>().module.id){
+          _cartList.add(cartItem);
+        }
+      }
+    }else{
+      _cartList = [];
+      _cartList.addAll(cartRepo.getCartList());
+    }
+
     calculationCart();
   }
 
@@ -71,7 +87,8 @@ class CartController extends GetxController implements GetxService {
       _cartList.add(cartModel);
     }
     Get.find<ItemController>().setExistInCart(cartModel.item, notify: true);
-    cartRepo.addToCartList(_cartList);
+    _allCartList.add(cartModel);
+    cartRepo.addToCartList(_allCartList);
 
     calculationCart();
     update();
@@ -132,9 +149,9 @@ class CartController extends GetxController implements GetxService {
     return -1;
   }
 
-  bool existAnotherStoreItem(int storeID) {
+  bool existAnotherStoreItem(int storeID, int moduleId) {
     for(CartModel cartModel in _cartList) {
-      if(cartModel.item.storeId != storeID) {
+      if(cartModel.item.storeId != storeID && cartModel.item.moduleId == moduleId) {
         return true;
       }
     }
@@ -143,9 +160,15 @@ class CartController extends GetxController implements GetxService {
 
   void removeAllAndAddToCart(CartModel cartModel) {
     _cartList = [];
+    for(CartModel cartItem in cartRepo.getCartList()){
+      if(cartItem.item.moduleId != cartModel.item.moduleId){
+        _cartList.add(cartItem);
+      }
+    }
     _cartList.add(cartModel);
     Get.find<ItemController>().setExistInCart(cartModel.item, notify: true);
     cartRepo.addToCartList(_cartList);
+    getCartData();
     calculationCart();
     update();
   }

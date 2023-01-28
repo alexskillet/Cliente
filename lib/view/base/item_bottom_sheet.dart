@@ -38,11 +38,13 @@ class ItemBottomSheet extends StatefulWidget {
 }
 
 class _ItemBottomSheetState extends State<ItemBottomSheet> {
+  bool _newVariation = false;
 
   @override
   void initState() {
     super.initState();
 
+    _newVariation = Get.find<SplashController>().getModuleConfig(widget.item.moduleType).newVariation;
     Get.find<ItemController>().initData(widget.item, widget.cart);
   }
 
@@ -58,6 +60,7 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
             : BorderRadius.all(Radius.circular(Dimensions.RADIUS_EXTRA_LARGE)),
       ),
       child: GetBuilder<ItemController>(builder: (itemController) {
+        print(Get.find<SplashController>().configModel.moduleConfig.module.toJson());
         double _startingPrice;
         double _endingPrice;
         if (widget.item.choiceOptions.length != 0) {
@@ -72,37 +75,49 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
           _startingPrice = widget.item.price;
         }
 
-        List<String> _variationList = [];
-        for (int index = 0; index < widget.item.choiceOptions.length; index++) {
-          _variationList.add(widget.item.choiceOptions[index].options[itemController.variationIndex[index]].replaceAll(' ', ''));
-        }
-        String variationType = '';
-        bool isFirst = true;
-        _variationList.forEach((variation) {
-          if (isFirst) {
-            variationType = '$variationType$variation';
-            isFirst = false;
-          } else {
-            variationType = '$variationType-$variation';
-          }
-        });
-
-        double price = widget.item.price;
+        double _price = widget.item.price;
+        double _variationPrice = 0;
         Variation _variation;
-        int _stock = widget.item.stock;
-        for (Variation variation in widget.item.variations) {
-          if (variation.type == variationType) {
-            price = variation.price;
-            _variation = variation;
-            _stock = variation.stock;
-            break;
-          }
-        }
-
         double _discount = (widget.isCampaign || widget.item.storeDiscount == 0) ? widget.item.discount : widget.item.storeDiscount;
         String _discountType = (widget.isCampaign || widget.item.storeDiscount == 0) ? widget.item.discountType : 'percent';
-        double priceWithDiscount = PriceConverter.convertWithDiscount(price, _discount, _discountType);
-        double priceWithQuantity = priceWithDiscount * itemController.quantity;
+        int _stock = widget.item.stock ?? 0;
+
+        if(_newVariation) {
+          for(int index = 0; index< widget.item.foodVariations.length; index++) {
+            for(int i=0; i<widget.item.foodVariations[index].variationValues.length; i++) {
+              if(itemController.selectedVariations[index][i]) {
+                _variationPrice += widget.item.foodVariations[index].variationValues[i].optionPrice;
+              }
+            }
+          }
+        }else {
+          List<String> _variationList = [];
+          for (int index = 0; index < widget.item.choiceOptions.length; index++) {
+            _variationList.add(widget.item.choiceOptions[index].options[itemController.variationIndex[index]].replaceAll(' ', ''));
+          }
+          String variationType = '';
+          bool isFirst = true;
+          _variationList.forEach((variation) {
+            if (isFirst) {
+              variationType = '$variationType$variation';
+              isFirst = false;
+            } else {
+              variationType = '$variationType-$variation';
+            }
+          });
+
+          for (Variation variation in widget.item.variations) {
+            if (variation.type == variationType) {
+              _price = variation.price;
+              _variation = variation;
+              _stock = variation.stock;
+              break;
+            }
+          }
+        }
+
+        _price += _variationPrice;
+        double priceWithDiscount = PriceConverter.convertWithDiscount(_price, _discount, _discountType);
         double addonsCost = 0;
         List<AddOn> _addOnIdList = [];
         List<AddOns> _addOnsList = [];
@@ -113,18 +128,12 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
             _addOnsList.add(widget.item.addOns[index]);
           }
         }
-        double priceWithAddons = priceWithQuantity + (Get.find<SplashController>().configModel.moduleConfig.module.addOn ? addonsCost : 0);
-        // bool _isRestAvailable = DateConverter.isAvailable(widget.product.restaurantOpeningTime, widget.product.restaurantClosingTime);
         bool _isAvailable = DateConverter.isAvailable(widget.item.availableTimeStarts, widget.item.availableTimeEnds);
 
-        CartModel _cartModel = CartModel(
-          price, priceWithDiscount, _variation != null ? [_variation] : [],
-          (price - PriceConverter.convertWithDiscount(price, _discount, _discountType)),
-          itemController.quantity, _addOnIdList, _addOnsList, widget.isCampaign, _stock, widget.item,
-        );
-
-        return SingleChildScrollView(
-          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.end, children: [
+        return Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.end, children: [
 
             InkWell(onTap: () => Get.back(), child: Padding(
               padding:  EdgeInsets.only(right: Dimensions.PADDING_SIZE_EXTRA_SMALL),
@@ -184,14 +193,14 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
                           ),
                         ),
                       ),
-                      RatingBar(rating: widget.item.avgRating, size: 15, ratingCount: widget.item.ratingCount),
+                      !widget.isCampaign ? RatingBar(rating: widget.item.avgRating, size: 15, ratingCount: widget.item.ratingCount) : SizedBox(),
                       Text(
                         '${PriceConverter.convertPrice(_startingPrice, discount: _discount, discountType: _discountType)}'
                             '${_endingPrice != null ? ' - ${PriceConverter.convertPrice(_endingPrice, discount: _discount,
                             discountType: _discountType)}' : ''}',
                         style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
                       ),
-                      price > priceWithDiscount ? Text(
+                      _price > priceWithDiscount ? Text(
                         '${PriceConverter.convertPrice(_startingPrice)}'
                             '${_endingPrice != null ? ' - ${PriceConverter.convertPrice(_endingPrice)}' : ''}',
                         style: robotoMedium.copyWith(color: Theme.of(context).disabledColor, decoration: TextDecoration.lineThrough),
@@ -248,58 +257,11 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
                 ) : SizedBox(),
 
                 // Variation
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.item.choiceOptions.length,
-                  physics: NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  itemBuilder: (context, index) {
-                    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(widget.item.choiceOptions[index].title, style: robotoMedium),
-                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                      GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: ResponsiveHelper.isMobile(context) ? 3 : 4,
-                          crossAxisSpacing: 20,
-                          mainAxisSpacing: 10,
-                          childAspectRatio: (1 / 0.25),
-                        ),
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        itemCount: widget.item.choiceOptions[index].options.length,
-                        itemBuilder: (context, i) {
-                          return InkWell(
-                            onTap: () {
-                              itemController.setCartVariationIndex(index, i, widget.item);
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                              decoration: BoxDecoration(
-                                color:
-                                itemController.variationIndex[index] != i ? Theme.of(context).backgroundColor : Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                                border:
-                                itemController.variationIndex[index] != i ? Border.all(color: Theme.of(context).disabledColor, width: 2) : null,
-                              ),
-                              child: Text(
-                                widget.item.choiceOptions[index].options[i].trim(),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: robotoRegular.copyWith(
-                                  color: itemController.variationIndex[index] != i ? Colors.black : Colors.white,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      SizedBox(height: index != widget.item.choiceOptions.length - 1 ? Dimensions.PADDING_SIZE_LARGE : 0),
-                    ]);
-                  },
+                _newVariation ? NewVariationView(
+                  item: widget.item, itemController: itemController,
+                ) : VariationView(
+                  item: widget.item, itemController: itemController,
                 ),
-                SizedBox(height: widget.item.choiceOptions.length > 0 ? Dimensions.PADDING_SIZE_LARGE : 0),
 
                 // Quantity
                 Row(children: [
@@ -419,7 +381,20 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
                 Row(children: [
                   Text('${'total_amount'.tr}:', style: robotoMedium),
                   SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  Text(PriceConverter.convertPrice(priceWithAddons), style: robotoBold.copyWith(color: Theme.of(context).primaryColor)),
+                  Text(
+                    PriceConverter.convertPrice(
+                      (_price * itemController.quantity) + addonsCost,
+                      discount: _discount, discountType: _discountType,
+                    ),
+                    style: robotoBold.copyWith(color: Theme.of(context).primaryColor),
+                  ),
+                  SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  _discount > 0 ? Text(
+                    PriceConverter.convertPrice(
+                      (_price * itemController.quantity) + addonsCost,
+                    ),
+                    style: robotoMedium.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall, decoration: TextDecoration.lineThrough),
+                  ) : SizedBox(),
                 ]),
                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
@@ -470,29 +445,57 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
                         ? 'out_of_stock'.tr : widget.isCampaign ? 'order_now'.tr
                         : (widget.cart != null || itemController.cartIndex != -1) ? 'update_in_cart'.tr : 'add_to_cart'.tr,
                     onPressed: (Get.find<SplashController>().configModel.moduleConfig.module.stock && _stock <= 0) ? null : () {
-                      Get.back();
-                      if(widget.isCampaign) {
-                        Get.toNamed(RouteHelper.getCheckoutRoute('campaign'), arguments: CheckoutScreen(
-                          fromCart: false, cartList: [_cartModel],
-                        ));
+
+                      String _invalid;
+                      if(_newVariation) {
+                        for(int index=0; index<widget.item.foodVariations.length; index++) {
+                          if(!widget.item.foodVariations[index].multiSelect && widget.item.foodVariations[index].required
+                              && !itemController.selectedVariations[index].contains(true)) {
+                            _invalid = '${'choose_a_variation_from'.tr} ${widget.item.foodVariations[index].name}';
+                            break;
+                          }else if(widget.item.foodVariations[index].multiSelect && (widget.item.foodVariations[index].required
+                              || itemController.selectedVariations[index].contains(true)) && widget.item.foodVariations[index].min
+                              > itemController.selectedVariationLength(itemController.selectedVariations, index)) {
+                            _invalid = '${'you_need_to_select_minimum'.tr} ${widget.item.foodVariations[index].min} '
+                                '${'to_maximum'.tr} ${widget.item.foodVariations[index].max} ${'options_from'.tr}'
+                                ' ${widget.item.foodVariations[index].name} ${'variation'.tr}';
+                            break;
+                          }
+                        }
+                      }
+
+                      if(_invalid != null) {
+                        showCustomSnackBar(_invalid, getXSnackBar: true);
                       }else {
-                        if (Get.find<CartController>().existAnotherStoreItem(_cartModel.item.storeId)) {
-                          Get.dialog(ConfirmationDialog(
-                            icon: Images.warning,
-                            title: 'are_you_sure_to_reset'.tr,
-                            description: Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
-                                ? 'if_you_continue'.tr : 'if_you_continue_without_another_store'.tr,
-                            onYesPressed: () {
-                              Get.back();
-                              Get.find<CartController>().removeAllAndAddToCart(_cartModel);
-                              showCartSnackBar(context);
-                            },
-                          ), barrierDismissible: false);
-                        } else {
-                          Get.find<CartController>().addToCart(
-                            _cartModel, widget.cartIndex != null ? widget.cartIndex : itemController.cartIndex,
-                          );
-                          showCartSnackBar(context);
+                        Get.back();
+                        CartModel _cartModel = CartModel(
+                          _price, priceWithDiscount, _variation != null ? [_variation] : [], itemController.selectedVariations,
+                          (_price - PriceConverter.convertWithDiscount(_price, _discount, _discountType)),
+                          itemController.quantity, _addOnIdList, _addOnsList, widget.isCampaign, _stock, widget.item,
+                        );
+                        if(widget.isCampaign) {
+                          Get.toNamed(RouteHelper.getCheckoutRoute('campaign'), arguments: CheckoutScreen(
+                            storeId: null, fromCart: false, cartList: [_cartModel],
+                          ));
+                        }else {
+                          if (Get.find<CartController>().existAnotherStoreItem(_cartModel.item.storeId, Get.find<SplashController>().module.id)) {
+                            Get.dialog(ConfirmationDialog(
+                              icon: Images.warning,
+                              title: 'are_you_sure_to_reset'.tr,
+                              description: Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+                                  ? 'if_you_continue'.tr : 'if_you_continue_without_another_store'.tr,
+                              onYesPressed: () {
+                                Get.back();
+                                Get.find<CartController>().removeAllAndAddToCart(_cartModel);
+                                showCartSnackBar(context);
+                              },
+                            ), barrierDismissible: false);
+                          } else {
+                            Get.find<CartController>().addToCart(
+                              _cartModel, widget.cartIndex != null ? widget.cartIndex : itemController.cartIndex,
+                            );
+                            showCartSnackBar(context);
+                          }
                         }
                       }
                     },
@@ -502,11 +505,168 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
               ]),
             ),
           ]),
-        );
+        )]);
       }),
     );
   }
+}
 
+class VariationView extends StatelessWidget {
+  final Item item;
+  final ItemController itemController;
+  const VariationView({Key key, @required this.item, @required this.itemController}) : super(key: key);
 
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: item.choiceOptions.length,
+      physics: NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.only(bottom: item.choiceOptions.length > 0 ? Dimensions.PADDING_SIZE_LARGE : 0),
+      itemBuilder: (context, index) {
+        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(item.choiceOptions[index].title, style: robotoMedium),
+          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+              color: Theme.of(context).cardColor,
+            ),
+            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
+              itemCount: item.choiceOptions[index].options.length,
+              itemBuilder: (context, i) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  child: InkWell(
+                    onTap: () {
+                      itemController.setCartVariationIndex(index, i, item);
+                    },
+                    child: Row(children: [
+                      Expanded(child: Text(
+                        item.choiceOptions[index].options[i].trim(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: robotoRegular,
+                      )),
+                      SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                      Radio<int>(
+                        value: i,
+                        groupValue: itemController.variationIndex[index],
+                        onChanged: (int value) => itemController.setCartVariationIndex(index, i, item),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        activeColor: Theme.of(context).primaryColor,
+                      ),
+                    ]),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: index != item.choiceOptions.length - 1 ? Dimensions.PADDING_SIZE_LARGE : 0),
+        ]);
+      },
+    );
+  }
+}
+
+class NewVariationView extends StatelessWidget {
+  final Item item;
+  final ItemController itemController;
+  const NewVariationView({Key key, @required this.item, @required this.itemController}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return item.foodVariations != null ? ListView.builder(
+      shrinkWrap: true,
+      itemCount: item.foodVariations.length,
+      physics: NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.only(bottom: (item.foodVariations != null && item.foodVariations.length > 0) ? Dimensions.PADDING_SIZE_LARGE : 0),
+      itemBuilder: (context, index) {
+        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+
+          Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
+            Text(item.foodVariations[index].name, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
+
+            Text(
+              ' (${item.foodVariations[index].required ? 'required'.tr : 'optional'.tr})',
+              style: robotoMedium.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeSmall),
+            ),
+          ]),
+          SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+
+          Row(children: [
+            (item.foodVariations[index].multiSelect) ? Text(
+              '${'you_need_to_select_minimum'.tr} ${'${item.foodVariations[index].min}'
+                  ' ${'to_maximum'.tr} ${item.foodVariations[index].max} ${'options'.tr}'}',
+              style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor),
+            ) : SizedBox(),
+          ]),
+          SizedBox(height: (item.foodVariations[index].multiSelect) ? Dimensions.PADDING_SIZE_EXTRA_SMALL : 0),
+
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            itemCount: item.foodVariations[index].variationValues.length,
+            itemBuilder: (context, i) {
+              return InkWell(
+                onTap: () {
+                  itemController.setNewCartVariationIndex(index, i, item);
+                },
+                child: Row(children: [
+
+                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+
+                    item.foodVariations[index].multiSelect ? Checkbox(
+                      value: itemController.selectedVariations[index][i],
+                      activeColor: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
+                      onChanged:(bool newValue) {
+                        itemController.setNewCartVariationIndex(index, i, item);
+                      },
+                      visualDensity: VisualDensity(horizontal: -3, vertical: -3),
+                    ) : Radio(
+                      value: i,
+                      groupValue: itemController.selectedVariations[index].indexOf(true),
+                      onChanged: (value) {
+                        itemController.setNewCartVariationIndex(index, i, item);
+                      },
+                      activeColor: Theme.of(context).primaryColor,
+                      toggleable: false,
+                      visualDensity: VisualDensity(horizontal: -3, vertical: -3),
+                    ),
+
+                    Text(
+                      item.foodVariations[index].variationValues[i].level.trim(),
+                      maxLines: 1, overflow: TextOverflow.ellipsis,
+                      style: itemController.selectedVariations[index][i] ? robotoMedium : robotoRegular,
+                    ),
+
+                  ]),
+
+                  Spacer(),
+
+                  Text(
+                    '${item.foodVariations[index].variationValues[i].optionPrice > 0 ? '+'
+                        + PriceConverter.convertPrice(item.foodVariations[index].variationValues[i].optionPrice) : 'free'.tr}',
+                    maxLines: 1, overflow: TextOverflow.ellipsis,
+                    style: itemController.selectedVariations[index][i] ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall)
+                        : robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor),
+                  ),
+
+                ]),
+              );
+            },
+          ),
+
+          SizedBox(height: index != item.foodVariations.length - 1 ? Dimensions.PADDING_SIZE_LARGE : 0),
+        ]);
+      },
+    ) : SizedBox();
+  }
 }
 

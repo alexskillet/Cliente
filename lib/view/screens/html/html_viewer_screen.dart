@@ -47,7 +47,7 @@ class _HtmlViewerScreenState extends State<HtmlViewerScreen> {
               width: Dimensions.WEB_MAX_WIDTH,
               color: Theme.of(context).cardColor,
               padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-              child: Column(children: [
+              child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
 
                 ResponsiveHelper.isDesktop(context) ? Container(
                   height: 50, alignment: Alignment.center, color: Theme.of(context).cardColor, width: Dimensions.WEB_MAX_WIDTH,

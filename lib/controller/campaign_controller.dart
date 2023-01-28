@@ -17,6 +17,10 @@ class CampaignController extends GetxController implements GetxService {
   BasicCampaignModel get campaign => _campaign;
   List<Item> get itemCampaignList => _itemCampaignList;
 
+  void itemCampaignNull(){
+    _itemCampaignList = null;
+  }
+
   Future<void> getBasicCampaignList(bool reload) async {
     if(_basicCampaignList == null || reload) {
       Response response = await campaignRepo.getBasicCampaignList();
@@ -41,12 +45,20 @@ class CampaignController extends GetxController implements GetxService {
     update();
   }
 
-  Future<void> getItemCampaignList(bool reload) async {
+  Future<void> getItemCampaignList(bool reload, String moduleType) async {
     if(_itemCampaignList == null || reload) {
       Response response = await campaignRepo.getItemCampaignList();
       if (response.statusCode == 200) {
         _itemCampaignList = [];
-        response.body.forEach((campaign) => _itemCampaignList.add(Item.fromJson(campaign)));
+        List<Item> _campaign = [];
+        response.body.forEach((campaign) => _campaign.add(Item.fromJson(campaign)));
+        _campaign.forEach((campaign) {
+          if(campaign.moduleType == 'food' && moduleType == 'food' && campaign.foodVariations.isNotEmpty){
+            _itemCampaignList.add(campaign);
+          }else if(moduleType != 'food' && campaign.foodVariations.isEmpty){
+            _itemCampaignList.add(campaign);
+          }
+        });
       } else {
         ApiChecker.checkApi(response);
       }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class StoreModel {
   int totalSize;
   String limit;
@@ -66,6 +68,7 @@ class Store {
   Discount discount;
   List<Schedules> schedules;
   int vendorId;
+  bool prescriptionOrder;
 
   Store(
       {this.id,
@@ -103,6 +106,7 @@ class Store {
         this.discount,
         this.schedules,
         this.vendorId,
+        this.prescriptionOrder,
       });
 
   Store.fromJson(Map<String, dynamic> json) {
@@ -123,7 +127,7 @@ class Store {
     scheduleOrder = json['schedule_order'];
     avgRating = json['avg_rating'].toDouble();
     tax = json['tax'] != null ? json['tax'].toDouble() : null;
-    ratingCount = json['rating_count '];
+    ratingCount = json['rating_count'];
     selfDeliverySystem = json['self_delivery_system'];
     posSystem = json['pos_system'];
     minimumShippingCharge = json['minimum_shipping_charge'].toDouble();
@@ -146,6 +150,7 @@ class Store {
       });
     }
     vendorId = json['vendor_id'];
+    prescriptionOrder = json['prescription_order'] != null ? json['prescription_order'] : false;
   }
 
   Map<String, dynamic> toJson() {
@@ -189,6 +194,7 @@ class Store {
       data['schedules'] = this.schedules.map((v) => v.toJson()).toList();
     }
     data['vendor_id'] = this.vendorId;
+    data['prescription_order'] = this.prescriptionOrder;
     return data;
   }
 }
@@ -283,6 +289,47 @@ class Schedules {
     data['day'] = this.day;
     data['opening_time'] = this.openingTime;
     data['closing_time'] = this.closingTime;
+    return data;
+  }
+}
+
+class Refund {
+  int id;
+  int orderId;
+  List<String> image;
+  String customerReason;
+  String customerNote;
+  String adminNote;
+
+  Refund(
+      {this.id,
+        this.orderId,
+        this.image,
+        this.customerReason,
+        this.customerNote,
+        this.adminNote,
+      });
+
+  Refund.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    orderId = json['order_id'];
+    if(json['image'] != null){
+      image = [];
+      jsonDecode(json['image']).forEach((v) => image.add(v));
+    }
+    customerReason = json['customer_reason'];
+    customerNote = json['customer_note'];
+    adminNote = json['admin_note'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['order_id'] = this.orderId;
+    data['image'] = this.image;
+    data['customer_reason'] = this.customerReason;
+    data['customer_note'] = this.customerNote;
+    data['admin_note'] = this.adminNote;
     return data;
   }
 }

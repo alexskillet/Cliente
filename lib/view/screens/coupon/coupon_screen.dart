@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:sixam_mart/controller/auth_controller.dart';
 import 'package:sixam_mart/controller/coupon_controller.dart';
+import 'package:sixam_mart/controller/localization_controller.dart';
 import 'package:sixam_mart/controller/splash_controller.dart';
 import 'package:sixam_mart/helper/price_converter.dart';
 import 'package:sixam_mart/helper/responsive_helper.dart';
@@ -66,15 +69,18 @@ class _CouponScreenState extends State<CouponScreen> {
 
                       ClipRRect(
                         borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                        child: Image.asset(
-                          Images.coupon_bg,
-                          height: ResponsiveHelper.isMobilePhone() ? 120 : 140, width: MediaQuery.of(context).size.width,
-                          color: Theme.of(context).primaryColor, fit: BoxFit.cover,
+                        child: Transform.rotate(
+                          angle: Get.find<LocalizationController>().isLtr ? 0 : pi,
+                          child: Image.asset(
+                            Images.coupon_bg,
+                            height: ResponsiveHelper.isMobilePhone() ? 130 : 140, width: MediaQuery.of(context).size.width,
+                            color: Theme.of(context).primaryColor, fit: BoxFit.cover,
+                          ),
                         ),
                       ),
 
                       Container(
-                        height: ResponsiveHelper.isMobilePhone() ? 120 : 140,
+                        height: ResponsiveHelper.isMobilePhone() ? 125 : 140,
                         alignment: Alignment.center,
                         child: Row(children: [
 

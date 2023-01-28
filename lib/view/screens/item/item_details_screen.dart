@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sixam_mart/controller/cart_controller.dart';
@@ -40,6 +42,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   void initState() {
     super.initState();
 
+    print('==------------>product item : ${jsonEncode(widget.item)}');
     Get.find<ItemController>().getProductDetails(widget.item);
   }
 
@@ -68,7 +71,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
           double price = itemController.item.price;
           Variation _variation;
-          _stock = itemController.item.stock;
+          _stock = itemController.item.stock ?? 0;
           for (Variation variation in itemController.item.variations) {
             if (variation.type == variationType) {
               price = variation.price;
@@ -94,7 +97,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
           }
 
           _cartModel = CartModel(
-            price, priceWithDiscount, _variation != null ? [_variation] : [],
+            price, priceWithDiscount, _variation != null ? [_variation] : [], [],
             (price - PriceConverter.convertWithDiscount(price, _discount, _discountType)),
             itemController.quantity, _addOnIdList, _addOnsList, itemController.item.availableDateStarts != null, _stock, itemController.item,
           );
@@ -119,7 +122,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   ItemImageView(item: itemController.item),
                   SizedBox(height: 20),
 
-                  ItemTitleView(item: itemController.item, inStorePage: widget.inStorePage),
+                  ItemTitleView(item: itemController.item, inStorePage: widget.inStorePage, isCampaign: itemController.item.availableDateStarts != null),
                   Divider(height: 20, thickness: 2),
 
                   // Variation
@@ -248,10 +251,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   if(!Get.find<SplashController>().configModel.moduleConfig.module.stock || _stock > 0) {
                     if(itemController.item.availableDateStarts != null) {
                       Get.toNamed(RouteHelper.getCheckoutRoute('campaign'), arguments: CheckoutScreen(
-                        fromCart: false, cartList: [_cartModel],
+                        storeId: null, fromCart: false, cartList: [_cartModel],
                       ));
                     }else {
-                      if (Get.find<CartController>().existAnotherStoreItem(_cartModel.item.storeId)) {
+                      if (Get.find<CartController>().existAnotherStoreItem(_cartModel.item.storeId, Get.find<SplashController>().module.id)) {
                         Get.dialog(ConfirmationDialog(
                           icon: Images.warning,
                           title: 'are_you_sure_to_reset'.tr,

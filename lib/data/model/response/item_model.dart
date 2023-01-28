@@ -1,3 +1,6 @@
+import 'package:get/get.dart';
+import 'package:sixam_mart/controller/splash_controller.dart';
+
 class ItemModel {
   int totalSize;
   String limit;
@@ -13,7 +16,11 @@ class ItemModel {
     if (json['products'] != null) {
       items = [];
       json['products'].forEach((v) {
-        items.add(new Item.fromJson(v));
+        if(!Get.find<SplashController>().getModuleConfig(v['module_type']).newVariation
+            || (v['variations'] == null || v['variations'].isEmpty
+                || (v['food_variations'] != null && v['food_variations'].isNotEmpty))) {
+          items.add(new Item.fromJson(v));
+        }
       });
     }
   }
@@ -39,6 +46,7 @@ class Item {
   int categoryId;
   List<CategoryIds> categoryIds;
   List<Variation> variations;
+  List<FoodVariation> foodVariations;
   List<AddOns> addOns;
   List<ChoiceOptions> choiceOptions;
   double price;
@@ -56,6 +64,7 @@ class Item {
   int ratingCount;
   int veg;
   int moduleId;
+  String moduleType;
   String unitType;
   int stock;
   String availableDateStarts;
@@ -69,6 +78,7 @@ class Item {
         this.categoryId,
         this.categoryIds,
         this.variations,
+        this.foodVariations,
         this.addOns,
         this.choiceOptions,
         this.price,
@@ -86,6 +96,7 @@ class Item {
         this.ratingCount,
         this.veg,
         this.moduleId,
+        this.moduleType,
         this.unitType,
         this.stock,
       });
@@ -103,10 +114,16 @@ class Item {
         categoryIds.add(new CategoryIds.fromJson(v));
       });
     }
+    variations = [];
     if (json['variations'] != null) {
-      variations = [];
       json['variations'].forEach((v) {
         variations.add(new Variation.fromJson(v));
+      });
+    }
+    foodVariations = [];
+    if (json['food_variations'] != null && json['food_variations'].isNotEmpty) {
+      json['food_variations'].forEach((v) {
+        foodVariations.add(new FoodVariation.fromJson(v));
       });
     }
     if (json['add_ons'] != null) {
@@ -135,6 +152,7 @@ class Item {
     avgRating = json['avg_rating'].toDouble();
     ratingCount = json['rating_count'];
     moduleId = json['module_id'];
+    moduleType = json['module_type'];
     veg = json['veg'] != null ? int.parse(json['veg'].toString()) : 0;
     stock = json['stock'];
     unitType = json['unit_type'];
@@ -154,6 +172,9 @@ class Item {
     }
     if (this.variations != null) {
       data['variations'] = this.variations.map((v) => v.toJson()).toList();
+    }
+    if (this.foodVariations != null) {
+      data['food_variations'] = this.foodVariations.map((v) => v.toJson()).toList();
     }
     if (this.addOns != null) {
       data['add_ons'] = this.addOns.map((v) => v.toJson()).toList();
@@ -177,6 +198,7 @@ class Item {
     data['rating_count'] = this.ratingCount;
     data['veg'] = this.veg;
     data['module_id'] = this.moduleId;
+    data['module_type'] = this.moduleType;
     data['stock'] = this.stock;
     data['unit_type'] = this.unitType;
     data['available_date_starts'] = this.availableDateStarts;
@@ -265,6 +287,65 @@ class ChoiceOptions {
     data['name'] = this.name;
     data['title'] = this.title;
     data['options'] = this.options;
+    return data;
+  }
+}
+
+class FoodVariation {
+  String name;
+  bool multiSelect;
+  int min;
+  int max;
+  bool required;
+  List<VariationValue> variationValues;
+
+  FoodVariation({this.name, this.multiSelect, this.min, this.max, this.required, this.variationValues});
+
+  FoodVariation.fromJson(Map<String, dynamic> json) {
+    if(json['max'] != null) {
+      name = json['name'];
+      multiSelect = json['type'] == 'multi';
+      min =  multiSelect ? int.parse(json['min'].toString()) : 0;
+      max = multiSelect ? int.parse(json['max'].toString()) : 0;
+      required = json['required'] == 'on';
+      if (json['values'] != null) {
+        variationValues = [];
+        json['values'].forEach((v) {
+          variationValues.add(new VariationValue.fromJson(v));
+        });
+      }
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['type'] = this.multiSelect;
+    data['min'] = this.min;
+    data['max'] = this.max;
+    data['required'] = this.required;
+    if (this.variationValues != null) {
+      data['values'] = this.variationValues.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class VariationValue {
+  String level;
+  double optionPrice;
+
+  VariationValue({this.level, this.optionPrice});
+
+  VariationValue.fromJson(Map<String, dynamic> json) {
+    level = json['label'];
+    optionPrice = double.parse(json['optionPrice'].toString());
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['label'] = this.level;
+    data['optionPrice'] = this.optionPrice;
     return data;
   }
 }

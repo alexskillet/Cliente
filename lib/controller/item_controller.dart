@@ -25,6 +25,7 @@ class ItemController extends GetxController implements GetxService {
   List<Item> _reviewedItemList;
   bool _isLoading = false;
   List<int> _variationIndex;
+  List<List<bool>> _selectedVariations = [];
   int _quantity = 1;
   List<bool> _addOnActiveList = [];
   List<int> _addOnQtyList = [];
@@ -41,6 +42,7 @@ class ItemController extends GetxController implements GetxService {
   List<Item> get reviewedItemList => _reviewedItemList;
   bool get isLoading => _isLoading;
   List<int> get variationIndex => _variationIndex;
+  List<List<bool>> get selectedVariations => _selectedVariations;
   int get quantity => _quantity;
   List<bool> get addOnActiveList => _addOnActiveList;
   List<int> get addOnQtyList => _addOnQtyList;
@@ -104,22 +106,9 @@ class ItemController extends GetxController implements GetxService {
     _variationIndex = [];
     _addOnQtyList = [];
     _addOnActiveList = [];
+    _selectedVariations = [];
     if(cart != null) {
       _quantity = cart.quantity;
-      List<String> _variationTypes = [];
-      if(cart.variation.length != null && cart.variation.length > 0 && cart.variation[0].type != null) {
-        _variationTypes.addAll(cart.variation[0].type.split('-'));
-      }
-      int _varIndex = 0;
-      item.choiceOptions.forEach((choiceOption) {
-        for(int index=0; index<choiceOption.options.length; index++) {
-          if(choiceOption.options[index].trim().replaceAll(' ', '') == _variationTypes[_varIndex].trim()) {
-            _variationIndex.add(index);
-            break;
-          }
-        }
-        _varIndex++;
-      });
       List<int> _addOnIdList = [];
       cart.addOnIds.forEach((addOnId) => _addOnIdList.add(addOnId.id));
       item.addOns.forEach((addOn) {
@@ -131,34 +120,67 @@ class ItemController extends GetxController implements GetxService {
           _addOnQtyList.add(1);
         }
       });
+
+      if(Get.find<SplashController>().getModuleConfig(item.moduleType).newVariation) {
+        _selectedVariations.addAll(cart.foodVariations);
+      }else {
+        List<String> _variationTypes = [];
+        if(cart.variation.length != null && cart.variation.length > 0 && cart.variation[0].type != null) {
+          _variationTypes.addAll(cart.variation[0].type.split('-'));
+        }
+        int _varIndex = 0;
+        item.choiceOptions.forEach((choiceOption) {
+          for(int index=0; index<choiceOption.options.length; index++) {
+            if(choiceOption.options[index].trim().replaceAll(' ', '') == _variationTypes[_varIndex].trim()) {
+              _variationIndex.add(index);
+              break;
+            }
+          }
+          _varIndex++;
+        });
+      }
     }else {
+      if(Get.find<SplashController>().getModuleConfig(item.moduleType).newVariation) {
+        for(int index=0; index<item.foodVariations.length; index++) {
+          _selectedVariations.add([]);
+          for(int i=0; i < item.foodVariations[index].variationValues.length; i++) {
+            _selectedVariations[index].add(false);
+          }
+        }
+      }else {
+        item.choiceOptions.forEach((element) => _variationIndex.add(0));
+      }
       _quantity = 1;
-      item.choiceOptions.forEach((element) => _variationIndex.add(0));
       item.addOns.forEach((addOn) {
         _addOnActiveList.add(false);
         _addOnQtyList.add(1);
       });
-      print('-------$_variationIndex');
       setExistInCart(item, notify: false);
     }
   }
 
   int setExistInCart(Item item, {bool notify = false}) {
-    List<String> _variationList = [];
-    for (int index = 0; index < item.choiceOptions.length; index++) {
-      _variationList.add(item.choiceOptions[index].options[_variationIndex[index]].replaceAll(' ', ''));
-    }
     String variationType = '';
-    bool isFirst = true;
-    _variationList.forEach((variation) {
-      if (isFirst) {
-        variationType = '$variationType$variation';
-        isFirst = false;
-      } else {
-        variationType = '$variationType-$variation';
+    if(!Get.find<SplashController>().getModuleConfig(Get.find<SplashController>().module.moduleType).newVariation){
+      List<String> _variationList = [];
+      for (int index = 0; index < item.choiceOptions.length; index++) {
+        _variationList.add(item.choiceOptions[index].options[_variationIndex[index]].replaceAll(' ', ''));
       }
-    });
-    _cartIndex = Get.find<CartController>().isExistInCart(item.id, variationType, false, null);
+      bool isFirst = true;
+      _variationList.forEach((variation) {
+        if (isFirst) {
+          variationType = '$variationType$variation';
+          isFirst = false;
+        } else {
+          variationType = '$variationType-$variation';
+        }
+      });
+    }
+    if(Get.find<SplashController>().getModuleConfig(Get.find<SplashController>().module.moduleType).newVariation) {
+      _cartIndex = -1;
+    }else {
+      _cartIndex = Get.find<CartController>().isExistInCart(item.id, variationType, false, null);
+    }
     if(_cartIndex != -1) {
       _quantity = Get.find<CartController>().cartList[_cartIndex].quantity;
       _addOnActiveList = [];
@@ -208,6 +230,42 @@ class ItemController extends GetxController implements GetxService {
     _quantity = 1;
     setExistInCart(item);
     update();
+  }
+
+  void setNewCartVariationIndex(int index, int i, Item item) {
+    if(!item.foodVariations[index].multiSelect) {
+      for(int j = 0; j < _selectedVariations[index].length; j++) {
+        if(item.foodVariations[index].required){
+          _selectedVariations[index][j] = j == i;
+        }else{
+          if(_selectedVariations[index][j]){
+            _selectedVariations[index][j] = false;
+          }else{
+            _selectedVariations[index][j] = j == i;
+          }
+        }
+      }
+    } else {
+      if(!_selectedVariations[index][i] && selectedVariationLength(_selectedVariations, index) >= item.foodVariations[index].max) {
+        showCustomSnackBar(
+          '${'maximum_variation_for'.tr} ${item.foodVariations[index].name} ${'is'.tr} ${item.foodVariations[index].max}',
+          getXSnackBar: true,
+        );
+      }else {
+        _selectedVariations[index][i] = !_selectedVariations[index][i];
+      }
+    }
+    update();
+  }
+
+  int selectedVariationLength(List<List<bool>> selectedVariations, int index) {
+    int _length = 0;
+    for(bool isSelected in selectedVariations[index]) {
+      if(isSelected) {
+        _length++;
+      }
+    }
+    return _length;
   }
 
   void addAddOn(bool isAdd, int index) {
@@ -348,7 +406,9 @@ class ItemController extends GetxController implements GetxService {
   String getDiscountType(Item item) => item.storeDiscount == 0 ? item.discountType : 'percent';
 
   void navigateToItemPage(Item item, BuildContext context, {bool inStore = false, bool isCampaign = false}) {
-    if(Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText) {
+    print('----->> ${Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText}/// module type  ---> ${item.moduleType}');
+    print('---item : $item, ---> stock : ${item.stock}');
+    if(Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText || item.moduleType == 'food') {
       ResponsiveHelper.isMobile(context) ? Get.bottomSheet(
         ItemBottomSheet(item: item, inStorePage: inStore, isCampaign: isCampaign),
         backgroundColor: Colors.transparent, isScrollControlled: true,

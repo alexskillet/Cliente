@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:sixam_mart/controller/cart_controller.dart';
 import 'package:sixam_mart/controller/category_controller.dart';
 import 'package:sixam_mart/controller/localization_controller.dart';
@@ -18,6 +19,7 @@ import 'package:sixam_mart/view/base/item_view.dart';
 import 'package:sixam_mart/view/base/menu_drawer.dart';
 import 'package:sixam_mart/view/base/paginated_list_view.dart';
 import 'package:sixam_mart/view/base/web_menu_bar.dart';
+import 'package:sixam_mart/view/screens/checkout/checkout_screen.dart';
 import 'package:sixam_mart/view/screens/store/widget/store_description_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,11 +43,28 @@ class _StoreScreenState extends State<StoreScreen> {
   void initState() {
     super.initState();
 
-    Get.find<StoreController>().getStoreDetails(Store(id: widget.store.id), widget.fromModule);
+    Get.find<StoreController>().hideAnimation();
+    Get.find<StoreController>().getStoreDetails(Store(id: widget.store.id), widget.fromModule).then((value) {
+      Get.find<StoreController>().showButtonAnimation();
+    });
     if(Get.find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(true);
     }
     Get.find<StoreController>().getStoreItemList(widget.store.id, 1, 'all', false);
+
+    scrollController.addListener(() {
+      if(scrollController.position.userScrollDirection == ScrollDirection.reverse){
+        if(Get.find<StoreController>().showFavButton){
+          Get.find<StoreController>().changeFavVisibility();
+          Get.find<StoreController>().hideAnimation();
+        }
+      }else{
+        if(!Get.find<StoreController>().showFavButton){
+          Get.find<StoreController>().changeFavVisibility();
+          Get.find<StoreController>().showButtonAnimation();
+        }
+      }
+    });
   }
 
   @override
@@ -118,15 +137,17 @@ class _StoreScreenState extends State<StoreScreen> {
                     image: '${Get.find<SplashController>().configModel.baseUrls.storeCoverPhotoUrl}/${_store.coverPhoto}',
                   ),
                 ),
-                actions: [IconButton(
-                  onPressed: () => Get.toNamed(RouteHelper.getSearchStoreItemRoute(_store.id)),
-                  icon: Container(
-                    height: 50, width: 50,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).primaryColor),
-                    alignment: Alignment.center,
-                    child: Icon(Icons.search, size: 20, color: Theme.of(context).cardColor),
+                actions: [
+                  IconButton(
+                    onPressed: () => Get.toNamed(RouteHelper.getSearchStoreItemRoute(_store.id)),
+                    icon: Container(
+                      height: 50, width: 50,
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).primaryColor),
+                      alignment: Alignment.center,
+                      child: Icon(Icons.search, size: 20, color: Theme.of(context).cardColor),
+                    ),
                   ),
-                )],
+                ],
               ),
 
               SliverToBoxAdapter(child: Center(child: Container(
@@ -251,6 +272,43 @@ class _StoreScreenState extends State<StoreScreen> {
           ) : Center(child: CircularProgressIndicator());
         });
       }),
+
+      floatingActionButton: GetBuilder<StoreController>(
+        builder: (storeController) {
+          return Visibility(
+            visible: storeController.showFavButton && Get.find<SplashController>().configModel.moduleConfig.module.orderAttachment
+                && (storeController.store != null && storeController.store.prescriptionOrder) && Get.find<SplashController>().configModel.prescriptionStatus,
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+
+              AnimatedContainer(
+                duration: Duration(milliseconds: 800),
+                width: storeController.currentState == false ? 0 : ResponsiveHelper.isDesktop(context) ? 180 : 150,
+                height: 30,
+                curve: Curves.linear,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).textTheme.bodyText1.color,
+                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                ),
+                child: storeController.currentState ? Center(
+                  child: Text(
+                    'prescription_order'.tr, textAlign: TextAlign.center,
+                    style: robotoMedium.copyWith(color: Theme.of(context).cardColor), maxLines: 1, overflow: TextOverflow.ellipsis,
+                  ),
+                ) : SizedBox(),
+              ),
+              SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+
+              FloatingActionButton(
+                onPressed: () => Get.toNamed(
+                  RouteHelper.getCheckoutRoute('prescription', storeId: storeController.store.id),
+                  arguments: CheckoutScreen(fromCart: false, cartList: null, storeId: storeController.store.id),
+                ),
+                child: Icon(Icons.assignment_outlined, size: 20, color: Theme.of(context).cardColor),
+              ),
+            ]),
+          );
+        }
+      ),
 
       bottomNavigationBar: GetBuilder<CartController>(builder: (cartController) {
         return cartController.cartList.length > 0 && !ResponsiveHelper.isDesktop(context) ? BottomCartWidget() : SizedBox();

@@ -74,7 +74,14 @@ class ParcelController extends GetxController implements GetxService {
         );
         ZoneResponseModel _response = await Get.find<LocationController>().getZone(_address.latitude, _address.longitude, false);
         if (_response.isSuccess) {
-          if(Get.find<LocationController>().getUserAddress().zoneIds.contains(_response.zoneIds[0])) {
+          bool _inZone = false;
+          for(int zoneId in Get.find<LocationController>().getUserAddress().zoneIds) {
+            if(_response.zoneIds.contains(zoneId)) {
+              _inZone = true;
+              break;
+            }
+          }
+          if(_inZone) {
             _address.zoneId =  _response.zoneIds[0];
             _address.zoneIds = [];
             _address.zoneIds.addAll(_response.zoneIds);

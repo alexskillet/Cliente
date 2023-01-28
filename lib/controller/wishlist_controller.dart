@@ -18,46 +18,101 @@ class WishListController extends GetxController implements GetxService {
   List<Store> _wishStoreList;
   List<int> _wishItemIdList = [];
   List<int> _wishStoreIdList = [];
+  bool _isRemoving = false;
 
   List<Item> get wishItemList => _wishItemList;
   List<Store> get wishStoreList => _wishStoreList;
   List<int> get wishItemIdList => _wishItemIdList;
   List<int> get wishStoreIdList => _wishStoreIdList;
+  bool get isRemoving => _isRemoving;
 
   void addToWishList(Item product, Store store, bool isStore) async {
+    if(isStore) {
+      _wishStoreIdList.add(store.id);
+      _wishStoreList.add(store);
+    }else{
+      _wishItemList.add(product);
+      _wishItemIdList.add(product.id);
+    }
     Response response = await wishListRepo.addWishList(isStore ? store.id : product.id, isStore);
     if (response.statusCode == 200) {
-      if(isStore) {
-        _wishStoreIdList.add(store.id);
-        _wishStoreList.add(store);
-      }else {
-        _wishItemList.add(product);
-        _wishItemIdList.add(product.id);
-      }
+      // if(isStore) {
+      //   _wishStoreIdList.forEach((storeId) {
+      //     if(storeId == store.id){
+      //       _wishStoreIdList.removeAt(_wishStoreIdList.indexOf(storeId));
+      //     }
+      //   });
+      //   _wishStoreIdList.add(store.id);
+      //   _wishStoreList.add(store);
+      // }else {
+      //   _wishItemIdList.forEach((productId) {
+      //     if(productId == product.id){
+      //       _wishItemIdList.removeAt(_wishItemIdList.indexOf(productId));
+      //     }
+      //   });
+      //   _wishItemList.add(product);
+      //   _wishItemIdList.add(product.id);
+      // }
       showCustomSnackBar(response.body['message'], isError: false);
     } else {
+      if(isStore) {
+        _wishStoreIdList.forEach((storeId) {
+          if (storeId == store.id) {
+            _wishStoreIdList.removeAt(_wishStoreIdList.indexOf(storeId));
+          }
+        });
+      }else{
+        _wishItemIdList.forEach((productId) {
+          if(productId == product.id){
+            _wishItemIdList.removeAt(_wishItemIdList.indexOf(productId));
+          }
+        });
+      }
       ApiChecker.checkApi(response);
     }
     update();
   }
 
   void removeFromWishList(int id, bool isStore) async {
-    Response response = await wishListRepo.removeWishList(id, isStore);
-    if (response.statusCode == 200) {
-      int _idIndex = -1;
-      if(isStore) {
-        _idIndex = _wishStoreIdList.indexOf(id);
+    _isRemoving = true;
+    update();
+
+    int _idIndex = -1;
+    int storeId, itemId;
+    Store store;
+    Item item;
+    if(isStore) {
+      _idIndex = _wishStoreIdList.indexOf(id);
+      if(_idIndex != -1) {
+        storeId = id;
         _wishStoreIdList.removeAt(_idIndex);
+        store = _wishStoreList[_idIndex];
         _wishStoreList.removeAt(_idIndex);
-      }else {
-        _idIndex = _wishItemIdList.indexOf(id);
+      }
+    }else {
+      _idIndex = _wishItemIdList.indexOf(id);
+      if(_idIndex != -1) {
+        itemId = id;
         _wishItemIdList.removeAt(_idIndex);
+        item = _wishItemList[_idIndex];
         _wishItemList.removeAt(_idIndex);
       }
-      showCustomSnackBar(response.body['message'], isError: false);
-    } else {
-      ApiChecker.checkApi(response);
     }
+    Response response = await wishListRepo.removeWishList(id, isStore);
+    if (response.statusCode == 200) {
+      showCustomSnackBar(response.body['message'], isError: false);
+    }
+    else {
+      ApiChecker.checkApi(response);
+      if(isStore) {
+        _wishStoreIdList.add(storeId);
+        _wishStoreList.add(store);
+      }else {
+        _wishItemIdList.add(itemId);
+        _wishItemList.add(item);
+      }
+    }
+    _isRemoving = false;
     update();
   }
 

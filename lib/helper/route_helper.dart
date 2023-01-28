@@ -172,7 +172,7 @@ class RouteHelper {
     return '$orderSuccess?id=$orderID';
   }
   static String getPaymentRoute(String id, int user, String type) => '$payment?id=$id&user=$user&type=$type';
-  static String getCheckoutRoute(String page) => '$checkout?page=$page';
+  static String getCheckoutRoute(String page,{int storeId}) => '$checkout?page=$page&store-id=$storeId';
   static String getOrderTrackingRoute(int id) => '$orderTracking?id=$id';
   static String getBasicCampaignRoute(BasicCampaignModel basicCampaignModel) {
     String _data = base64Encode(utf8.encode(jsonEncode(basicCampaignModel.toJson())));
@@ -314,7 +314,7 @@ class RouteHelper {
       CheckoutScreen _checkoutScreen = Get.arguments;
       bool _fromCart = Get.parameters['page'] == 'cart';
       return getRoute(_checkoutScreen != null ? _checkoutScreen : !_fromCart ? NotFound() : CheckoutScreen(
-        cartList: null, fromCart: Get.parameters['page'] == 'cart',
+        cartList: null, fromCart: Get.parameters['page'] == 'cart', storeId: Get.parameters['store-id'] != 'null' ? int.parse(Get.parameters['store-id']) : null,
       ));
     }),
     GetPage(name: orderTracking, page: () => getRoute(OrderTrackingScreen(orderID: Get.parameters['id']))),

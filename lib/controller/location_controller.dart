@@ -149,7 +149,7 @@ class LocationController extends GetxController implements GetxService {
   }
 
   Future<void> syncZoneData() async {
-    ZoneResponseModel _response = await getZone(getUserAddress().latitude, getUserAddress().longitude, false);
+    ZoneResponseModel _response = await getZone(getUserAddress().latitude, getUserAddress().longitude, false, updateInAddress: true);
     AddressModel _address = getUserAddress();
     _address.zoneId = _response.zoneIds[0];
     _address.zoneIds = [];

@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:sixam_mart/controller/category_controller.dart';
 import 'package:sixam_mart/controller/coupon_controller.dart';
 import 'package:sixam_mart/controller/location_controller.dart';
@@ -35,6 +36,9 @@ class StoreController extends GetxController implements GetxService {
   String _type = 'all';
   String _searchType = 'all';
   String _searchText = '';
+  bool _currentState = false;
+  bool _showFavButton = true;
+  List<XFile> _pickedPrescriptions = [];
 
   StoreModel get storeModel => _storeModel;
   List<Store> get popularStoreList => _popularStoreList;
@@ -51,6 +55,43 @@ class StoreController extends GetxController implements GetxService {
   String get type => _type;
   String get searchType => _searchType;
   String get searchText => _searchText;
+  bool get currentState => _currentState;
+  bool get showFavButton => _showFavButton;
+  List<XFile> get pickedPrescriptions => _pickedPrescriptions;
+
+
+  void pickPrescriptionImage({@required bool isRemove, @required bool isCamera}) async {
+    if(isRemove) {
+      _pickedPrescriptions = [];
+    }else {
+      XFile _xFile = await ImagePicker().pickImage(source: isCamera ? ImageSource.camera : ImageSource.gallery, imageQuality: 50);
+      if(_xFile != null) {
+        _pickedPrescriptions.add(_xFile);
+      }
+      update();
+    }
+  }
+
+  void removePrescriptionImage(int index) {
+    _pickedPrescriptions.removeAt(index);
+    update();
+  }
+  
+  void changeFavVisibility(){
+    _showFavButton = !_showFavButton;
+    update();
+  }
+
+  void hideAnimation(){
+    _currentState = false;
+  }
+
+  void showButtonAnimation(){
+    Future.delayed(Duration(milliseconds: 600), () {
+      _currentState = true;
+      update();
+    });
+  }
 
   Future<void> getStoreList(int offset, bool reload) async {
     if(reload) {

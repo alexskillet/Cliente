@@ -39,7 +39,7 @@ class HomeScreen extends StatefulWidget {
       Get.find<BannerController>().getBannerList(reload);
       Get.find<CategoryController>().getCategoryList(reload);
       Get.find<StoreController>().getPopularStoreList(reload, 'all', false);
-      Get.find<CampaignController>().getItemCampaignList(reload);
+      Get.find<CampaignController>().getItemCampaignList(reload, Get.find<SplashController>().module.moduleType);
       Get.find<ItemController>().getPopularItemList(reload, 'all', false);
       Get.find<StoreController>().getLatestStoreList(reload, 'all', false);
       Get.find<ItemController>().getReviewedItemList(reload, 'all', false);
@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 await Get.find<BannerController>().getBannerList(true);
                 await Get.find<CategoryController>().getCategoryList(true);
                 await Get.find<StoreController>().getPopularStoreList(true, 'all', false);
-                await Get.find<CampaignController>().getItemCampaignList(true);
+                await Get.find<CampaignController>().getItemCampaignList(true, Get.find<SplashController>().module.moduleType);
                 await Get.find<ItemController>().getPopularItemList(true, 'all', false);
                 await Get.find<StoreController>().getLatestStoreList(true, 'all', false);
                 await Get.find<ItemController>().getReviewedItemList(true, 'all', false);

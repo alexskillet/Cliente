@@ -15,7 +15,8 @@ import 'package:sixam_mart/view/base/rating_bar.dart';
 class ItemTitleView extends StatelessWidget {
   final Item item;
   final bool inStorePage;
-  ItemTitleView({@required this.item,  this.inStorePage = false});
+  final bool isCampaign;
+  ItemTitleView({@required this.item,  this.inStorePage = false, this.isCampaign = false});
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +163,7 @@ class ItemTitleView extends StatelessWidget {
             ) : SizedBox(),
             SizedBox(height: item.discount > 0 ? 5 : 0),
 
-            Row(children: [
+            !isCampaign ? Row(children: [
 
               Text(item.avgRating.toStringAsFixed(1), style: robotoRegular.copyWith(
                 color: Theme.of(context).hintColor,
@@ -172,7 +173,7 @@ class ItemTitleView extends StatelessWidget {
 
               RatingBar(rating: item.avgRating, ratingCount: item.ratingCount),
 
-            ]),
+            ]) : SizedBox(),
 
           ]);
         },

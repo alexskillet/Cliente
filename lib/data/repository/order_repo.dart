@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:sixam_mart/data/api/api_client.dart';
 import 'package:sixam_mart/data/model/body/place_order_body.dart';
@@ -13,8 +15,8 @@ class OrderRepo {
   final SharedPreferences sharedPreferences;
   OrderRepo({@required this.apiClient, @required this.sharedPreferences});
 
-  Future<Response> getRunningOrderList(int offset, bool fromDashBoard) async {
-    return await apiClient.getData('${AppConstants.RUNNING_ORDER_LIST_URI}?offset=$offset&limit=${fromDashBoard ? 20 : 10}');
+  Future<Response> getRunningOrderList(int offset) async {
+    return await apiClient.getData('${AppConstants.RUNNING_ORDER_LIST_URI}?offset=$offset&limit=${50}');
   }
 
   Future<Response> getHistoryOrderList(int offset) async {
@@ -34,10 +36,25 @@ class OrderRepo {
   }
 
   Future<Response> placeOrder(PlaceOrderBody orderBody, XFile orderAttachment) async {
+    print('=====body====> ${jsonEncode(orderBody)}');
     return await apiClient.postMultipartData(
       AppConstants.PLACE_ORDER_URI, orderBody.toJson(),
       [MultipartBody('order_attachment', orderAttachment)],
     );
+  }
+
+  Future<Response> placePrescriptionOrder(int storeId, double distance, String address, String longitude,
+      String latitude, String note, List<MultipartBody> orderAttachment) async {
+
+    Map<String, String> _body = {
+      'store_id': storeId.toString(),
+      'distance': distance.toString(),
+      'address': address,
+      'longitude': longitude,
+      'latitude': latitude,
+      'order_note': note,
+    };
+    return await apiClient.postMultipartData(AppConstants.PLACE_PRESCRIPTION_ORDER_URI, _body, orderAttachment);
   }
 
   Future<Response> getDeliveryManData(String orderID) async {

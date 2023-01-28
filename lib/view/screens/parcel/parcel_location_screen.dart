@@ -67,8 +67,6 @@ class _ParcelLocationScreenState extends State<ParcelLocationScreen> with Ticker
       // }
       Get.find<ParcelController>().setIsPickedUp(_tabController.index == 0, false);
       Get.find<ParcelController>().setIsSender(_tabController.index == 0, true);
-      print('my index is'+ _tabController.index.toString());
-      print('is sender : ${Get.find<ParcelController>().isSender}');
     });
   }
 

@@ -44,7 +44,7 @@ class CategoryView1 extends StatelessWidget {
                           child: SizedBox(
                             width: 75,
                             child: Container(
-                              height: 65, width: 65,
+                              height: 65, width: 75,
                               margin: EdgeInsets.only(
                                 left: index == 0 ? 0 : Dimensions.PADDING_SIZE_EXTRA_SMALL,
                                 right: Dimensions.PADDING_SIZE_EXTRA_SMALL,
@@ -54,7 +54,7 @@ class CategoryView1 extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                                   child: CustomImage(
                                     image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}/${categoryController.categoryList[index].image}',
-                                    height: 65, width: 65, fit: BoxFit.cover,
+                                    height: 65, width: 75, fit: BoxFit.cover,
                                   ),
                                 ),
                                 Positioned(bottom: 0, left: 0, right: 0, child: Container(

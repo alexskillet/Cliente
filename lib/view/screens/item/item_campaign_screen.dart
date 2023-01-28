@@ -1,4 +1,5 @@
 import 'package:sixam_mart/controller/campaign_controller.dart';
+import 'package:sixam_mart/controller/splash_controller.dart';
 import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/view/base/custom_app_bar.dart';
 import 'package:sixam_mart/view/base/footer_view.dart';
@@ -18,7 +19,7 @@ class _ItemCampaignScreenState extends State<ItemCampaignScreen> {
   void initState() {
     super.initState();
 
-    Get.find<CampaignController>().getItemCampaignList(false);
+    Get.find<CampaignController>().getItemCampaignList(false, Get.find<SplashController>().module.moduleType);
   }
 
   @override

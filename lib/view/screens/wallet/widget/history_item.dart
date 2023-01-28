@@ -35,22 +35,20 @@ class HistoryItem extends StatelessWidget {
             Text(data[index].transactionType.tr,
                 style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall,color: Theme.of(context).disabledColor),
                 maxLines: 1, overflow: TextOverflow.ellipsis),
-          ],
-          ),
+          ]),
 
           Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
             Text(DateConverter.dateToDateAndTimeAm(data[index].createdAt),style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall,color: Theme.of(context).disabledColor),
                 maxLines: 1, overflow: TextOverflow.ellipsis),
             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
-            Text( fromWallet ? data[index].transactionType == 'order_place' ? 'debit' : 'credit' : data[index].transactionType == 'point_to_wallet' ? 'debit' : 'credit',
+            Text( fromWallet ? data[index].transactionType == 'order_place' ? 'debit'.tr : 'credit'.tr : data[index].transactionType == 'point_to_wallet' ? 'debit'.tr : 'credit'.tr,
                 style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: fromWallet ? data[index].transactionType == 'order_place'
                     ? Colors.red : Colors.green : data[index].transactionType == 'point_to_wallet' ? Colors.red : Colors.green),
                 maxLines: 1, overflow: TextOverflow.ellipsis),
-          ],
-          ),
+          ]),
 
-        ],),
+        ]),
 
       Padding(
         padding: const EdgeInsets.only(top: Dimensions.PADDING_SIZE_DEFAULT),

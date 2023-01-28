@@ -182,7 +182,7 @@ class DetailsWebView extends StatelessWidget {
                             child: CustomButton(
                               buttonText: itemController.cartIndex != -1 ? 'update_in_cart'.tr : (Get.find<SplashController>().configModel.moduleConfig.module.stock && stock <= 0) ? 'out_of_stock'.tr : 'add_to_cart'.tr,
                               onPressed: (!Get.find<SplashController>().configModel.moduleConfig.module.stock || stock > 0) ?  () {
-                                if (Get.find<CartController>().existAnotherStoreItem(cartModel.item.storeId)) {
+                                if (Get.find<CartController>().existAnotherStoreItem(cartModel.item.storeId, Get.find<SplashController>().module.id)) {
                                   Get.dialog(ConfirmationDialog(
                                     icon: Images.warning,
                                     title: 'are_you_sure_to_reset'.tr,

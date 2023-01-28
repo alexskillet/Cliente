@@ -4,6 +4,7 @@ class CartModel {
   double _price;
   double _discountedPrice;
   List<Variation> _variation;
+  List<List<bool>> _foodVariations;
   double _discountAmount;
   int _quantity;
   List<AddOn> _addOnIds;
@@ -16,6 +17,7 @@ class CartModel {
         double price,
         double discountedPrice,
         List<Variation> variation,
+        List<List<bool>> foodVariations,
         double discountAmount,
         int quantity,
         List<AddOn> addOnIds,
@@ -26,6 +28,7 @@ class CartModel {
     this._price = price;
     this._discountedPrice = discountedPrice;
     this._variation = variation;
+    this._foodVariations = foodVariations;
     this._discountAmount = discountAmount;
     this._quantity = quantity;
     this._addOnIds = addOnIds;
@@ -38,6 +41,7 @@ class CartModel {
   double get price => _price;
   double get discountedPrice => _discountedPrice;
   List<Variation> get variation => _variation;
+  List<List<bool>> get foodVariations => _foodVariations;
   double get discountAmount => _discountAmount;
   // ignore: unnecessary_getters_setters
   int get quantity => _quantity;
@@ -57,6 +61,15 @@ class CartModel {
       json['variation'].forEach((v) {
         _variation.add(new Variation.fromJson(v));
       });
+    }
+    if (json['food_variations'] != null) {
+      _foodVariations = [];
+      for(int index=0; index<json['food_variations'].length; index++) {
+        _foodVariations.add([]);
+        for(int i=0; i<json['food_variations'][index].length; i++) {
+          _foodVariations[index].add(json['food_variations'][index][i]);
+        }
+      }
     }
     _discountAmount = json['discount_amount'].toDouble();
     _quantity = json['quantity'];
@@ -86,6 +99,7 @@ class CartModel {
     if (this._variation != null) {
       data['variation'] = this._variation.map((v) => v.toJson()).toList();
     }
+    data['food_variations'] = this._foodVariations;
     data['discount_amount'] = this._discountAmount;
     data['quantity'] = this._quantity;
     if (this._addOnIds != null) {
