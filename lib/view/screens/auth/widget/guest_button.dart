@@ -15,7 +15,7 @@ class GuestButton extends StatelessWidget {
       },
       child: RichText(text: TextSpan(children: [
         TextSpan(text: '${'continue_as'.tr} ', style: robotoRegular.copyWith(color: Theme.of(context).disabledColor)),
-        TextSpan(text: 'guest'.tr, style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyText1.color)),
+        TextSpan(text: 'guest'.tr, style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyLarge.color)),
       ])),
     );
   }

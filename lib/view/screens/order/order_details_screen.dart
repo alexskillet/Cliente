@@ -95,7 +95,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             Get.back();
           }
         }),
-        endDrawer: MenuDrawer(),
+        endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
         body: GetBuilder<OrderController>(builder: (orderController) {
           double _deliveryCharge = 0;
           double _itemsPrice = 0;
@@ -107,7 +107,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           OrderModel _order = orderController.trackModel;
           bool _parcel = false;
           bool _prescriptionOrder = false;
-          if(orderController.orderDetails != null) {
+          bool _taxIncluded = false;
+          if(orderController.orderDetails != null  && _order != null) {
             _parcel = _order.orderType == 'parcel';
             _prescriptionOrder = _order.prescriptionOrder;
             _deliveryCharge = _order.deliveryCharge;
@@ -115,6 +116,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             _discount = _order.storeDiscountAmount;
             _tax = _order.totalTaxAmount;
             _dmTips = _order.dmTips;
+            _taxIncluded = _order.taxStatus;
             if(_prescriptionOrder){
               double orderAmount = _order.orderAmount ?? 0;
               _itemsPrice = (orderAmount + _discount) - (_tax + _deliveryCharge );
@@ -212,8 +214,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   _order.orderStatus == 'refund_requested' ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
                     RichText(text: TextSpan(children: [
-                      TextSpan(text: '${'refund_note'.tr}:', style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyText1.color)),
-                      TextSpan(text: '(${(_order.refund != null) ? _order.refund.customerReason : ''})', style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyText1.color)),
+                      TextSpan(text: '${'refund_note'.tr}:', style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyLarge.color)),
+                      TextSpan(text: '(${(_order.refund != null) ? _order.refund.customerReason : ''})', style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge.color)),
                     ])),
                     SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
@@ -285,7 +287,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: _order.orderAttachment.length,
                           itemBuilder: (BuildContext context, index) {
-                            print('---> ${Get.find<SplashController>().configModel.baseUrls.orderAttachmentUrl}/${_order.orderAttachment}');
                             return Padding(
                               padding: const EdgeInsets.only(right: 8),
                               child: InkWell(
@@ -420,7 +421,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   Get.find<SplashController>().getModuleConfig(_order.moduleType).addOn ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('subtotal'.tr, style: robotoMedium),
+                      Text('subtotal'.tr+ ' ${_taxIncluded ? 'tax_included'.tr : ''}', style: robotoMedium),
                       Text(PriceConverter.convertPrice(_subTotal), style: robotoMedium),
                     ],
                   ) : SizedBox(),
@@ -441,11 +442,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   ]) : SizedBox(),
                   SizedBox(height: _couponDiscount > 0 ? 10 : 0),
 
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  !_taxIncluded ?  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text('vat_tax'.tr, style: robotoRegular),
                     Text('(+) ${PriceConverter.convertPrice(_tax)}', style: robotoRegular),
-                  ]),
-                  SizedBox(height: 10),
+                  ]) : SizedBox(),
+                  SizedBox(height: _taxIncluded ? 0 : 10),
 
                   (_dmTips > 0) ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

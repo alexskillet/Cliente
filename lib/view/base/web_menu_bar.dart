@@ -49,14 +49,14 @@ class _WebMenuBarState extends State<WebMenuBar> {
                   Icon(
                     locationController.getUserAddress().addressType == 'home' ? Icons.home_filled
                         : locationController.getUserAddress().addressType == 'office' ? Icons.work : Icons.location_on,
-                    size: 20, color: Theme.of(context).textTheme.bodyText1.color,
+                    size: 20, color: Theme.of(context).textTheme.bodyLarge.color,
                   ),
                   SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                   Flexible(
                     child: Text(
                       locationController.getUserAddress().address,
                       style: robotoRegular.copyWith(
-                        color: Theme.of(context).textTheme.bodyText1.color, fontSize: Dimensions.fontSizeSmall,
+                        color: Theme.of(context).textTheme.bodyLarge.color, fontSize: Dimensions.fontSizeSmall,
                       ),
                       maxLines: 1, overflow: TextOverflow.ellipsis,
                     ),
@@ -82,7 +82,7 @@ class _WebMenuBarState extends State<WebMenuBar> {
             hint: Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
                 ? 'search_food_or_restaurant'.tr : 'search_item_or_store'.tr,
             suffixIcon: searchController.searchHomeText.length > 0 ? Icons.highlight_remove : Icons.search,
-            filledColor: Theme.of(context).backgroundColor,
+            filledColor: Theme.of(context).colorScheme.background,
             iconPressed: () {
               if(searchController.searchHomeText.length > 0) {
                 _searchController.text = '';
@@ -203,7 +203,7 @@ class MenuIconButton extends StatelessWidget {
           return Stack(clipBehavior: Clip.none, children: [
             Icon(
               icon,
-              color: hovered ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyText1.color,
+              color: hovered ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyLarge.color,
             ),
             (isCart && cartController.cartList.length > 0) ? Positioned(
               top: -5, right: -5,

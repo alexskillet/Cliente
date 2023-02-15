@@ -406,8 +406,6 @@ class ItemController extends GetxController implements GetxService {
   String getDiscountType(Item item) => item.storeDiscount == 0 ? item.discountType : 'percent';
 
   void navigateToItemPage(Item item, BuildContext context, {bool inStore = false, bool isCampaign = false}) {
-    print('----->> ${Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText}/// module type  ---> ${item.moduleType}');
-    print('---item : $item, ---> stock : ${item.stock}');
     if(Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText || item.moduleType == 'food') {
       ResponsiveHelper.isMobile(context) ? Get.bottomSheet(
         ItemBottomSheet(item: item, inStorePage: inStore, isCampaign: isCampaign),

@@ -30,7 +30,7 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'my_cart'.tr, backButton: (ResponsiveHelper.isDesktop(context) || !widget.fromNav)),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: GetBuilder<CartController>(
         builder: (cartController) {
           // List<List<AddOns>> _addOnsList = [];

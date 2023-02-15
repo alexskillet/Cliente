@@ -26,7 +26,7 @@ class WishListController extends GetxController implements GetxService {
   List<int> get wishStoreIdList => _wishStoreIdList;
   bool get isRemoving => _isRemoving;
 
-  void addToWishList(Item product, Store store, bool isStore) async {
+  void addToWishList(Item product, Store store, bool isStore, {bool getXSnackBar = false}) async {
     if(isStore) {
       _wishStoreIdList.add(store.id);
       _wishStoreList.add(store);
@@ -53,7 +53,7 @@ class WishListController extends GetxController implements GetxService {
       //   _wishItemList.add(product);
       //   _wishItemIdList.add(product.id);
       // }
-      showCustomSnackBar(response.body['message'], isError: false);
+      showCustomSnackBar(response.body['message'], isError: false, getXSnackBar: getXSnackBar);
     } else {
       if(isStore) {
         _wishStoreIdList.forEach((storeId) {
@@ -68,12 +68,12 @@ class WishListController extends GetxController implements GetxService {
           }
         });
       }
-      ApiChecker.checkApi(response);
+      ApiChecker.checkApi(response, getXSnackBar: getXSnackBar);
     }
     update();
   }
 
-  void removeFromWishList(int id, bool isStore) async {
+  void removeFromWishList(int id, bool isStore, {bool getXSnackBar = false}) async {
     _isRemoving = true;
     update();
 
@@ -100,10 +100,10 @@ class WishListController extends GetxController implements GetxService {
     }
     Response response = await wishListRepo.removeWishList(id, isStore);
     if (response.statusCode == 200) {
-      showCustomSnackBar(response.body['message'], isError: false);
+      showCustomSnackBar(response.body['message'], isError: false, getXSnackBar: getXSnackBar);
     }
     else {
-      ApiChecker.checkApi(response);
+      ApiChecker.checkApi(response, getXSnackBar: getXSnackBar);
       if(isStore) {
         _wishStoreIdList.add(storeId);
         _wishStoreList.add(store);
@@ -117,6 +117,8 @@ class WishListController extends GetxController implements GetxService {
   }
 
   Future<void> getWishList() async {
+    _wishItemList = null;
+    _wishStoreList = null;
     Response response = await wishListRepo.getWishList();
     if (response.statusCode == 200) {
       update();
@@ -124,23 +126,29 @@ class WishListController extends GetxController implements GetxService {
       _wishItemList = [];
       _wishStoreList = [];
       _wishStoreIdList = [];
+      _wishItemIdList = [];
 
       response.body['item'].forEach((item) async {
-        Item _item = Item.fromJson(item);
-        if(Get.find<SplashController>().module == null){
-          Get.find<LocationController>().getUserAddress().zoneData.forEach((zone) {
-            zone.modules.forEach((module) {
-              if(module.id == _item.moduleId){
-                if(module.pivot.zoneId == _item.zoneId){
-                  _wishItemList.add(_item);
-                  _wishItemIdList.add(_item.id);
+        if(item['module_type'] == null || !Get.find<SplashController>().getModuleConfig(item['module_type']).newVariation
+            || item['variations'] == null || item['variations'].isEmpty
+            || (item['food_variations'] != null && item['food_variations'].isNotEmpty)){
+
+          Item _item = Item.fromJson(item);
+          if(Get.find<SplashController>().module == null){
+            Get.find<LocationController>().getUserAddress().zoneData.forEach((zone) {
+              zone.modules.forEach((module) {
+                if(module.id == _item.moduleId){
+                  if(module.pivot.zoneId == _item.zoneId){
+                    _wishItemList.add(_item);
+                    _wishItemIdList.add(_item.id);
+                  }
                 }
-              }
+              });
             });
-          });
-        }else{
-          _wishItemList.add(_item);
-          _wishItemIdList.add(_item.id);
+          }else{
+            _wishItemList.add(_item);
+            _wishItemIdList.add(_item.id);
+          }
         }
       });
 

@@ -110,7 +110,7 @@ class BannerView1 extends StatelessWidget {
                 return TabPageSelectorIndicator(
                   backgroundColor: index == bannerController.currentIndex ? Theme.of(context).primaryColor
                       : Theme.of(context).primaryColor.withOpacity(0.5),
-                  borderColor: Theme.of(context).backgroundColor,
+                  borderColor: Theme.of(context).colorScheme.background,
                   size: index == bannerController.currentIndex ? 10 : 7,
                 );
               }).toList(),

@@ -13,7 +13,9 @@ import 'package:sixam_mart/view/screens/checkout/widget/payment_failed_dialog.da
 
 class PaymentScreen extends StatefulWidget {
   final OrderModel orderModel;
-  PaymentScreen({@required this.orderModel});
+  final double maximumCodOrderAmount;
+  final bool isCashOnDelivery;
+  PaymentScreen({@required this.orderModel, @required this.maximumCodOrderAmount, @required this.isCashOnDelivery});
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -35,7 +37,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   void _initData() async {
-    browser = MyInAppBrowser(orderID: widget.orderModel.id.toString(), orderType: widget.orderModel.orderType);
+    browser = MyInAppBrowser(orderID: widget.orderModel.id.toString(), orderType: widget.orderModel.orderType, orderAmount: widget.orderModel.orderAmount, maxCodOrderAmount: widget.maximumCodOrderAmount, isCashOnDelivery: widget.isCashOnDelivery);
 
     if (Platform.isAndroid) {
       await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
@@ -47,7 +49,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
         AndroidServiceWorkerController serviceWorkerController = AndroidServiceWorkerController.instance();
         await serviceWorkerController.setServiceWorkerClient(AndroidServiceWorkerClient(
           shouldInterceptRequest: (request) async {
-            print(request);
             return null;
           },
         ));
@@ -103,7 +104,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Future<bool> _exitApp() async {
-    return Get.dialog(PaymentFailedDialog(orderID: widget.orderModel.id.toString()));
+    return Get.dialog(PaymentFailedDialog(orderID: widget.orderModel.id.toString(), orderAmount: widget.orderModel.orderAmount, maxCodOrderAmount: widget.maximumCodOrderAmount, orderType: widget.orderModel.orderType, isCashOnDelivery: widget.isCashOnDelivery));
   }
 
 }
@@ -111,7 +112,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
 class MyInAppBrowser extends InAppBrowser {
   final String orderID;
   final String orderType;
-  MyInAppBrowser({@required this.orderID, @required this.orderType, int windowId, UnmodifiableListView<UserScript> initialUserScripts})
+  final double orderAmount;
+  final double maxCodOrderAmount;
+  final bool isCashOnDelivery;
+  MyInAppBrowser({@required this.orderID, @required this.orderType, @required this.orderAmount, @required this.maxCodOrderAmount, @required this.isCashOnDelivery, int windowId, UnmodifiableListView<UserScript> initialUserScripts})
       : super(windowId: windowId, initialUserScripts: initialUserScripts);
 
   bool _canRedirect = true;
@@ -151,7 +155,7 @@ class MyInAppBrowser extends InAppBrowser {
   @override
   void onExit() {
     if(_canRedirect) {
-      Get.dialog(PaymentFailedDialog(orderID: orderID));
+      Get.dialog(PaymentFailedDialog(orderID: orderID, orderAmount: orderAmount, maxCodOrderAmount: maxCodOrderAmount, orderType: orderType, isCashOnDelivery: isCashOnDelivery));
     }
     print("\n\nBrowser closed!\n\n");
   }
@@ -186,9 +190,9 @@ class MyInAppBrowser extends InAppBrowser {
         close();
       }
       if (_isSuccess) {
-        Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID));
+        Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID, isCashOnDelivery));
       } else if (_isFailed || _isCancel) {
-        Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID));
+        Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID, isCashOnDelivery));
       }
     }
   }

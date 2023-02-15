@@ -62,7 +62,7 @@ class _ParcelRequestScreenState extends State<ParcelRequestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'parcel_request'.tr),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: GetBuilder<ParcelController>(builder: (parcelController) {
         double _charge = -1;
         if(parcelController.distance != -1 && _isLoggedIn) {
@@ -275,7 +275,7 @@ class _ParcelRequestScreenState extends State<ParcelRequestScreen> {
     );
   }
 
-  void orderCallback(bool isSuccess, String message, String orderID, int zoneID) {
+  void orderCallback(bool isSuccess, String message, String orderID, int zoneID, double orderAmount, double maxCodAmount) {
     Get.find<ParcelController>().startLoader(false);
     if(isSuccess) {
       if(Get.find<ParcelController>().paymentIndex == 1) {
@@ -287,10 +287,10 @@ class _ParcelRequestScreenState extends State<ParcelRequestScreen> {
               .userInfoModel.id}&&callback=$protocol//$hostname${RouteHelper.orderSuccess}?id=$orderID&status=';
           html.window.open(selectedUrl,"_self");
         } else{
-          Get.offNamed(RouteHelper.getPaymentRoute(orderID, Get.find<UserController>().userInfoModel.id, 'parcel'));
+          Get.offNamed(RouteHelper.getPaymentRoute(orderID, Get.find<UserController>().userInfoModel.id, 'parcel', orderAmount, maxCodAmount, Get.find<SplashController>().configModel.cashOnDelivery));
         }
       }else {
-        Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID));
+        Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID, Get.find<SplashController>().configModel.cashOnDelivery));
       }
       Get.find<OrderController>().updateTips(-1, notify: false);
     }else {
@@ -319,7 +319,7 @@ class _ParcelRequestScreenState extends State<ParcelRequestScreen> {
             floor: widget.pickedUpAddress.floor ?? '',
             discountAmount: 0, taxAmount: 0, parcelCategoryId: widget.parcelCategory.id.toString(),
             chargePayer: parcelController.payerTypes[parcelController.payerIndex], dmTips: _tipController.text.trim(),
-          ), widget.pickedUpAddress.zoneId, orderCallback);
+          ), widget.pickedUpAddress.zoneId, orderCallback, 0, 0);
         }
       },
     ) : Center(child: CircularProgressIndicator());

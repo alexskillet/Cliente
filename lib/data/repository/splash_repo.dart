@@ -93,6 +93,24 @@ class SplashRepo {
     }
   }
 
+  Future<void> setCacheModule(ModuleModel module) async {
+    if(module != null) {
+      await sharedPreferences.setString(AppConstants.CACHE_MODULE_ID, jsonEncode(module.toJson()));
+    }else {
+      await sharedPreferences.remove(AppConstants.CACHE_MODULE_ID);
+    }
+  }
+
+  ModuleModel getCacheModule() {
+    ModuleModel _module;
+    if(sharedPreferences.containsKey(AppConstants.CACHE_MODULE_ID)) {
+      try {
+        _module = ModuleModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.CACHE_MODULE_ID)));
+      }catch(e) {}
+    }
+    return _module;
+  }
+
   ModuleModel getModule() {
     ModuleModel _module;
     if(sharedPreferences.containsKey(AppConstants.MODULE_ID)) {

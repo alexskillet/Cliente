@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sixam_mart/controller/cart_controller.dart';
@@ -42,7 +40,6 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   void initState() {
     super.initState();
 
-    print('==------------>product item : ${jsonEncode(widget.item)}');
     Get.find<ItemController>().getProductDetails(widget.item);
   }
 

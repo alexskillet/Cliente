@@ -57,10 +57,8 @@ class UserController extends GetxController implements GetxService {
       _pickedFile = null;
       _rawFile = null;
       getUserInfo();
-      print(response.bodyString);
     } else {
       _responseModel = ResponseModel(false, response.statusText);
-      print(response.statusText);
     }
     update();
     return _responseModel;

@@ -1,5 +1,6 @@
 import 'package:sixam_mart/controller/order_controller.dart';
 import 'package:sixam_mart/controller/splash_controller.dart';
+import 'package:sixam_mart/helper/price_converter.dart';
 import 'package:sixam_mart/helper/route_helper.dart';
 import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/util/images.dart';
@@ -7,10 +8,15 @@ import 'package:sixam_mart/util/styles.dart';
 import 'package:sixam_mart/view/base/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sixam_mart/view/base/custom_snackbar.dart';
 
 class PaymentFailedDialog extends StatelessWidget {
   final String orderID;
-  PaymentFailedDialog({@required this.orderID});
+  final String orderType;
+  final double orderAmount;
+  final double maxCodOrderAmount;
+  final bool isCashOnDelivery;
+  PaymentFailedDialog({@required this.orderID, @required this.maxCodOrderAmount, @required this.orderAmount, @required this.orderType, @required this.isCashOnDelivery});
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +52,19 @@ class PaymentFailedDialog extends StatelessWidget {
 
           GetBuilder<OrderController>(builder: (orderController) {
             return !orderController.isLoading ? Column(children: [
-              Get.find<SplashController>().configModel.cashOnDelivery ? CustomButton(
+              isCashOnDelivery ? CustomButton(
                 buttonText: 'switch_to_cash_on_delivery'.tr,
-                onPressed: () => orderController.switchToCOD(orderID),
+                onPressed: () {
+                  print('-------orderAmount : $orderAmount----maxCodOrderAmount : $maxCodOrderAmount----orderType : $orderType');
+                  if((orderAmount < maxCodOrderAmount && orderType != 'parcel') || orderType == 'parcel'){
+                    orderController.switchToCOD(orderID);
+                  }else{
+                    if(Get.isDialogOpen) {
+                      Get.back();
+                    }
+                    showCustomSnackBar('you_cant_order_more_then'.tr + ' ${PriceConverter.convertPrice(maxCodOrderAmount)} ' + 'in_cash_on_delivery'.tr);
+                  }
+                },
                 radius: Dimensions.RADIUS_SMALL, height: 40,
               ) : SizedBox(),
               SizedBox(width: Get.find<SplashController>().configModel.cashOnDelivery ? Dimensions.PADDING_SIZE_LARGE : 0),
@@ -60,7 +76,7 @@ class PaymentFailedDialog extends StatelessWidget {
                   backgroundColor: Theme.of(context).disabledColor.withOpacity(0.3), minimumSize: Size(Dimensions.WEB_MAX_WIDTH, 40), padding: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
                 ),
-                child: Text('continue_with_order_fail'.tr, textAlign: TextAlign.center, style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyText1.color)),
+                child: Text('continue_with_order_fail'.tr, textAlign: TextAlign.center, style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge.color)),
               ),
             ]) : Center(child: CircularProgressIndicator());
           }),

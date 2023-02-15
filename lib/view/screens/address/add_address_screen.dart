@@ -211,7 +211,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                         Text(
                           locationController.addressTypeList[index].tr,
                           style: robotoRegular.copyWith(color: locationController.addressTypeIndex == index
-                              ? Theme.of(context).textTheme.bodyText1.color : Theme.of(context).disabledColor),
+                              ? Theme.of(context).textTheme.bodyLarge.color : Theme.of(context).disabledColor),
                         ),
                       ]),
                     ),

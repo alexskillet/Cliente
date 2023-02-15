@@ -56,7 +56,7 @@ class _ReceiverDetailsBottomSheetState extends State<ReceiverDetailsBottomSheet>
       width: 550,
       padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
       decoration: BoxDecoration(
-        color: Theme.of(context).backgroundColor,
+        color: Theme.of(context).colorScheme.background,
         borderRadius: ResponsiveHelper.isDesktop(context) ? BorderRadius.all(Radius.circular(Dimensions.RADIUS_EXTRA_LARGE))
             : BorderRadius.vertical(top: Radius.circular(Dimensions.RADIUS_EXTRA_LARGE)),
       ),

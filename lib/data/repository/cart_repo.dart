@@ -19,10 +19,10 @@ class CartRepo{
     return cartList;
   }
 
-  void addToCartList(List<CartModel> cartProductList) {
+  Future<void> addToCartList(List<CartModel> cartProductList) async {
     List<String> carts = [];
     cartProductList.forEach((cartModel) => carts.add(jsonEncode(cartModel)) );
-    sharedPreferences.setStringList(AppConstants.CART_LIST, carts);
+    await sharedPreferences.setStringList(AppConstants.CART_LIST, carts);
   }
 
 }

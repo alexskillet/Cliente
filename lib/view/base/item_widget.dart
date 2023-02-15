@@ -70,6 +70,14 @@ class ItemWidget extends StatelessWidget {
             );
           }
         }else {
+          if(isFeatured && Get.find<SplashController>().moduleList != null) {
+            for(ModuleModel module in Get.find<SplashController>().moduleList) {
+              if(module.id == item.moduleId) {
+                Get.find<SplashController>().setModule(module);
+                break;
+              }
+            }
+          }
           Get.find<ItemController>().navigateToItemPage(item, context, inStore: inStore, isCampaign: isCampaign);
         }
       },

@@ -60,7 +60,6 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
             : BorderRadius.all(Radius.circular(Dimensions.RADIUS_EXTRA_LARGE)),
       ),
       child: GetBuilder<ItemController>(builder: (itemController) {
-        print(Get.find<SplashController>().configModel.moduleConfig.module.toJson());
         double _startingPrice;
         double _endingPrice;
         if (widget.item.choiceOptions.length != 0) {
@@ -227,10 +226,10 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
                       return InkWell(
                         onTap: () {
                           if(Get.find<AuthController>().isLoggedIn()) {
-                            wishList.wishItemIdList.contains(widget.item.id) ? wishList.removeFromWishList(widget.item.id, false)
-                                : wishList.addToWishList(widget.item, null, false);
+                            wishList.wishItemIdList.contains(widget.item.id) ? wishList.removeFromWishList(widget.item.id, false, getXSnackBar: true)
+                                : wishList.addToWishList(widget.item, null, false, getXSnackBar: true);
                           }else {
-                            showCustomSnackBar('you_are_not_logged_in'.tr);
+                            showCustomSnackBar('you_are_not_logged_in'.tr, getXSnackBar: true);
                           }
                         },
                         child: Icon(
@@ -313,7 +312,7 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
                             alignment: Alignment.center,
                             margin: EdgeInsets.only(bottom: itemController.addOnActiveList[index] ? 2 : 20),
                             decoration: BoxDecoration(
-                              color: itemController.addOnActiveList[index] ? Theme.of(context).primaryColor : Theme.of(context).backgroundColor,
+                              color: itemController.addOnActiveList[index] ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.background,
                               borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                               border: itemController.addOnActiveList[index] ? null : Border.all(color: Theme.of(context).disabledColor, width: 2),
                               boxShadow: itemController.addOnActiveList[index]

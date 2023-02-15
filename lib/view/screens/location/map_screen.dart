@@ -38,7 +38,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'location'.tr),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: Center(
         child: Container(
           width: Dimensions.WEB_MAX_WIDTH,

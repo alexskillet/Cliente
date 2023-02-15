@@ -8,6 +8,7 @@ import 'package:sixam_mart/controller/wishlist_controller.dart';
 import 'package:sixam_mart/data/model/response/cart_model.dart';
 import 'package:sixam_mart/helper/price_converter.dart';
 import 'package:sixam_mart/helper/responsive_helper.dart';
+import 'package:sixam_mart/helper/route_helper.dart';
 import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/util/images.dart';
 import 'package:sixam_mart/util/styles.dart';
@@ -16,6 +17,7 @@ import 'package:sixam_mart/view/base/custom_button.dart';
 import 'package:sixam_mart/view/base/custom_image.dart';
 import 'package:sixam_mart/view/base/custom_snackbar.dart';
 import 'package:sixam_mart/view/base/footer_view.dart';
+import 'package:sixam_mart/view/screens/checkout/checkout_screen.dart';
 import 'package:sixam_mart/view/screens/item/item_details_screen.dart';
 import 'package:sixam_mart/view/screens/item/widget/item_title_view.dart';
 
@@ -158,6 +160,7 @@ class DetailsWebView extends StatelessWidget {
                               isIncrement: true, quantity: itemController.cartIndex != -1 ? cartController.cartList[itemController.cartIndex].quantity : itemController.quantity,
                               stock: stock, cartIndex: itemController.cartIndex, isExistInCart: itemController.cartIndex != -1,
                             ),
+
                           ]);
                         }),
                         SizedBox(height: 30),
@@ -180,9 +183,14 @@ class DetailsWebView extends StatelessWidget {
                         SizedBox(width: 400, child: Row(children: [
                           Expanded(flex:5, child: Container(
                             child: CustomButton(
-                              buttonText: itemController.cartIndex != -1 ? 'update_in_cart'.tr : (Get.find<SplashController>().configModel.moduleConfig.module.stock && stock <= 0) ? 'out_of_stock'.tr : 'add_to_cart'.tr,
+                              buttonText: (Get.find<SplashController>().configModel.moduleConfig.module.stock && stock <= 0) ? 'out_of_stock'.tr
+                                  : itemController.item.availableDateStarts != null ? 'order_now'.tr : itemController.cartIndex != -1 ? 'update_in_cart'.tr : 'add_to_cart'.tr,
                               onPressed: (!Get.find<SplashController>().configModel.moduleConfig.module.stock || stock > 0) ?  () {
-                                if (Get.find<CartController>().existAnotherStoreItem(cartModel.item.storeId, Get.find<SplashController>().module.id)) {
+                                if(itemController.item.availableDateStarts != null) {
+                                  Get.toNamed(RouteHelper.getCheckoutRoute('campaign'), arguments: CheckoutScreen(
+                                    storeId: null, fromCart: false, cartList: [cartModel],
+                                  ));
+                                }else if (Get.find<CartController>().existAnotherStoreItem(cartModel.item.storeId, Get.find<SplashController>().module.id)) {
                                   Get.dialog(ConfirmationDialog(
                                     icon: Images.warning,
                                     title: 'are_you_sure_to_reset'.tr,

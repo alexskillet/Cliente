@@ -20,6 +20,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class CouponScreen extends StatefulWidget {
+  final bool fromCheckout;
+  const CouponScreen({Key key, @required this.fromCheckout}) : super(key: key);
+
   @override
   State<CouponScreen> createState() => _CouponScreenState();
 }
@@ -40,7 +43,7 @@ class _CouponScreenState extends State<CouponScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'coupon'.tr),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: _isLoggedIn ? GetBuilder<CouponController>(builder: (couponController) {
         return couponController.couponList != null ? couponController.couponList.length > 0 ? RefreshIndicator(
           onRefresh: () async {
@@ -62,8 +65,12 @@ class _CouponScreenState extends State<CouponScreen> {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
-                      Clipboard.setData(ClipboardData(text: couponController.couponList[index].code));
-                      showCustomSnackBar('coupon_code_copied'.tr, isError: false);
+                      if(widget.fromCheckout) {
+                        Get.back(result: couponController.couponList[index].code);
+                      }else{
+                        Clipboard.setData(ClipboardData(text: couponController.couponList[index].code));
+                        showCustomSnackBar('coupon_code_copied'.tr, isError: false);
+                      }
                     },
                     child: Stack(children: [
 

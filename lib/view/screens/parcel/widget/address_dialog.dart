@@ -45,7 +45,6 @@ class AddressDialog extends StatelessWidget {
                         address: locationController.addressList[index],
                         fromAddress: false,
                         onTap: () {
-                          print(locationController.addressList[index].toJson());
 
                           onTap(locationController.addressList[index]);
 

@@ -34,7 +34,7 @@ class _NewPassScreenState extends State<NewPassScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: widget.fromPasswordChange ? 'change_password'.tr : 'reset_password'.tr),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: SafeArea(child: Center(child: Scrollbar(child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: FooterView(child: Container(

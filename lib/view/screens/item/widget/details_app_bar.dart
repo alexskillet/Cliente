@@ -45,12 +45,12 @@ class DetailsAppBarState extends State<DetailsAppBar> with SingleTickerProviderS
       });
 
     return AppBar(
-      leading: IconButton(icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).textTheme.bodyText1.color), onPressed: () => Navigator.pop(context)),
+      leading: IconButton(icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).textTheme.bodyLarge.color), onPressed: () => Navigator.pop(context)),
       backgroundColor: Theme.of(context).cardColor,
       elevation: 0,
       title: Text(
         'item_details'.tr,
-        style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color),
+        style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyLarge.color),
       ),
       centerTitle: true,
       actions: [AnimatedBuilder(

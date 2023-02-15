@@ -8,7 +8,6 @@ import 'package:sixam_mart/data/model/response/order_model.dart';
 import 'package:sixam_mart/helper/responsive_helper.dart';
 import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/view/base/cart_widget.dart';
-import 'package:sixam_mart/view/base/custom_snackbar.dart';
 import 'package:sixam_mart/view/screens/cart/cart_screen.dart';
 import 'package:sixam_mart/view/screens/dashboard/widget/bottom_nav_item.dart';
 import 'package:sixam_mart/view/screens/favourite/favourite_screen.dart';
@@ -115,11 +114,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   elevation: 5,
                   backgroundColor: _pageIndex == 2 ? Theme.of(context).primaryColor : Theme.of(context).cardColor,
                   onPressed: () {
-                    if(Get.find<SplashController>().module != null) {
+                    // if(Get.find<SplashController>().module != null) {
                       _setPage(2);
-                    }else{
-                      showCustomSnackBar('please_select_any_module'.tr);
-                    }
+                    // }else{
+                    //   showCustomSnackBar('please_select_any_module'.tr);
+                    // }
                   },
                   child: CartWidget(color: _pageIndex == 2 ? Theme.of(context).cardColor : Theme.of(context).disabledColor, size: 30),
                 ),

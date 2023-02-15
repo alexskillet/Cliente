@@ -55,7 +55,7 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'delivery_man_registration'.tr),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: GetBuilder<AuthController>(builder: (authController) {
         List<int> _zoneIndexList = [];
         if(authController.zoneList != null) {
@@ -164,7 +164,7 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
                       showFlagMain: true,
                       flagWidth: 30,
                       textStyle: robotoRegular.copyWith(
-                        fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color,
+                        fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyLarge.color,
                       ),
                     ),
                   ),

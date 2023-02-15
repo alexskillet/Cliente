@@ -27,7 +27,7 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: (widget.fromMenu || ResponsiveHelper.isDesktop(context)) ? CustomAppBar(title: 'language'.tr, backButton: true) : null,
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: SafeArea(
         child: GetBuilder<LocalizationController>(builder: (localizationController) {
           return Column(children: [

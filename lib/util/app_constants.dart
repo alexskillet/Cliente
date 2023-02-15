@@ -4,7 +4,7 @@ import 'package:sixam_mart/util/images.dart';
 
 class AppConstants {
   static const String APP_NAME = 'LavaGo';
-  static const double APP_VERSION = 1.8;
+  static const double APP_VERSION = 2.0;
 
   static const String BASE_URL = 'https://socio.lavago.app';
   static const String CATEGORY_URI = '/api/v1/categories';
@@ -114,6 +114,7 @@ class AppConstants {
   static const String TOPIC = 'all_zone_customer';
   static const String ZONE_ID = 'zoneId';
   static const String MODULE_ID = 'moduleId';
+  static const String CACHE_MODULE_ID = 'cacheModuleId';
   static const String LOCALIZATION_KEY = 'X-localization';
   static const String LATITUDE = 'latitude';
   static const String LONGITUDE = 'longitude';

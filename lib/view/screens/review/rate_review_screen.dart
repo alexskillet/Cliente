@@ -34,7 +34,7 @@ class _RateReviewScreenState extends State<RateReviewScreen> with TickerProvider
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: CustomAppBar(title: 'rate_review'.tr),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: Column(children: [
         Center(
           child: Container(
@@ -42,7 +42,7 @@ class _RateReviewScreenState extends State<RateReviewScreen> with TickerProvider
             color: Theme.of(context).cardColor,
             child: TabBar(
               controller: _tabController,
-              labelColor: Theme.of(context).textTheme.bodyText1.color,
+              labelColor: Theme.of(context).textTheme.bodyLarge.color,
               indicatorColor: Theme.of(context).primaryColor,
               indicatorWeight: 3,
               unselectedLabelStyle: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall),

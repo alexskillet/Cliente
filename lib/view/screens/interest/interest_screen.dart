@@ -30,7 +30,7 @@ class _InterestScreenState extends State<InterestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: SafeArea(
         child: GetBuilder<CategoryController>(builder: (categoryController) {
           return categoryController.categoryList != null ? categoryController.categoryList.length > 0 ? Center(
@@ -81,7 +81,7 @@ class _InterestScreenState extends State<InterestScreen> {
                               style: robotoMedium.copyWith(
                                 fontSize: Dimensions.fontSizeSmall,
                                 color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
-                                    : Theme.of(context).textTheme.bodyText1.color,
+                                    : Theme.of(context).textTheme.bodyLarge.color,
                               ),
                               maxLines: 1, overflow: TextOverflow.ellipsis,
                             )),

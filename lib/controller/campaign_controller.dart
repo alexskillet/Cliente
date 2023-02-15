@@ -1,3 +1,4 @@
+import 'package:sixam_mart/controller/splash_controller.dart';
 import 'package:sixam_mart/data/api/api_checker.dart';
 import 'package:sixam_mart/data/model/response/basic_campaign_model.dart';
 import 'package:sixam_mart/data/model/response/item_model.dart';
@@ -45,7 +46,7 @@ class CampaignController extends GetxController implements GetxService {
     update();
   }
 
-  Future<void> getItemCampaignList(bool reload, String moduleType) async {
+  Future<void> getItemCampaignList(bool reload) async {
     if(_itemCampaignList == null || reload) {
       Response response = await campaignRepo.getItemCampaignList();
       if (response.statusCode == 200) {
@@ -53,9 +54,8 @@ class CampaignController extends GetxController implements GetxService {
         List<Item> _campaign = [];
         response.body.forEach((campaign) => _campaign.add(Item.fromJson(campaign)));
         _campaign.forEach((campaign) {
-          if(campaign.moduleType == 'food' && moduleType == 'food' && campaign.foodVariations.isNotEmpty){
-            _itemCampaignList.add(campaign);
-          }else if(moduleType != 'food' && campaign.foodVariations.isEmpty){
+          if(!Get.find<SplashController>().getModuleConfig(campaign.moduleType).newVariation
+              || campaign.variations.isEmpty || campaign.foodVariations.isNotEmpty) {
             _itemCampaignList.add(campaign);
           }
         });

@@ -60,7 +60,7 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'store_registration'.tr),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: SingleChildScrollView(
         padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL, horizontal: Dimensions.PADDING_SIZE_DEFAULT),
         child: FooterView(
@@ -372,7 +372,6 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                   }else if(_password != _confirmPassword) {
                     showCustomSnackBar('confirm_password_does_not_matched'.tr);
                   }else {
-                    print('%%%%%%%%%%%${authController.moduleList[authController.selectedModuleIndex].id}');
                     authController.registerStore(StoreBody(
                       storeName: _name, storeAddress: _address, tax: _vat, minDeliveryTime: _minTime,
                       maxDeliveryTime: _maxTime, lat: authController.restaurantLocation.latitude.toString(), email: _email,

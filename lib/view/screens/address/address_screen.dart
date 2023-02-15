@@ -39,7 +39,7 @@ class _AddressScreenState extends State<AddressScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'my_address'.tr),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       floatingActionButton: ResponsiveHelper.isDesktop(context) ? null : FloatingActionButton(
         child: Icon(Icons.add, color: Theme.of(context).cardColor),
         backgroundColor: Theme.of(context).primaryColor,

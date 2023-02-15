@@ -78,7 +78,7 @@ class _StoreScreenState extends State<StoreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       backgroundColor: Theme.of(context).cardColor,
       body: GetBuilder<StoreController>(builder: (storeController) {
         return GetBuilder<CategoryController>(builder: (categoryController) {
@@ -286,7 +286,7 @@ class _StoreScreenState extends State<StoreScreen> {
                 height: 30,
                 curve: Curves.linear,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).textTheme.bodyText1.color,
+                  color: Theme.of(context).textTheme.bodyLarge.color,
                   borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                 ),
                 child: storeController.currentState ? Center(

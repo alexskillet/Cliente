@@ -1,5 +1,6 @@
 import 'package:sixam_mart/controller/auth_controller.dart';
 import 'package:sixam_mart/controller/splash_controller.dart';
+import 'package:sixam_mart/controller/wishlist_controller.dart';
 import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/util/styles.dart';
 import 'package:sixam_mart/view/base/custom_app_bar.dart';
@@ -22,13 +23,14 @@ class _FavouriteScreenState extends State<FavouriteScreen> with SingleTickerProv
     super.initState();
 
     _tabController = TabController(length: 2, initialIndex: 0, vsync: this);
+    Get.find<WishListController>().getWishList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'favourite'.tr, backButton: false),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: Get.find<AuthController>().isLoggedIn() ? SafeArea(child: Column(children: [
 
         Container(

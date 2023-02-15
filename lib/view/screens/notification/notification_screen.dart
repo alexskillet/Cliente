@@ -62,7 +62,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             Get.back();
           }
         }),
-        endDrawer: MenuDrawer(),
+        endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
         body: Get.find<AuthController>().isLoggedIn() ? GetBuilder<NotificationController>(builder: (notificationController) {
           if(notificationController.notificationList != null) {
             notificationController.saveSeenNotificationCount(notificationController.notificationList.length);

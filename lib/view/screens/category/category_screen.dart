@@ -24,7 +24,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
     return Scaffold(
       appBar: CustomAppBar(title: 'categories'.tr),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: SafeArea(child: Scrollbar(child: SingleChildScrollView(child: FooterView(child: SizedBox(
         width: Dimensions.WEB_MAX_WIDTH,
         child: GetBuilder<CategoryController>(builder: (catController) {

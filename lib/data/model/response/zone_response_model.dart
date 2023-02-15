@@ -123,11 +123,14 @@ class Pivot {
   int moduleId;
   double perKmShippingCharge;
   double minimumShippingCharge;
+  double maximumCodOrderAmount;
 
-  Pivot({this.zoneId,
-        this.moduleId,
-        this.perKmShippingCharge,
-        this.minimumShippingCharge,
+  Pivot({
+    this.zoneId,
+    this.moduleId,
+    this.perKmShippingCharge,
+    this.minimumShippingCharge,
+    this.maximumCodOrderAmount,
   });
 
   Pivot.fromJson(Map<String, dynamic> json) {
@@ -135,6 +138,7 @@ class Pivot {
     moduleId = json['module_id'];
     perKmShippingCharge = json['per_km_shipping_charge'] != null ? json['per_km_shipping_charge'].toDouble() : null;
     minimumShippingCharge = json['minimum_shipping_charge'] != null ? json['minimum_shipping_charge'].toDouble() : null;
+    maximumCodOrderAmount = json['maximum_cod_order_amount'] != null ? json['maximum_cod_order_amount'].toDouble() : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -143,6 +147,7 @@ class Pivot {
     data['module_id'] = this.moduleId;
     data['per_km_shipping_charge'] = this.perKmShippingCharge;
     data['minimum_shipping_charge'] = this.minimumShippingCharge;
+    data['maximum_cod_order_amount'] = this.maximumCodOrderAmount;
     return data;
   }
 }

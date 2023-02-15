@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:sixam_mart/controller/location_controller.dart';
 import 'package:sixam_mart/controller/order_controller.dart';
 import 'package:sixam_mart/controller/splash_controller.dart';
 import 'package:sixam_mart/controller/theme_controller.dart';
+import 'package:sixam_mart/data/model/response/zone_response_model.dart';
 import 'package:sixam_mart/helper/responsive_helper.dart';
 import 'package:sixam_mart/helper/route_helper.dart';
 import 'package:sixam_mart/util/dimensions.dart';
@@ -18,7 +20,8 @@ import 'package:get/get.dart';
 
 class OrderSuccessfulScreen extends StatefulWidget {
   final String orderID;
-  OrderSuccessfulScreen({@required this.orderID});
+  final bool isCashOnDelivery;
+  OrderSuccessfulScreen({@required this.orderID, @required this.isCashOnDelivery});
 
   @override
   State<OrderSuccessfulScreen> createState() => _OrderSuccessfulScreenState();
@@ -43,19 +46,28 @@ class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
       child: Scaffold(
         backgroundColor: Theme.of(context).cardColor,
         appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
-        endDrawer: MenuDrawer(),
+        endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
         body: GetBuilder<OrderController>(builder: (orderController){
           double total = 0;
           bool success = true;
           bool parcel = false;
+          double _maximumCodOrderAmount;
           if(orderController.trackModel != null) {
             total = ((orderController.trackModel.orderAmount / 100) * Get.find<SplashController>().configModel.loyaltyPointItemPurchasePoint);
             success = orderController.trackModel.paymentStatus == 'paid' || orderController.trackModel.paymentMethod == 'cash_on_delivery';
             parcel = orderController.trackModel.paymentMethod == 'parcel';
+            for(ZoneData zData in Get.find<LocationController>().getUserAddress().zoneData) {
+              for(Modules m in zData.modules) {
+                if(m.id == Get.find<SplashController>().module.id) {
+                  _maximumCodOrderAmount = m.pivot.maximumCodOrderAmount;
+                  break;
+                }
+              }
+            }
 
-            if (!success) {
+            if (!success && !Get.isDialogOpen) {
               Future.delayed(Duration(seconds: 1), () {
-                Get.dialog(PaymentFailedDialog(orderID: widget.orderID), barrierDismissible: false);
+                Get.dialog(PaymentFailedDialog(orderID: widget.orderID, isCashOnDelivery: widget.isCashOnDelivery, orderAmount: total, maxCodOrderAmount: _maximumCodOrderAmount, orderType: parcel ? 'parcel' : 'delivery'), barrierDismissible: false);
               });
             }
           }

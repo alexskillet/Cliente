@@ -98,7 +98,7 @@ class OrderItemWidget extends StatelessWidget {
         ),
       ]),
 
-      (Get.find<SplashController>().getModuleConfig(orderDetails.itemDetails.moduleType).addOn && _addOnText.isNotEmpty) ? Padding(
+      (Get.find<SplashController>().getModuleConfig(order.moduleType).addOn && _addOnText.isNotEmpty) ? Padding(
         padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_EXTRA_SMALL),
         child: Row(children: [
           SizedBox(width: 60),

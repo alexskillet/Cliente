@@ -90,7 +90,7 @@ class _ParcelLocationScreenState extends State<ParcelLocationScreen> with Ticker
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'parcel_location'.tr),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: GetBuilder<ParcelController>(builder: (parcelController) {
         return Column(children: [
 
@@ -202,9 +202,6 @@ class _ParcelLocationScreenState extends State<ParcelLocationScreen> with Ticker
 
                 parcelController.setDestinationAddress(_destination);
 
-                print('pickup : ${Get.find<ParcelController>().pickupAddress.toJson()}');
-                print('destination : ${Get.find<ParcelController>().destinationAddress.toJson()}');
-
                 Get.toNamed(RouteHelper.getParcelRequestRoute(
                   widget.category,
                   Get.find<ParcelController>().pickupAddress,
@@ -245,7 +242,6 @@ class _ParcelLocationScreenState extends State<ParcelLocationScreen> with Ticker
         floor: _senderFloorController.text.trim(),
       );
       Get.find<ParcelController>().setPickupAddress(_pickup, true);
-      print('pickup : ${_pickup.toJson()}');
       _tabController.animateTo(1);
     }
   }

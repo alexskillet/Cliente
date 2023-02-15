@@ -42,7 +42,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       appBar: CustomAppBar(title: 'refer_and_earn'.tr),
       body: Center(
         child: _isLoggedIn ? SingleChildScrollView(

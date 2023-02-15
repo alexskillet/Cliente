@@ -38,13 +38,13 @@ class LanguageWidget extends StatelessWidget {
                 height: 65, width: 65,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                  border: Border.all(color: Theme.of(context).textTheme.bodyText1.color, width: 1),
+                  border: Border.all(color: Theme.of(context).textTheme.bodyLarge.color, width: 1),
                 ),
                 alignment: Alignment.center,
                 child: Image.asset(
                   languageModel.imageUrl, width: 36, height: 36,
                   color: languageModel.languageCode == 'en' || languageModel.languageCode == 'ar'
-                      ? Theme.of(context).textTheme.bodyText1.color : null,
+                      ? Theme.of(context).textTheme.bodyLarge.color : null,
                 ),
               ),
               SizedBox(height: Dimensions.PADDING_SIZE_LARGE),

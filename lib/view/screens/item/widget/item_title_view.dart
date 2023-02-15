@@ -81,6 +81,17 @@ class ItemTitleView extends StatelessWidget {
                 style: robotoRegular.copyWith(color: Colors.red, decoration: TextDecoration.lineThrough,fontSize: Dimensions.fontSizeLarge),
               ),
             ) : SizedBox(),
+            SizedBox(width: Dimensions.PADDING_SIZE_LARGE),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+              decoration: BoxDecoration(
+                color: item.stock == 0 ? Colors.red : Colors.green, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+              ),
+              child: Text(item.stock == 0 ? 'out_of_stock'.tr : 'in_stock'.tr, style: robotoRegular.copyWith(
+                color: Colors.white,
+                fontSize: Dimensions.fontSizeSmall,
+              )),
+            ),
           ]),
 
         ],);
@@ -149,31 +160,46 @@ class ItemTitleView extends StatelessWidget {
             ),
             const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
-            Text(
-              '${PriceConverter.convertPrice(_startingPrice, discount: item.discount, discountType: item.discountType)}'
-                  '${_endingPrice!= null ? ' - ${PriceConverter.convertPrice(_endingPrice, discount: item.discount, discountType: item.discountType)}' : ''}',
-              style: robotoMedium.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeLarge),
-            ),
-            SizedBox(height: 5),
+            Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(
+                  '${PriceConverter.convertPrice(_startingPrice, discount: item.discount, discountType: item.discountType)}'
+                      '${_endingPrice!= null ? ' - ${PriceConverter.convertPrice(_endingPrice, discount: item.discount, discountType: item.discountType)}' : ''}',
+                  style: robotoMedium.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeLarge),
+                ),
+                SizedBox(height: 5),
 
-            item.discount > 0 ? Text(
-              '${PriceConverter.convertPrice(_startingPrice)}'
-                  '${_endingPrice!= null ? ' - ${PriceConverter.convertPrice(_endingPrice)}' : ''}',
-              style: robotoRegular.copyWith(color: Theme.of(context).hintColor, decoration: TextDecoration.lineThrough),
-            ) : SizedBox(),
-            SizedBox(height: item.discount > 0 ? 5 : 0),
+                item.discount > 0 ? Text(
+                  '${PriceConverter.convertPrice(_startingPrice)}'
+                      '${_endingPrice!= null ? ' - ${PriceConverter.convertPrice(_endingPrice)}' : ''}',
+                  style: robotoRegular.copyWith(color: Theme.of(context).hintColor, decoration: TextDecoration.lineThrough),
+                ) : SizedBox(),
+                SizedBox(height: item.discount > 0 ? 5 : 0),
 
-            !isCampaign ? Row(children: [
+                !isCampaign ? Row(children: [
+                  Text(item.avgRating.toStringAsFixed(1), style: robotoRegular.copyWith(
+                    color: Theme.of(context).hintColor,
+                    fontSize: Dimensions.fontSizeLarge,
+                  )),
+                  SizedBox(width: 5),
 
-              Text(item.avgRating.toStringAsFixed(1), style: robotoRegular.copyWith(
-                color: Theme.of(context).hintColor,
-                fontSize: Dimensions.fontSizeLarge,
-              )),
-              SizedBox(width: 5),
+                  RatingBar(rating: item.avgRating, ratingCount: item.ratingCount),
 
-              RatingBar(rating: item.avgRating, ratingCount: item.ratingCount),
+                ]) : SizedBox(),
+              ])),
 
-            ]) : SizedBox(),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                decoration: BoxDecoration(
+                  color: item.stock == 0 ? Colors.red : Colors.green, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                ),
+                child: Text(item.stock == 0 ? 'out_of_stock'.tr : 'in_stock'.tr, style: robotoRegular.copyWith(
+                  color: Colors.white,
+                  fontSize: Dimensions.fontSizeSmall,
+                )),
+              ),
+
+            ]),
 
           ]);
         },

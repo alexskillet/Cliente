@@ -30,7 +30,7 @@ class _SearchFieldState extends State<SearchField> {
         isDense: true,
         suffixIcon: IconButton(
           onPressed: widget.iconPressed,
-          icon: Icon(widget.suffixIcon, color: Theme.of(context).textTheme.bodyText1.color),
+          icon: Icon(widget.suffixIcon, color: Theme.of(context).textTheme.bodyLarge.color),
         ),
       ),
       onSubmitted: widget.onSubmit,

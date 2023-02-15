@@ -204,7 +204,7 @@ class _MenuDrawerState extends State<MenuDrawer> with SingleTickerProviderStateM
                           height: 60, width: 60, alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(Dimensions.RADIUS_EXTRA_LARGE),
-                            color: index != _menuList.length-1 ? Theme.of(context).primaryColor : Get.find<AuthController>().isLoggedIn() ? Theme.of(context).errorColor : Colors.green,
+                            color: index != _menuList.length-1 ? Theme.of(context).primaryColor : Get.find<AuthController>().isLoggedIn() ? Theme.of(context).colorScheme.error : Colors.green,
                           ),
                           child: Image.asset(_menuList[index].icon, color: Colors.white, height: 30, width: 30),
                         ),

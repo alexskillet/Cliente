@@ -51,7 +51,7 @@ class _PickMapScreenState extends State<PickMapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: SafeArea(child: Center(child: SizedBox(
         width: Dimensions.WEB_MAX_WIDTH,
         child: GetBuilder<LocationController>(builder: (locationController) {

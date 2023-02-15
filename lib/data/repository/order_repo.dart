@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:sixam_mart/data/api/api_client.dart';
 import 'package:sixam_mart/data/model/body/place_order_body.dart';
@@ -36,7 +34,6 @@ class OrderRepo {
   }
 
   Future<Response> placeOrder(PlaceOrderBody orderBody, XFile orderAttachment) async {
-    print('=====body====> ${jsonEncode(orderBody)}');
     return await apiClient.postMultipartData(
       AppConstants.PLACE_ORDER_URI, orderBody.toJson(),
       [MultipartBody('order_attachment', orderAttachment)],

@@ -113,7 +113,7 @@ class BestReviewedItemView extends StatelessWidget {
                                   itemController.getDiscount(_itemList[index]) > 0  ? Flexible(child: Text(
                                     PriceConverter.convertPrice(itemController.getStartingPrice(_itemList[index])),
                                     style: robotoRegular.copyWith(
-                                      fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).errorColor,
+                                      fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).colorScheme.error,
                                       decoration: TextDecoration.lineThrough,
                                     ),
                                   )) : SizedBox(),

@@ -57,6 +57,7 @@ class ConfigModel {
   int cancellationPolicyStatus;
   int shippingPolicyStatus;
   bool prescriptionStatus;
+  int taxIncluded;
 
   ConfigModel(
       {this.businessName,
@@ -115,6 +116,7 @@ class ConfigModel {
         this.cancellationPolicyStatus,
         this.shippingPolicyStatus,
         this.prescriptionStatus,
+        this.taxIncluded,
       });
 
   ConfigModel.fromJson(Map<String, dynamic> json) {
@@ -199,6 +201,7 @@ class ConfigModel {
     cancellationPolicyStatus = json['cancelation_policy'];
     shippingPolicyStatus = json['shipping_policy'];
     prescriptionStatus = json['prescription_order_status'];
+    taxIncluded = json['tax_included'];
   }
 
   Map<String, dynamic> toJson() {
@@ -273,6 +276,7 @@ class ConfigModel {
     if (this.socialLogin != null) {
       data['social_login'] = this.socialLogin.map((v) => v.toJson()).toList();
     }
+    data['tax_included'] = this.taxIncluded;
     return data;
   }
 }

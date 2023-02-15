@@ -32,7 +32,7 @@ class _PopularItemScreenState extends State<PopularItemScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: widget.isPopular ? 'popular_items_nearby'.tr : 'best_reviewed_item'.tr, showCart: true),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: Scrollbar(child: SingleChildScrollView(child: FooterView(child: SizedBox(
         width: Dimensions.WEB_MAX_WIDTH,
         child: GetBuilder<ItemController>(builder: (itemController) {

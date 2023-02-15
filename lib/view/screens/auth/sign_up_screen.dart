@@ -56,7 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: SafeArea(child: Scrollbar(
         child: SingleChildScrollView(
           padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
@@ -135,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             showFlagMain: true,
                             dialogBackgroundColor: Theme.of(context).cardColor,
                             textStyle: robotoRegular.copyWith(
-                              fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color,
+                              fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyLarge.color,
                             ),
                           ),
                           Expanded(child: CustomTextField(

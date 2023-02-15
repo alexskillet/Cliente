@@ -52,8 +52,7 @@ class OrderController extends GetxController implements GetxService {
   List<String> _refundReasons;
   int _selectedReasonIndex = 0;
   XFile _refundImage;
-  // XFile _prescriptionImage;
-  // Uint8List _rawPrescription;
+  bool _acceptTerms = true;
 
 
   PaginatedOrderModel get runningOrderModel => _runningOrderModel;
@@ -79,9 +78,14 @@ class OrderController extends GetxController implements GetxService {
   bool get showOneOrder => _showOneOrder;
   int get selectedReasonIndex => _selectedReasonIndex;
   XFile get refundImage => _refundImage;
-  // XFile get prescriptionImage => _prescriptionImage;
   List<String> get refundReasons => _refundReasons;
-  // Uint8List get rawPrescription => _rawPrescription;
+  bool get acceptTerms => _acceptTerms;
+
+
+  void toggleTerms() {
+    _acceptTerms = !_acceptTerms;
+    update();
+  }
 
   void selectReason(int index,{bool isUpdate = true}){
     _selectedReasonIndex = index;
@@ -279,27 +283,26 @@ class OrderController extends GetxController implements GetxService {
     return _responseModel;
   }
 
-  Future<void> placeOrder(PlaceOrderBody placeOrderBody, int zoneID, Function(bool isSuccess, String message, String orderID, int zoneID) callback) async {
+  Future<void> placeOrder(PlaceOrderBody placeOrderBody, int zoneID, Function(bool isSuccess, String message, String orderID, int zoneID, double amount, double maximumCodOrderAmount) callback, double amount, double maximumCodOrderAmount) async {
     _isLoading = true;
     update();
-    print(placeOrderBody.toJson());
     Response response = await orderRepo.placeOrder(placeOrderBody, _orderAttachment);
     _isLoading = false;
     if (response.statusCode == 200) {
       String message = response.body['message'];
       String orderID = response.body['order_id'].toString();
-      callback(true, message, orderID, zoneID);
+      callback(true, message, orderID, zoneID, amount, maximumCodOrderAmount);
       _orderAttachment = null;
       _rawAttachment = null;
       print('-------- Order placed successfully $orderID ----------');
     } else {
-      callback(false, response.statusText, '-1', zoneID);
+      callback(false, response.statusText, '-1', zoneID, amount, maximumCodOrderAmount);
     }
     update();
   }
 
-  Future<void> placePrescriptionOrder(int storeId, int zoneID, double distance, String address, String longitude,
-      String latitude, String note, List<XFile> orderAttachment, Function(bool isSuccess, String message, String orderID, int zoneID) callback) async {
+  Future<void> placePrescriptionOrder(int storeId, int zoneID, double distance, String address, String longitude, String latitude, String note, List<XFile> orderAttachment,
+      Function(bool isSuccess, String message, String orderID, int zoneID, double orderAmount, double maxCodAmount) callback,  double orderAmount, double maxCodAmount) async {
 
     List<MultipartBody> _multiParts = [];
     for(XFile file in orderAttachment) {
@@ -312,12 +315,12 @@ class OrderController extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       String message = response.body['message'];
       String orderID = response.body['order_id'].toString();
-      callback(true, message, orderID, zoneID);
+      callback(true, message, orderID, zoneID, orderAmount, maxCodAmount);
       _orderAttachment = null;
       _rawAttachment = null;
       print('-------- Order placed successfully $orderID ----------');
     } else {
-      callback(false, response.statusText, '-1', zoneID);
+      callback(false, response.statusText, '-1', zoneID, orderAmount, maxCodAmount);
     }
     update();
   }
@@ -329,6 +332,7 @@ class OrderController extends GetxController implements GetxService {
 
   void clearPrevData(int zoneID) {
     _addressIndex = -1;
+    _acceptTerms = true;
     try {
       ZoneData _zoneData = Get.find<LocationController>().getUserAddress().zoneData.firstWhere((element) => element.id == zoneID);
       _paymentMethodIndex = _zoneData.cashOnDelivery ? 0 : _zoneData.digitalPayment ? 1
@@ -368,7 +372,6 @@ class OrderController extends GetxController implements GetxService {
       _showCancelled = true;
       showCustomSnackBar(response.body['message'], isError: false);
     } else {
-      print(response.statusText);
       ApiChecker.checkApi(response);
     }
     update();
@@ -468,7 +471,7 @@ class OrderController extends GetxController implements GetxService {
     Response response = await orderRepo.switchToCOD(orderID);
     bool _isSuccess;
     if (response.statusCode == 200) {
-      Get.offAllNamed(RouteHelper.getInitialRoute());
+      await Get.offAllNamed(RouteHelper.getInitialRoute());
       showCustomSnackBar(response.body['message'], isError: false);
       _isSuccess = true;
     } else {

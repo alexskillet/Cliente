@@ -54,7 +54,7 @@ class ReviewDialog extends StatelessWidget {
 
         ]) : Text(
           review.comment,
-          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyText1.color),
+          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyLarge.color),
         ),
       )),
     );

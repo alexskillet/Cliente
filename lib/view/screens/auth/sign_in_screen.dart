@@ -87,9 +87,9 @@ class _SignInScreenState extends State<SignInScreen> {
       child: Scaffold(
         appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : !widget.exitFromApp ? AppBar(leading: IconButton(
           onPressed: () => Get.back(),
-          icon: Icon(Icons.arrow_back_ios_rounded, color: Theme.of(context).textTheme.bodyText1.color),
+          icon: Icon(Icons.arrow_back_ios_rounded, color: Theme.of(context).textTheme.bodyLarge.color),
         ), elevation: 0, backgroundColor: Colors.transparent) : null,
-        endDrawer: MenuDrawer(),
+        endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
         body: SafeArea(child: Center(
           child: Scrollbar(
             child: SingleChildScrollView(
@@ -137,7 +137,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               flagWidth: 30,
                               dialogBackgroundColor: Theme.of(context).cardColor,
                               textStyle: robotoRegular.copyWith(
-                                fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color,
+                                fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyLarge.color,
                               ),
                             ),
                             Expanded(flex: 1, child: CustomTextField(

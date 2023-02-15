@@ -56,7 +56,7 @@ class ConfirmationDialog extends StatelessWidget {
                   ),
                   child: Text(
                     isLogOut ? 'yes'.tr : 'no'.tr, textAlign: TextAlign.center,
-                    style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyText1.color),
+                    style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge.color),
                   ),
                 )),
                 SizedBox(width: Dimensions.PADDING_SIZE_LARGE),

@@ -50,7 +50,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
       appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: GetBuilder<UserController>(builder: (userController) {
         if(userController.userInfoModel != null && _phoneController.text.isEmpty) {
           _firstNameController.text = userController.userInfoModel.fName ?? '';
@@ -125,7 +125,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     ),
                     SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                     Text('(${'non_changeable'.tr})', style: robotoRegular.copyWith(
-                      fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).errorColor,
+                      fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).colorScheme.error,
                     )),
                   ]),
                   SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),

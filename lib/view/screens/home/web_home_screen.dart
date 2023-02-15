@@ -92,15 +92,15 @@ class WebHomeScreen extends StatelessWidget {
                             return [
                               PopupMenuItem(value: 'all', child: Text('all'.tr), textStyle: robotoMedium.copyWith(
                                 color: storeController.storeType == 'all'
-                                    ? Theme.of(context).textTheme.bodyText1.color : Theme.of(context).disabledColor,
+                                    ? Theme.of(context).textTheme.bodyLarge.color : Theme.of(context).disabledColor,
                               )),
                               PopupMenuItem(value: 'take_away', child: Text('take_away'.tr), textStyle: robotoMedium.copyWith(
                                 color: storeController.storeType == 'take_away'
-                                    ? Theme.of(context).textTheme.bodyText1.color : Theme.of(context).disabledColor,
+                                    ? Theme.of(context).textTheme.bodyLarge.color : Theme.of(context).disabledColor,
                               )),
                               PopupMenuItem(value: 'delivery', child: Text('delivery'.tr), textStyle: robotoMedium.copyWith(
                                 color: storeController.storeType == 'delivery'
-                                    ? Theme.of(context).textTheme.bodyText1.color : Theme.of(context).disabledColor,
+                                    ? Theme.of(context).textTheme.bodyLarge.color : Theme.of(context).disabledColor,
                               )),
                             ];
                           },

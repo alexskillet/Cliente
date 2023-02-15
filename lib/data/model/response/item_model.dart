@@ -16,9 +16,9 @@ class ItemModel {
     if (json['products'] != null) {
       items = [];
       json['products'].forEach((v) {
-        if(!Get.find<SplashController>().getModuleConfig(v['module_type']).newVariation
-            || (v['variations'] == null || v['variations'].isEmpty
-                || (v['food_variations'] != null && v['food_variations'].isNotEmpty))) {
+        if(v['module_type'] == null || !Get.find<SplashController>().getModuleConfig(v['module_type']).newVariation
+            || v['variations'] == null || v['variations'].isEmpty
+            || (v['food_variations'] != null && v['food_variations'].isNotEmpty)) {
           items.add(new Item.fromJson(v));
         }
       });

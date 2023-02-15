@@ -85,7 +85,7 @@ class _ChatScreenState extends State<ChatScreen> {
           }
         },
         child: Scaffold(
-          endDrawer: MenuDrawer(),
+          endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
           appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : AppBar(
             leading: IconButton(
               onPressed: () {

@@ -73,8 +73,17 @@ class CartController extends GetxController implements GetxService {
         }
       }
     }else{
-      _cartList = [];
-      _cartList.addAll(cartRepo.getCartList());
+      if(Get.find<SplashController>().cacheModule != null){
+        _cartList = [];
+        for(CartModel cartItem in cartRepo.getCartList()){
+          if(cartItem.item.moduleId == Get.find<SplashController>().cacheModule.id){
+            _cartList.add(cartItem);
+          }
+        }
+      }else{
+        _cartList = [];
+        _cartList.addAll(cartRepo.getCartList());
+      }
     }
 
     calculationCart();
@@ -137,6 +146,7 @@ class CartController extends GetxController implements GetxService {
 
   int isExistInCart(int itemID, String variationType, bool isUpdate, int cartIndex) {
     for(int index=0; index<_cartList.length; index++) {
+      print('======${_cartList[index].toJson()}');
       if(_cartList[index].item.id == itemID && (_cartList[index].variation.length > 0 ? _cartList[index].variation[0].type
           == variationType : true)) {
         if((isUpdate && index == cartIndex)) {
@@ -158,18 +168,18 @@ class CartController extends GetxController implements GetxService {
     return false;
   }
 
-  void removeAllAndAddToCart(CartModel cartModel) {
+  void removeAllAndAddToCart(CartModel cartModel) async {
     _cartList = [];
-    for(CartModel cartItem in cartRepo.getCartList()){
-      if(cartItem.item.moduleId != cartModel.item.moduleId){
+    for(CartModel cartItem in cartRepo.getCartList()) {
+      if(cartItem.item.moduleId != cartModel.item.moduleId) {
         _cartList.add(cartItem);
       }
     }
     _cartList.add(cartModel);
-    Get.find<ItemController>().setExistInCart(cartModel.item, notify: true);
-    cartRepo.addToCartList(_cartList);
+    await cartRepo.addToCartList(_cartList);
     getCartData();
     calculationCart();
+    Get.find<ItemController>().setExistInCart(cartModel.item, notify: true);
     update();
   }
 

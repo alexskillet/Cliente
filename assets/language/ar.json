@@ -398,7 +398,7 @@
   "product_images": "صور المنتج",
   "prescription": "روشتة",
   "are_you_sure_want_to_switch": "هل أنت متأكد من أنك تريد التبديل في",
-  "select_the_type_of_stores_for_your_order": "حدد نوع العناصر لطلبك",
+  "select_the_type_of_modules_for_your_order": "حدد نوع العناصر لطلبك",
   "parcel": "قطعة",
   "instant_same_day_delivery": "توصيل فوري في نفس اليوم",
   "send_things_to_your_destination_instantly_and_safely": "أرسل الأشياء إلى وجهتك على الفور وبأمان",
@@ -654,5 +654,13 @@
   "from_gallery": "من المعرض",
   "your_prescription": "الوصفة الطبية الخاصة بك",
   "please_upload_your_prescription_images": "يرجى تحميل صورة الوصفة الخاصة بك",
-  "convert": "يتحول"
+  "convert": "يتحول",
+  "you_cant_order_more_then": "لا يمكنك طلب أكثر من ذلك",
+  "in_cash_on_delivery": "نقدا عند التسليم",
+  "tax_included": "(شامل الضريبة)",
+  "in_stock": "مخزون معد للبيع",
+  "i_have_read_and_agreed_with": "لقد قرأت ووافقت مع",
+  "please_accept_privacy_policy_trams_conditions_refund_policy_first": "برجاء قبول سياسة الخصوصية والشروط والأحكام وسياسة الاسترداد",
+  "add_voucher": "أضف قسيمة",
+  "promo_code": "رمز ترويجي"
 }

@@ -56,7 +56,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
       return Scaffold(
         appBar: CustomAppBar(title: 'conversation_list'.tr),
-        endDrawer: MenuDrawer(),
+        endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
         floatingActionButton: (chatController.conversationModel != null && !chatController.hasAdmin) ? FloatingActionButton.extended(
           label: SizedBox(
             width: context.width * 0.75,
@@ -172,7 +172,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 showCustomSnackBar('${_type.tr} ${'not_found'.tr}');
                               }
                             },
-                            highlightColor: Theme.of(context).backgroundColor.withOpacity(0.1),
+                            highlightColor: Theme.of(context).colorScheme.background.withOpacity(0.1),
                             radius: Dimensions.RADIUS_SMALL,
                             child: Stack(children: [
                               Padding(

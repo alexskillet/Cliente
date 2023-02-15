@@ -160,7 +160,7 @@ class RouteHelper {
   }
   static String getProfileRoute() => '$profile';
   static String getUpdateProfileRoute() => '$updateProfile';
-  static String getCouponRoute() => '$coupon';
+  static String getCouponRoute({bool fromCheckout = false}) => '$coupon?fromCheckout=${fromCheckout ? 'true' : 'false'}';
   static String getNotificationRoute({bool fromNotification}) => '$notification?from=${fromNotification.toString()}';
   static String getMapRoute(AddressModel addressModel, String page) {
     List<int> _encoded = utf8.encode(jsonEncode(addressModel.toJson()));
@@ -168,10 +168,10 @@ class RouteHelper {
     return '$map?address=$_data&page=$page';
   }
   static String getAddressRoute() => '$address';
-  static String getOrderSuccessRoute(String orderID) {
-    return '$orderSuccess?id=$orderID';
+  static String getOrderSuccessRoute(String orderID, bool codDelivery) {
+    return '$orderSuccess?id=$orderID&cod-delivery=$codDelivery';
   }
-  static String getPaymentRoute(String id, int user, String type) => '$payment?id=$id&user=$user&type=$type';
+  static String getPaymentRoute(String id, int user, String type, double amount, double maximumCodOrderAmount, bool codDelivery) => '$payment?id=$id&user=$user&type=$type&amount=$amount&cod=$maximumCodOrderAmount&cod-delivery=$codDelivery';
   static String getCheckoutRoute(String page,{int storeId}) => '$checkout?page=$page&store-id=$storeId';
   static String getOrderTrackingRoute(int id) => '$orderTracking?id=$id';
   static String getBasicCampaignRoute(BasicCampaignModel basicCampaignModel) {
@@ -298,7 +298,7 @@ class RouteHelper {
     }),
     GetPage(name: profile, page: () => getRoute(ProfileScreen())),
     GetPage(name: updateProfile, page: () => getRoute(UpdateProfileScreen())),
-    GetPage(name: coupon, page: () => getRoute(CouponScreen())),
+    GetPage(name: coupon, page: () => getRoute(CouponScreen(fromCheckout: Get.parameters['fromCheckout'] == 'true'))),
     GetPage(name: notification, page: () => getRoute(NotificationScreen(fromNotification: Get.parameters['from'] == 'true'))),
     GetPage(name: map, page: () {
       List<int> _decode = base64Decode(Get.parameters['address'].replaceAll(' ', '+'));
@@ -306,10 +306,14 @@ class RouteHelper {
       return getRoute(MapScreen(fromStore: Get.parameters['page'] == 'store', address: _data));
     }),
     GetPage(name: address, page: () => getRoute(AddressScreen())),
-    GetPage(name: orderSuccess, page: () => getRoute(OrderSuccessfulScreen(orderID: Get.parameters['id']))),
+    GetPage(name: orderSuccess, page: () => getRoute(OrderSuccessfulScreen(orderID: Get.parameters['id'],
+        isCashOnDelivery: Get.parameters['cod-delivery'] == 'true' ? true : false),
+    )),
     GetPage(name: payment, page: () => getRoute(PaymentScreen(orderModel: OrderModel(
-        id: int.parse(Get.parameters['id']), orderType: Get.parameters['type'], userId: int.parse(Get.parameters['user'],
-    ))))),
+        id: int.parse(Get.parameters['id']), orderType: Get.parameters['type'], userId: int.parse(Get.parameters['user']),
+        orderAmount: double.parse(Get.parameters['amount'])), maximumCodOrderAmount: double.parse(Get.parameters['cod'])
+        , isCashOnDelivery: Get.parameters['cod-delivery'] == 'true' ? true : false),
+    )),
     GetPage(name: checkout, page: () {
       CheckoutScreen _checkoutScreen = Get.arguments;
       bool _fromCart = Get.parameters['page'] == 'cart';

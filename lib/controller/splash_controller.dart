@@ -24,6 +24,7 @@ class SplashController extends GetxController implements GetxService {
   bool _firstTimeConnectionCheck = true;
   bool _hasConnection = true;
   ModuleModel _module;
+  ModuleModel _cacheModule;
   List<ModuleModel> _moduleList;
   int _moduleIndex = 0;
   Map<String, dynamic> _data = Map();
@@ -36,6 +37,7 @@ class SplashController extends GetxController implements GetxService {
   bool get firstTimeConnectionCheck => _firstTimeConnectionCheck;
   bool get hasConnection => _hasConnection;
   ModuleModel get module => _module;
+  ModuleModel get cacheModule => _cacheModule;
   int get moduleIndex => _moduleIndex;
   List<ModuleModel> get moduleList => _moduleList;
   String get htmlText => _htmlText;
@@ -75,6 +77,7 @@ class SplashController extends GetxController implements GetxService {
   Future<void> initSharedData() async {
     if(!GetPlatform.isWeb) {
       _module = null;
+      _cacheModule = splashRepo.getCacheModule();
       splashRepo.initSharedData();
     }else {
       _module = await splashRepo.initSharedData();
@@ -98,7 +101,9 @@ class SplashController extends GetxController implements GetxService {
     _module = module;
     splashRepo.setModule(module);
     if(module != null) {
+      splashRepo.setCacheModule(module);
       _configModel.moduleConfig.module = Module.fromJson(_data['module_config'][module.moduleType]);
+      Get.find<CartController>().getCartData();
     }
     if(Get.find<AuthController>().isLoggedIn()) {
       Get.find<WishListController>().getWishList();
@@ -146,13 +151,17 @@ class SplashController extends GetxController implements GetxService {
   void removeModule() {
     setModule(null);
     Get.find<BannerController>().getFeaturedBanner();
-    Get.find<CartController>().getCartData();
+    // Get.find<CartController>().getCartData();
     getModules();
     if(Get.find<AuthController>().isLoggedIn()) {
       Get.find<LocationController>().getAddressList();
     }
     Get.find<StoreController>().getFeaturedStoreList();
     Get.find<CampaignController>().itemCampaignNull();
+  }
+
+  void removeCacheModule() {
+    splashRepo.setCacheModule(null);
   }
 
   Future<void> getHtmlText(HtmlType htmlType) async {

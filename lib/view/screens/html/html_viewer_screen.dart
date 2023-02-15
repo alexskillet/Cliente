@@ -38,7 +38,7 @@ class _HtmlViewerScreenState extends State<HtmlViewerScreen> {
           ? 'privacy_policy'.tr : widget.htmlType == HtmlType.SHIPPING_POLICY ? 'shipping_policy'.tr
           : widget.htmlType == HtmlType.REFUND ? 'refund_policy'.tr :  widget.htmlType == HtmlType.CANCELATION
           ? 'cancellation_policy'.tr : 'no_data_found'.tr),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: GetBuilder<SplashController>(builder: (splashController) {
         return Center(
           child: splashController.htmlText != null ? SingleChildScrollView(

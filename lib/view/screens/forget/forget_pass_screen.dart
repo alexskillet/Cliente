@@ -34,7 +34,7 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: widget.fromSocialLogin ? 'phone'.tr : 'forgot_password'.tr),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: SafeArea(child: Center(child: Scrollbar(child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: FooterView(child: Container(
@@ -71,7 +71,7 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
                   showFlagMain: true,
                   dialogBackgroundColor: Theme.of(context).cardColor,
                   textStyle: robotoRegular.copyWith(
-                    fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color,
+                    fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyLarge.color,
                   ),
                 ),
                 Expanded(child: CustomTextField(

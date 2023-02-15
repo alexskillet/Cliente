@@ -51,6 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
       _firstTime = false;
     });
 
+    Get.find<SplashController>().initSharedData();
     Get.find<CartController>().getCartData();
     _route();
 

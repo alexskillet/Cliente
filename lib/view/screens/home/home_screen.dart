@@ -39,7 +39,7 @@ class HomeScreen extends StatefulWidget {
       Get.find<BannerController>().getBannerList(reload);
       Get.find<CategoryController>().getCategoryList(reload);
       Get.find<StoreController>().getPopularStoreList(reload, 'all', false);
-      Get.find<CampaignController>().getItemCampaignList(reload, Get.find<SplashController>().module.moduleType);
+      Get.find<CampaignController>().getItemCampaignList(reload);
       Get.find<ItemController>().getPopularItemList(reload, 'all', false);
       Get.find<StoreController>().getLatestStoreList(reload, 'all', false);
       Get.find<ItemController>().getReviewedItemList(reload, 'all', false);
@@ -97,9 +97,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
       return Scaffold(
         appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
-        endDrawer: MenuDrawer(),
+        endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
         backgroundColor: ResponsiveHelper.isDesktop(context) ? Theme.of(context).cardColor : splashController.module == null
-            ? Theme.of(context).backgroundColor : null,
+            ? Theme.of(context).colorScheme.background : null,
         body: _isParcel ? ParcelCategoryScreen() : SafeArea(
           child: RefreshIndicator(
             onRefresh: () async {
@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 await Get.find<BannerController>().getBannerList(true);
                 await Get.find<CategoryController>().getCategoryList(true);
                 await Get.find<StoreController>().getPopularStoreList(true, 'all', false);
-                await Get.find<CampaignController>().getItemCampaignList(true, Get.find<SplashController>().module.moduleType);
+                await Get.find<CampaignController>().getItemCampaignList(true);
                 await Get.find<ItemController>().getPopularItemList(true, 'all', false);
                 await Get.find<StoreController>().getLatestStoreList(true, 'all', false);
                 await Get.find<ItemController>().getReviewedItemList(true, 'all', false);
@@ -138,13 +138,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 // App Bar
                 SliverAppBar(
                   floating: true, elevation: 0, automaticallyImplyLeading: false,
-                  backgroundColor: ResponsiveHelper.isDesktop(context) ? Colors.transparent : Theme.of(context).backgroundColor,
+                  backgroundColor: ResponsiveHelper.isDesktop(context) ? Colors.transparent : Theme.of(context).colorScheme.background,
                   title: Center(child: Container(
-                    width: Dimensions.WEB_MAX_WIDTH, height: 50, color: Theme.of(context).backgroundColor,
+                    width: Dimensions.WEB_MAX_WIDTH, height: 50, color: Theme.of(context).colorScheme.background,
                     child: Row(children: [
                       (splashController.module != null && splashController.configModel.module == null) ? InkWell(
                         onTap: () => splashController.removeModule(),
-                        child: Image.asset(Images.module_icon, height: 22, width: 22, color: Theme.of(context).textTheme.bodyText1.color),
+                        child: Image.asset(Images.module_icon, height: 22, width: 22, color: Theme.of(context).textTheme.bodyLarge.color),
                       ) : SizedBox(),
                       SizedBox(width: (splashController.module != null && splashController.configModel.module
                           == null) ? Dimensions.PADDING_SIZE_EXTRA_SMALL : 0),
@@ -161,19 +161,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Icon(
                                   locationController.getUserAddress().addressType == 'home' ? Icons.home_filled
                                       : locationController.getUserAddress().addressType == 'office' ? Icons.work : Icons.location_on,
-                                  size: 20, color: Theme.of(context).textTheme.bodyText1.color,
+                                  size: 20, color: Theme.of(context).textTheme.bodyLarge.color,
                                 ),
                                 SizedBox(width: 10),
                                 Flexible(
                                   child: Text(
                                     locationController.getUserAddress().address,
                                     style: robotoRegular.copyWith(
-                                      color: Theme.of(context).textTheme.bodyText1.color, fontSize: Dimensions.fontSizeSmall,
+                                      color: Theme.of(context).textTheme.bodyLarge.color, fontSize: Dimensions.fontSizeSmall,
                                     ),
                                     maxLines: 1, overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                Icon(Icons.arrow_drop_down, color: Theme.of(context).textTheme.bodyText1.color),
+                                Icon(Icons.arrow_drop_down, color: Theme.of(context).textTheme.bodyLarge.color),
                               ],
                             );
                           }),
@@ -182,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       InkWell(
                         child: GetBuilder<NotificationController>(builder: (notificationController) {
                           return Stack(children: [
-                            Icon(Icons.notifications, size: 25, color: Theme.of(context).textTheme.bodyText1.color),
+                            Icon(Icons.notifications, size: 25, color: Theme.of(context).textTheme.bodyLarge.color),
                             notificationController.hasNotification ? Positioned(top: 0, right: 0, child: Container(
                               height: 10, width: 10, decoration: BoxDecoration(
                               color: Theme.of(context).primaryColor, shape: BoxShape.circle,
@@ -203,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   pinned: true,
                   delegate: SliverDelegate(child: Center(child: Container(
                     height: 50, width: Dimensions.WEB_MAX_WIDTH,
-                    color: Theme.of(context).backgroundColor,
+                    color: Theme.of(context).colorScheme.background,
                     padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
                     child: InkWell(
                       onTap: () => Get.toNamed(RouteHelper.getSearchRoute()),

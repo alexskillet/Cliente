@@ -37,9 +37,9 @@ class Theme1HomeScreen extends StatelessWidget {
         // App Bar
         SliverAppBar(
           floating: true, elevation: 0, automaticallyImplyLeading: false,
-          backgroundColor: ResponsiveHelper.isDesktop(context) ? Colors.transparent : Theme.of(context).backgroundColor,
+          backgroundColor: ResponsiveHelper.isDesktop(context) ? Colors.transparent : Theme.of(context).colorScheme.background,
           title: Center(child: Container(
-            width: Dimensions.WEB_MAX_WIDTH, height: 50, color: Theme.of(context).backgroundColor,
+            width: Dimensions.WEB_MAX_WIDTH, height: 50, color: Theme.of(context).colorScheme.background,
             child: Row(children: [
               (splashController.module != null && splashController.configModel.module == null) ? InkWell(
                 onTap: () => splashController.removeModule(),
@@ -60,19 +60,19 @@ class Theme1HomeScreen extends StatelessWidget {
                         Icon(
                           locationController.getUserAddress().addressType == 'home' ? Icons.home_filled
                               : locationController.getUserAddress().addressType == 'office' ? Icons.work : Icons.location_on,
-                          size: 20, color: Theme.of(context).textTheme.bodyText1.color,
+                          size: 20, color: Theme.of(context).textTheme.bodyLarge.color,
                         ),
                         SizedBox(width: 10),
                         Flexible(
                           child: Text(
                             locationController.getUserAddress().address,
                             style: robotoRegular.copyWith(
-                              color: Theme.of(context).textTheme.bodyText1.color, fontSize: Dimensions.fontSizeSmall,
+                              color: Theme.of(context).textTheme.bodyLarge.color, fontSize: Dimensions.fontSizeSmall,
                             ),
                             maxLines: 1, overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        Icon(Icons.arrow_drop_down, color: Theme.of(context).textTheme.bodyText1.color),
+                        Icon(Icons.arrow_drop_down, color: Theme.of(context).textTheme.bodyLarge.color),
                       ],
                     );
                   }),
@@ -81,7 +81,7 @@ class Theme1HomeScreen extends StatelessWidget {
               InkWell(
                 child: GetBuilder<NotificationController>(builder: (notificationController) {
                   return Stack(children: [
-                    Icon(Icons.notifications, size: 25, color: Theme.of(context).textTheme.bodyText1.color),
+                    Icon(Icons.notifications, size: 25, color: Theme.of(context).textTheme.bodyLarge.color),
                     notificationController.hasNotification ? Positioned(top: 0, right: 0, child: Container(
                       height: 10, width: 10, decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor, shape: BoxShape.circle,
@@ -102,7 +102,7 @@ class Theme1HomeScreen extends StatelessWidget {
           pinned: true,
           delegate: SliverDelegate(child: Center(child: Container(
             height: 50, width: Dimensions.WEB_MAX_WIDTH,
-            color: Theme.of(context).backgroundColor,
+            color: Theme.of(context).colorScheme.background,
             padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
             child: InkWell(
               onTap: () => Get.toNamed(RouteHelper.getSearchRoute()),

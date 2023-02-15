@@ -53,7 +53,7 @@ class _AccessLocationScreenState extends State<AccessLocationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'set_location'.tr, backButton: widget.fromHome),
-      endDrawer: MenuDrawer(),
+      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: SafeArea(child: Padding(
         padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
         child: GetBuilder<LocationController>(builder: (locationController) {

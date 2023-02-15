@@ -398,7 +398,7 @@
   "product_images": "Product Images",
   "prescription": "Prescription",
   "are_you_sure_want_to_switch": "Are you sure want to switch at",
-  "select_the_type_of_stores_for_your_order": "Select the type of stores for your order",
+  "select_the_type_of_modules_for_your_order": "Select the type of modules for your order",
   "parcel": "Parcel",
   "instant_same_day_delivery": "Instant same day delivery",
   "send_things_to_your_destination_instantly_and_safely": "Send things to your destination instantly and safely",
@@ -653,5 +653,13 @@
   "from_gallery": "From Gallery",
   "your_prescription": "Your Prescription",
   "please_upload_your_prescription_images": "Please upload your prescription image",
-  "convert": "Convert"
+  "convert": "Convert",
+  "you_cant_order_more_then": "You can't order more then",
+  "in_cash_on_delivery": "in cash on delivery",
+  "tax_included": "(Tax Included)",
+  "in_stock": "In Stock",
+  "i_have_read_and_agreed_with": "I have read and agreed with",
+  "please_accept_privacy_policy_trams_conditions_refund_policy_first": "Please accept Privacy Policy, Trams & Conditions and Refund Policy",
+  "add_voucher": "Add Voucher",
+  "promo_code": "Promo Code"
 }
