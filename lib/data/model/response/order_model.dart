@@ -83,6 +83,7 @@ class OrderModel {
   Refund refund;
   bool prescriptionOrder;
   bool taxStatus;
+  String cancellationReason;
 
   OrderModel(
       {this.id,
@@ -130,6 +131,7 @@ class OrderModel {
         this.refund,
         this.prescriptionOrder,
         this.taxStatus,
+        this.cancellationReason,
       });
 
   OrderModel.fromJson(Map<String, dynamic> json) {
@@ -188,6 +190,7 @@ class OrderModel {
     refund = json['refund'] != null ? new Refund.fromJson(json['refund']) : null;
     prescriptionOrder = json['prescription_order'];
     taxStatus = json['tax_status'] == 'included' ? true : false;
+    cancellationReason = json['cancellation_reason'];
   }
 
   Map<String, dynamic> toJson() {

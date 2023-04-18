@@ -6,6 +6,7 @@ import 'package:sixam_mart/controller/order_controller.dart';
 import 'package:sixam_mart/data/api/api_checker.dart';
 import 'package:sixam_mart/data/model/response/category_model.dart';
 import 'package:sixam_mart/data/model/response/item_model.dart';
+import 'package:sixam_mart/data/model/response/recommended_product_model.dart';
 import 'package:sixam_mart/data/model/response/store_model.dart';
 import 'package:sixam_mart/data/model/response/review_model.dart';
 import 'package:sixam_mart/data/model/response/zone_response_model.dart';
@@ -39,6 +40,7 @@ class StoreController extends GetxController implements GetxService {
   bool _currentState = false;
   bool _showFavButton = true;
   List<XFile> _pickedPrescriptions = [];
+  RecommendedItemModel _recommendedItemModel;
 
   StoreModel get storeModel => _storeModel;
   List<Store> get popularStoreList => _popularStoreList;
@@ -58,6 +60,7 @@ class StoreController extends GetxController implements GetxService {
   bool get currentState => _currentState;
   bool get showFavButton => _showFavButton;
   List<XFile> get pickedPrescriptions => _pickedPrescriptions;
+  RecommendedItemModel get recommendedItemModel => _recommendedItemModel;
 
 
   void pickPrescriptionImage({@required bool isRemove, @required bool isCamera}) async {
@@ -91,6 +94,22 @@ class StoreController extends GetxController implements GetxService {
       _currentState = true;
       update();
     });
+  }
+
+
+  Future<void> getRestaurantRecommendedItemList(int storeId, bool reload) async {
+    if(reload) {
+      _storeModel = null;
+      update();
+    }
+    Response response = await storeRepo.getStoreRecommendedItemList(storeId);
+    if (response.statusCode == 200) {
+      _recommendedItemModel = RecommendedItemModel.fromJson(response.body);
+
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
   }
 
   Future<void> getStoreList(int offset, bool reload) async {

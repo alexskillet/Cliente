@@ -33,6 +33,8 @@ class _MenuScreenState extends State<MenuScreen> {
       MenuModel(icon: Images.about_us, title: 'about_us'.tr, route: RouteHelper.getHtmlRoute('about-us')),
       MenuModel(icon: Images.terms, title: 'terms_conditions'.tr, route: RouteHelper.getHtmlRoute('terms-and-condition')),
       MenuModel(icon: Images.chat, title: 'live_chat'.tr, route: RouteHelper.getConversationRoute()),
+      ///only for taxi module.. will come soon.
+      // MenuModel(icon: Images.orders, title: 'trip_order'.tr, route: RouteHelper.getTripHistoryScreen()),
     ];
 
     if(Get.find<SplashController>().configModel.refundPolicyStatus == 1 ){

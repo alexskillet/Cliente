@@ -11,7 +11,15 @@ class CouponRepo {
     return await apiClient.getData(AppConstants.COUPON_URI);
   }
 
+  Future<Response> getTaxiCouponList() async {
+    return await apiClient.getData(AppConstants.TAXI_COUPON_URI);
+  }
+
   Future<Response> applyCoupon(String couponCode, int storeID) async {
     return await apiClient.getData('${AppConstants.COUPON_APPLY_URI}$couponCode&store_id=$storeID');
+  }
+
+  Future<Response> applyTaxiCoupon(String couponCode, int providerId) async {
+    return await apiClient.getData('${AppConstants.TAXI_COUPON_APPLY_URI}$couponCode&provider_id=$providerId');
   }
 }

@@ -97,7 +97,7 @@ class ItemCampaignView extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       PriceConverter.convertPrice(campaignController.itemCampaignList[index].price),
-                                      style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
+                                      style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall), textDirection: TextDirection.ltr,
                                     ),
                                   ),
                                   Icon(Icons.star, color: Theme.of(context).primaryColor, size: 12),

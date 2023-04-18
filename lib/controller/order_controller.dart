@@ -7,6 +7,7 @@ import 'package:sixam_mart/data/api/api_checker.dart';
 import 'package:sixam_mart/data/api/api_client.dart';
 import 'package:sixam_mart/data/model/body/place_order_body.dart';
 import 'package:sixam_mart/data/model/response/distance_model.dart';
+import 'package:sixam_mart/data/model/response/order_cancellation_body.dart';
 import 'package:sixam_mart/data/model/response/order_details_model.dart';
 import 'package:sixam_mart/data/model/response/order_model.dart';
 import 'package:sixam_mart/data/model/response/refund_model.dart';
@@ -53,7 +54,9 @@ class OrderController extends GetxController implements GetxService {
   int _selectedReasonIndex = 0;
   XFile _refundImage;
   bool _acceptTerms = true;
-
+  double _extraCharge;
+  String _cancelReason;
+  List<CancellationData> _orderCancelReasons;
 
   PaginatedOrderModel get runningOrderModel => _runningOrderModel;
   PaginatedOrderModel get historyOrderModel => _historyOrderModel;
@@ -80,7 +83,42 @@ class OrderController extends GetxController implements GetxService {
   XFile get refundImage => _refundImage;
   List<String> get refundReasons => _refundReasons;
   bool get acceptTerms => _acceptTerms;
+  double get extraCharge => _extraCharge;
+  String get cancelReason => _cancelReason;
+  List<CancellationData> get orderCancelReasons => _orderCancelReasons;
 
+  Future<void> getOrderCancelReasons()async {
+    Response response = await orderRepo.getCancelReasons();
+    if (response.statusCode == 200) {
+      OrderCancellationBody orderCancellationBody = OrderCancellationBody.fromJson(response.body);
+      _orderCancelReasons = [];
+      if(orderCancellationBody != null){
+        orderCancellationBody.reasons.forEach((element) {
+          _orderCancelReasons.add(element);
+        });
+      }
+
+    }else{
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
+
+  void setOrderCancelReason(String reason){
+    _cancelReason = reason;
+    update();
+  }
+
+  Future<double> getExtraCharge(double distance) async {
+    _extraCharge = null;
+    Response response = await orderRepo.getExtraCharge(distance);
+    if (response.statusCode == 200) {
+      _extraCharge = double.parse(response.body.toString());
+    } else {
+      _extraCharge = 0;
+    }
+    return _extraCharge;
+  }
 
   void toggleTerms() {
     _acceptTerms = !_acceptTerms;
@@ -354,13 +392,15 @@ class OrderController extends GetxController implements GetxService {
     update();
   }
 
-  void cancelOrder(int orderID) async {
+  Future<bool> cancelOrder(int orderID, String cancelReason) async {
+    bool success = false;
     _isLoading = true;
     update();
-    Response response = await orderRepo.cancelOrder(orderID.toString());
+    Response response = await orderRepo.cancelOrder(orderID.toString(), cancelReason);
     _isLoading = false;
     Get.back();
     if (response.statusCode == 200) {
+      success = true;
       OrderModel orderModel;
       for(OrderModel order in _runningOrderModel.orders) {
         if(order.id == orderID) {
@@ -375,6 +415,7 @@ class OrderController extends GetxController implements GetxService {
       ApiChecker.checkApi(response);
     }
     update();
+    return success;
   }
 
   void setOrderType(String type, {bool notify = true}) {
@@ -483,22 +524,31 @@ class OrderController extends GetxController implements GetxService {
     return _isSuccess;
   }
 
-  Future<double> getDistanceInKM(LatLng originLatLng, LatLng destinationLatLng) async {
+  Future<double> getDistanceInKM(LatLng originLatLng, LatLng destinationLatLng, {bool isDuration = false, bool isRiding = false}) async {
     _distance = -1;
-    Response response = await orderRepo.getDistanceInMeter(originLatLng, destinationLatLng);
+    Response response = await orderRepo.getDistanceInMeter(originLatLng, destinationLatLng, isRiding);
     try {
       if (response.statusCode == 200 && response.body['status'] == 'OK') {
-        _distance = DistanceModel.fromJson(response.body).rows[0].elements[0].distance.value / 1000;
+        if(isDuration){
+          _distance = DistanceModel.fromJson(response.body).rows[0].elements[0].duration.value / 3600;
+        }else{
+          _distance = DistanceModel.fromJson(response.body).rows[0].elements[0].distance.value / 1000;
+        }
       } else {
-        _distance = Geolocator.distanceBetween(
-          originLatLng.latitude, originLatLng.longitude, destinationLatLng.latitude, destinationLatLng.longitude,
-        ) / 1000;
+        if(!isDuration) {
+          _distance = Geolocator.distanceBetween(
+            originLatLng.latitude, originLatLng.longitude, destinationLatLng.latitude, destinationLatLng.longitude,
+          ) / 1000;
+        }
       }
     } catch (e) {
-      _distance = Geolocator.distanceBetween(
-        originLatLng.latitude, originLatLng.longitude, destinationLatLng.latitude, destinationLatLng.longitude,
-      ) / 1000;
+      if(!isDuration) {
+        _distance = Geolocator.distanceBetween(originLatLng.latitude, originLatLng.longitude,
+          destinationLatLng.latitude, destinationLatLng.longitude) / 1000;
+      }
     }
+    await getExtraCharge(_distance);
+
     update();
     return _distance;
   }

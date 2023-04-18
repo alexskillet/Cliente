@@ -137,9 +137,19 @@ class CartItemWidget extends StatelessWidget {
                           SizedBox(height: 2),
                           RatingBar(rating: cart.item.avgRating, size: 12, ratingCount: cart.item.ratingCount),
                           SizedBox(height: 5),
-                          Text(
-                            PriceConverter.convertPrice(cart.discountedPrice+cart.discountAmount),
-                            style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
+                          Row(
+                            children: [
+                              Text(
+                                PriceConverter.convertPrice(cart.discountedPrice),
+                                style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall), textDirection: TextDirection.ltr,
+                              ),
+
+                              SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                              cart.discountedPrice+cart.discountAmount > cart.discountedPrice ? Text(
+                                PriceConverter.convertPrice(cart.discountedPrice+cart.discountAmount), textDirection: TextDirection.ltr,
+                                style: robotoMedium.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall, decoration: TextDecoration.lineThrough),
+                              ) : SizedBox(),
+                            ],
                           ),
                         ]),
                       ),

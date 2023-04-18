@@ -21,7 +21,7 @@ class HistoryItem extends StatelessWidget {
             fromWallet ? Text(data[index].transactionType == 'order_place'
                 ? PriceConverter.convertPrice(data[index].debit + data[index].adminBonus)
                 : PriceConverter.convertPrice(data[index].credit + data[index].adminBonus),
-              style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault), maxLines: 1, overflow: TextOverflow.ellipsis,
+              style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault), maxLines: 1, overflow: TextOverflow.ellipsis, textDirection: TextDirection.ltr,
             ) : Row(children: [
               Text(data[index].transactionType == 'point_to_wallet'? data[index].debit.toStringAsFixed(0)
                   : data[index].credit.toStringAsFixed(0),

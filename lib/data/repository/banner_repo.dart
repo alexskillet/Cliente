@@ -10,6 +10,10 @@ class BannerRepo {
     return await apiClient.getData(AppConstants.BANNER_URI);
   }
 
+  Future<Response> getTaxiBannerList() async {
+    return await apiClient.getData(AppConstants.TAXI_BANNER_URI);
+  }
+
   Future<Response> getFeaturedBannerList() async {
     return await apiClient.getData('${AppConstants.BANNER_URI}?featured=1');
   }

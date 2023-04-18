@@ -31,9 +31,9 @@ class LocationRepo {
     return await apiClient.putData('${AppConstants.UPDATE_ADDRESS_URI}$addressId', addressModel.toJson());
   }
 
-  Future<bool> saveUserAddress(String address, List<int> zoneIDs, String latitude, String longitude) async {
+  Future<bool> saveUserAddress(String address, List<int> zoneIDs, List<int> areaIDs, String latitude, String longitude) async {
     apiClient.updateHeader(
-      sharedPreferences.getString(AppConstants.TOKEN), zoneIDs,
+      sharedPreferences.getString(AppConstants.TOKEN), zoneIDs, areaIDs,
       sharedPreferences.getString(AppConstants.LANGUAGE_CODE),
       Get.find<SplashController>().module != null ? Get.find<SplashController>().module.id : null,
       latitude, longitude

@@ -11,8 +11,10 @@ class BannerController extends GetxController implements GetxService {
   BannerController({@required this.bannerRepo});
 
   List<String> _bannerImageList;
+  List<String> _taxiBannerImageList;
   List<String> _featuredBannerList;
   List<dynamic> _bannerDataList;
+  List<dynamic> _taxiBannerDataList;
   List<dynamic> _featuredBannerDataList;
   int _currentIndex = 0;
 
@@ -21,6 +23,8 @@ class BannerController extends GetxController implements GetxService {
   List<dynamic> get bannerDataList => _bannerDataList;
   List<dynamic> get featuredBannerDataList => _featuredBannerDataList;
   int get currentIndex => _currentIndex;
+  List<String> get taxiBannerImageList => _taxiBannerImageList;
+  List<dynamic> get taxiBannerDataList => _taxiBannerDataList;
 
   Future<void> getFeaturedBanner() async {
     Response response = await bannerRepo.getFeaturedBannerList();
@@ -81,6 +85,41 @@ class BannerController extends GetxController implements GetxService {
         if(ResponsiveHelper.isDesktop(Get.context) && _bannerImageList.length % 2 != 0){
           _bannerImageList.add(_bannerImageList[0]);
           _bannerDataList.add(_bannerDataList[0]);
+        }
+      } else {
+        ApiChecker.checkApi(response);
+      }
+      update();
+    }
+  }
+
+  Future<void> getTaxiBannerList(bool reload) async {
+    if(_taxiBannerImageList == null || reload) {
+      _taxiBannerImageList = null;
+      Response response = await bannerRepo.getTaxiBannerList();
+      if (response.statusCode == 200) {
+        _taxiBannerImageList = [];
+        _taxiBannerDataList = [];
+        BannerModel _bannerModel = BannerModel.fromJson(response.body);
+        _bannerModel.campaigns.forEach((campaign) {
+          _taxiBannerImageList.add(campaign.image);
+          _taxiBannerDataList.add(campaign);
+        });
+        _bannerModel.banners.forEach((banner) {
+          _taxiBannerImageList.add(banner.image);
+          if(banner.item != null) {
+            _taxiBannerDataList.add(banner.item);
+          }else if(banner.store != null){
+            _taxiBannerDataList.add(banner.store);
+          }else if(banner.type == 'default'){
+            _taxiBannerDataList.add(banner.link);
+          }else{
+            _taxiBannerDataList.add(null);
+          }
+        });
+        if(ResponsiveHelper.isDesktop(Get.context) && _taxiBannerImageList.length % 2 != 0){
+          _taxiBannerImageList.add(_taxiBannerImageList[0]);
+          _taxiBannerDataList.add(_taxiBannerDataList[0]);
         }
       } else {
         ApiChecker.checkApi(response);

@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:sixam_mart/controller/auth_controller.dart';
 import 'package:sixam_mart/controller/banner_controller.dart';
+import 'package:sixam_mart/controller/booking_checkout_controller.dart';
 import 'package:sixam_mart/controller/campaign_controller.dart';
+import 'package:sixam_mart/controller/car_selection_controller.dart';
 import 'package:sixam_mart/controller/cart_controller.dart';
 import 'package:sixam_mart/controller/category_controller.dart';
 import 'package:sixam_mart/controller/chat_controller.dart';
@@ -14,6 +16,7 @@ import 'package:sixam_mart/controller/onboarding_controller.dart';
 import 'package:sixam_mart/controller/order_controller.dart';
 import 'package:sixam_mart/controller/item_controller.dart';
 import 'package:sixam_mart/controller/parcel_controller.dart';
+import 'package:sixam_mart/controller/rider_controller.dart';
 import 'package:sixam_mart/controller/store_controller.dart';
 import 'package:sixam_mart/controller/search_controller.dart';
 import 'package:sixam_mart/controller/splash_controller.dart';
@@ -24,6 +27,7 @@ import 'package:sixam_mart/controller/wishlist_controller.dart';
 import 'package:sixam_mart/data/repository/auth_repo.dart';
 import 'package:sixam_mart/data/repository/banner_repo.dart';
 import 'package:sixam_mart/data/repository/campaign_repo.dart';
+import 'package:sixam_mart/data/repository/car_selection_repo.dart';
 import 'package:sixam_mart/data/repository/cart_repo.dart';
 import 'package:sixam_mart/data/repository/category_repo.dart';
 import 'package:sixam_mart/data/repository/coupon_repo.dart';
@@ -34,6 +38,7 @@ import 'package:sixam_mart/data/repository/onboarding_repo.dart';
 import 'package:sixam_mart/data/repository/order_repo.dart';
 import 'package:sixam_mart/data/repository/item_repo.dart';
 import 'package:sixam_mart/data/repository/parcel_repo.dart';
+import 'package:sixam_mart/data/repository/rider_repo.dart';
 import 'package:sixam_mart/data/repository/store_repo.dart';
 import 'package:sixam_mart/data/repository/search_repo.dart';
 import 'package:sixam_mart/data/repository/splash_repo.dart';
@@ -75,6 +80,8 @@ Future<Map<String, Map<String, String>>> init() async {
   Get.lazyPut(() => ParcelRepo(apiClient: Get.find()));
   Get.lazyPut(() => WalletRepo(apiClient: Get.find()));
   Get.lazyPut(() => ChatRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
+  Get.lazyPut(() => RiderRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
+  Get.lazyPut(() => CarSelectionRepo(apiClient: Get.find()));
 
   // Controller
   Get.lazyPut(() => ThemeController(sharedPreferences: Get.find()));
@@ -98,6 +105,9 @@ Future<Map<String, Map<String, String>>> init() async {
   Get.lazyPut(() => ParcelController(parcelRepo: Get.find()));
   Get.lazyPut(() => WalletController(walletRepo: Get.find()));
   Get.lazyPut(() => ChatController(chatRepo: Get.find()));
+  Get.lazyPut(() => RiderController(riderRepo: Get.find()));
+  Get.lazyPut(() => CarSelectionController(carSelectionRepo: Get.find()));
+  Get.lazyPut(() => BookingCheckoutController(riderRepo: Get.find()));
 
   // Retrieving localized data
   Map<String, Map<String, String>> _languages = Map();

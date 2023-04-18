@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:photo_view/photo_view.dart';
+import 'package:sixam_mart/controller/location_controller.dart';
 import 'package:sixam_mart/controller/order_controller.dart';
 import 'package:sixam_mart/controller/splash_controller.dart';
 import 'package:sixam_mart/data/model/body/notification_body.dart';
@@ -8,6 +9,7 @@ import 'package:sixam_mart/data/model/response/conversation_model.dart';
 import 'package:sixam_mart/data/model/response/order_details_model.dart';
 import 'package:sixam_mart/data/model/response/order_model.dart';
 import 'package:sixam_mart/data/model/response/review_model.dart';
+import 'package:sixam_mart/data/model/response/zone_response_model.dart';
 import 'package:sixam_mart/helper/date_converter.dart';
 import 'package:sixam_mart/helper/price_converter.dart';
 import 'package:sixam_mart/helper/responsive_helper.dart';
@@ -23,6 +25,7 @@ import 'package:sixam_mart/view/base/custom_snackbar.dart';
 import 'package:sixam_mart/view/base/footer_view.dart';
 import 'package:sixam_mart/view/base/menu_drawer.dart';
 import 'package:sixam_mart/view/screens/chat/widget/image_dialog.dart';
+import 'package:sixam_mart/view/screens/order/widget/cancellation_dialogue.dart';
 import 'package:sixam_mart/view/screens/order/widget/order_item_widget.dart';
 import 'package:sixam_mart/view/screens/parcel/widget/card_widget.dart';
 import 'package:sixam_mart/view/screens/parcel/widget/details_widget.dart';
@@ -44,6 +47,8 @@ class OrderDetailsScreen extends StatefulWidget {
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   Timer _timer;
+  double _maxCodOrderAmount;
+  bool _isCashOnDeliveryActive = true;
 
   void _loadData(BuildContext context, bool reload) async {
     await Get.find<OrderController>().trackOrder(widget.orderId.toString(), reload ? null : widget.orderModel, false);
@@ -128,11 +133,23 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 _itemsPrice = _itemsPrice + (orderDetails.price * orderDetails.quantity);
               }
             }
+
+            for(ZoneData zData in Get.find<LocationController>().getUserAddress().zoneData) {
+              if(zData.id == _order.store.zoneId){
+                _isCashOnDeliveryActive = zData.cashOnDelivery;
+              }
+              for(Modules m in zData.modules) {
+                if(m.id == _order.store.moduleId) {
+                  _maxCodOrderAmount = m.pivot.maximumCodOrderAmount;
+                  break;
+                }
+              }
+            }
           }
           double _subTotal = _itemsPrice + _addOns;
-          double _total = _itemsPrice + _addOns - _discount + _tax + _deliveryCharge - _couponDiscount + _dmTips;
+          double _total = _itemsPrice + _addOns - _discount + (_taxIncluded ? 0 : _tax) + _deliveryCharge - _couponDiscount + _dmTips;
 
-          return orderController.orderDetails != null ? Column(children: [
+          return orderController.orderDetails != null && _order != null ? Column(children: [
 
             Expanded(child: Scrollbar(child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
@@ -207,6 +224,21 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     ),
                   ]),
                 ),
+
+                _order.orderStatus == 'canceled' ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Divider(height: Dimensions.PADDING_SIZE_LARGE),
+                  Text('${'cancellation_note'.tr}:', style: robotoMedium),
+                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+                  InkWell(
+                    onTap: () => Get.dialog(ReviewDialog(review: ReviewModel(comment: _order.cancellationReason), fromOrderDetails: true)),
+                    child: Text(
+                      '${_order.cancellationReason != null ? _order.cancellationReason : ''}', maxLines: 2, overflow: TextOverflow.ellipsis,
+                      style: robotoRegular.copyWith(color: Theme.of(context).disabledColor),
+                    ),
+                  ),
+
+                ]) : SizedBox(),
 
                 (_order.orderStatus == 'refund_requested' || _order.orderStatus == 'refund_request_canceled') ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Divider(height: Dimensions.PADDING_SIZE_LARGE),
@@ -402,7 +434,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 _parcel ? SizedBox() : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text('item_price'.tr, style: robotoRegular),
-                    Text(PriceConverter.convertPrice(_itemsPrice), style: robotoRegular),
+                    Text(PriceConverter.convertPrice(_itemsPrice), style: robotoRegular, textDirection: TextDirection.ltr),
                   ]),
                   SizedBox(height: 10),
 
@@ -410,7 +442,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('addons'.tr, style: robotoRegular),
-                      Text('(+) ${PriceConverter.convertPrice(_addOns)}', style: robotoRegular),
+                      Text('(+) ${PriceConverter.convertPrice(_addOns)}', style: robotoRegular, textDirection: TextDirection.ltr),
                     ],
                   ) : SizedBox(),
 
@@ -422,14 +454,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('subtotal'.tr+ ' ${_taxIncluded ? 'tax_included'.tr : ''}', style: robotoMedium),
-                      Text(PriceConverter.convertPrice(_subTotal), style: robotoMedium),
+                      Text(PriceConverter.convertPrice(_subTotal), style: robotoMedium, textDirection: TextDirection.ltr),
                     ],
                   ) : SizedBox(),
                   SizedBox(height: Get.find<SplashController>().getModuleConfig(_order.moduleType).addOn ? 10 : 0),
 
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text('discount'.tr, style: robotoRegular),
-                    Text('(-) ${PriceConverter.convertPrice(_discount)}', style: robotoRegular),
+                    Text('(-) ${PriceConverter.convertPrice(_discount)}', style: robotoRegular, textDirection: TextDirection.ltr),
                   ]),
                   SizedBox(height: 10),
 
@@ -437,14 +469,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     Text('coupon_discount'.tr, style: robotoRegular),
                     Text(
                       '(-) ${PriceConverter.convertPrice(_couponDiscount)}',
-                      style: robotoRegular,
+                      style: robotoRegular, textDirection: TextDirection.ltr,
                     ),
                   ]) : SizedBox(),
                   SizedBox(height: _couponDiscount > 0 ? 10 : 0),
 
                   !_taxIncluded ?  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text('vat_tax'.tr, style: robotoRegular),
-                    Text('(+) ${PriceConverter.convertPrice(_tax)}', style: robotoRegular),
+                    Text('(+) ${PriceConverter.convertPrice(_tax)}', style: robotoRegular, textDirection: TextDirection.ltr),
                   ]) : SizedBox(),
                   SizedBox(height: _taxIncluded ? 0 : 10),
 
@@ -452,7 +484,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('delivery_man_tips'.tr, style: robotoRegular),
-                      Text('(+) ${PriceConverter.convertPrice(_dmTips)}', style: robotoRegular),
+                      Text('(+) ${PriceConverter.convertPrice(_dmTips)}', style: robotoRegular, textDirection: TextDirection.ltr),
                     ],
                   ) : SizedBox(),
                   SizedBox(height: _dmTips > 0 ? 10 : 0),
@@ -460,7 +492,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text('delivery_fee'.tr, style: robotoRegular),
                     _deliveryCharge > 0 ? Text(
-                      '(+) ${PriceConverter.convertPrice(_deliveryCharge)}', style: robotoRegular,
+                      '(+) ${PriceConverter.convertPrice(_deliveryCharge)}', style: robotoRegular, textDirection: TextDirection.ltr,
                     ) : Text('free'.tr, style: robotoRegular.copyWith(color: Theme.of(context).primaryColor)),
                   ]),
                 ]),
@@ -475,18 +507,18 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).primaryColor,
                   )),
                   Text(
-                    PriceConverter.convertPrice(_total),
+                    PriceConverter.convertPrice(_total), textDirection: TextDirection.ltr,
                     style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).primaryColor),
                   ),
                 ]),
 
                 SizedBox(height: ResponsiveHelper.isDesktop(context) ? Dimensions.PADDING_SIZE_LARGE : 0),
-                ResponsiveHelper.isDesktop(context) ? _bottomView(orderController, _order, _parcel) : SizedBox(),
+                ResponsiveHelper.isDesktop(context) ? _bottomView(orderController, _order, _parcel, _total) : SizedBox(),
 
               ]))),
             ))),
 
-            ResponsiveHelper.isDesktop(context) ? SizedBox() : _bottomView(orderController, _order, _parcel),
+            ResponsiveHelper.isDesktop(context) ? SizedBox() : _bottomView(orderController, _order, _parcel, _total),
 
           ]) : Center(child: CircularProgressIndicator());
         }),
@@ -521,13 +553,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     },
   );
 
-  Widget _bottomView(OrderController orderController, OrderModel order, bool parcel) {
+  Widget _bottomView(OrderController orderController, OrderModel order, bool parcel, double totalPrice) {
     return Column(children: [
       !orderController.showCancelled ? Center(
         child: SizedBox(
           width: Dimensions.WEB_MAX_WIDTH,
           child: Row(children: [
-            (order.orderStatus == 'pending' || order.orderStatus == 'accepted' || order.orderStatus == 'confirmed'
+            ((order.orderStatus == 'pending' && order.paymentMethod != 'digital_payment') || order.orderStatus == 'accepted' || order.orderStatus == 'confirmed'
                 || order.orderStatus == 'processing' || order.orderStatus == 'handover'|| order.orderStatus == 'picked_up') ? Expanded(
               child: CustomButton(
                 buttonText: parcel ? 'track_delivery'.tr : 'track_order'.tr,
@@ -539,6 +571,31 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 },
               ),
             ) : SizedBox(),
+
+            (order.orderStatus == 'pending' && order.paymentStatus == 'unpaid' && order.paymentMethod == 'digital_payment' && _isCashOnDeliveryActive) ?
+            Expanded(
+              child: CustomButton(
+                buttonText: 'switch_to_cod'.tr,
+                margin: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                onPressed: () {
+                  Get.dialog(ConfirmationDialog(
+                      icon: Images.warning, description: 'are_you_sure_to_switch'.tr,
+                      onYesPressed: () {
+
+                        if((((_maxCodOrderAmount != null && totalPrice < _maxCodOrderAmount) || _maxCodOrderAmount == null || _maxCodOrderAmount == 0) && !parcel) || parcel){
+                          orderController.switchToCOD(order.id.toString());
+                        }else{
+                          if(Get.isDialogOpen) {
+                            Get.back();
+                          }
+                          showCustomSnackBar('you_cant_order_more_then'.tr + ' ${PriceConverter.convertPrice(_maxCodOrderAmount)} ' + 'in_cash_on_delivery'.tr);
+                        }
+                      }
+                  ));
+                },
+              ),
+            ): SizedBox(),
+
             order.orderStatus == 'pending' ? Expanded(child: Padding(
               padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
               child: TextButton(
@@ -546,11 +603,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), side: BorderSide(width: 2, color: Theme.of(context).disabledColor),
                 )),
                 onPressed: () {
-                  Get.dialog(ConfirmationDialog(
-                    icon: Images.warning, description: 'are_you_sure_to_cancel'.tr, onYesPressed: () {
-                    orderController.cancelOrder(order.id);
-                  },
-                  ));
+                  orderController.setOrderCancelReason('');
+                  Get.dialog(CancellationDialogue(orderId: order.id));
                 },
                 child: Text(parcel ? 'cancel_delivery'.tr : 'cancel_order'.tr, style: robotoBold.copyWith(
                   color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeLarge,

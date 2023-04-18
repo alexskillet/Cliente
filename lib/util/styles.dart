@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:sixam_mart/util/dimensions.dart';
 import 'package:flutter/material.dart';
 
@@ -23,4 +24,10 @@ final robotoBlack = TextStyle(
   fontFamily: 'Roboto',
   fontWeight: FontWeight.w900,
   fontSize: Dimensions.fontSizeDefault,
+);
+
+
+final BoxDecoration riderContainerDecoration = BoxDecoration(
+    borderRadius: BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL)),
+    color: Theme.of(Get.context).primaryColor.withOpacity(0.1), shape: BoxShape.rectangle,
 );

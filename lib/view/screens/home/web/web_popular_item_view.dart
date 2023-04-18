@@ -124,7 +124,7 @@ class WebPopularItemView extends StatelessWidget {
                             Text(
                               PriceConverter.convertPrice(
                                 _itemList[index].price, discount: _itemList[index].discount, discountType: _itemList[index].discountType,
-                              ),
+                              ), textDirection: TextDirection.ltr,
                               style: robotoBold.copyWith(fontSize: Dimensions.fontSizeExtraSmall),
                             ),
                             SizedBox(width: _itemList[index].discount > 0 ? Dimensions.PADDING_SIZE_EXTRA_SMALL : 0),
@@ -133,7 +133,7 @@ class WebPopularItemView extends StatelessWidget {
                               style: robotoRegular.copyWith(
                                 fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor,
                                 decoration: TextDecoration.lineThrough,
-                              ),
+                              ), textDirection: TextDirection.ltr,
                             )) : Expanded(child: SizedBox()),
                             Icon(Icons.add, size: 25),
                           ],

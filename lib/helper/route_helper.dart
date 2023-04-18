@@ -4,6 +4,7 @@ import 'package:sixam_mart/controller/location_controller.dart';
 import 'package:sixam_mart/controller/splash_controller.dart';
 import 'package:sixam_mart/data/model/body/notification_body.dart';
 import 'package:sixam_mart/data/model/body/social_log_in_body.dart';
+import 'package:sixam_mart/data/model/body/user_information_body.dart';
 import 'package:sixam_mart/data/model/response/address_model.dart';
 import 'package:sixam_mart/data/model/response/basic_campaign_model.dart';
 import 'package:sixam_mart/data/model/response/conversation_model.dart';
@@ -11,6 +12,7 @@ import 'package:sixam_mart/data/model/response/order_model.dart';
 import 'package:sixam_mart/data/model/response/item_model.dart';
 import 'package:sixam_mart/data/model/response/parcel_category_model.dart';
 import 'package:sixam_mart/data/model/response/store_model.dart';
+import 'package:sixam_mart/data/model/response/vehicle_model.dart';
 import 'package:sixam_mart/util/app_constants.dart';
 import 'package:sixam_mart/util/html_type.dart';
 import 'package:sixam_mart/view/base/image_viewer_screen.dart';
@@ -63,6 +65,14 @@ import 'package:sixam_mart/view/screens/store/review_screen.dart';
 import 'package:sixam_mart/view/screens/search/search_screen.dart';
 import 'package:sixam_mart/view/screens/splash/splash_screen.dart';
 import 'package:sixam_mart/view/screens/support/support_screen.dart';
+import 'package:sixam_mart/view/screens/taxi_booking/booking_checkout_screen/booking_checkout_screen.dart';
+import 'package:sixam_mart/view/screens/taxi_booking/car_details_screen/car_details_screen.dart';
+import 'package:sixam_mart/view/screens/taxi_booking/order_status_screen/order_status_screen.dart';
+import 'package:sixam_mart/view/screens/taxi_booking/select_car_screen.dart';
+import 'package:sixam_mart/view/screens/taxi_booking/select_map_location/select_map_location.dart';
+import 'package:sixam_mart/view/screens/taxi_booking/taxi_coupon_screen/TaxiCouponScreen.dart';
+import 'package:sixam_mart/view/screens/taxi_booking/trip_completed_confermation/trip_completed_confirmation_screen.dart';
+import 'package:sixam_mart/view/screens/taxi_booking/trip_history/trip_history_screen.dart';
 import 'package:sixam_mart/view/screens/update/update_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -124,6 +134,15 @@ class RouteHelper {
   static const String deliveryManRegistration = '/delivery-man-registration';
   static const String refund = '/refund';
 
+  static const String selectRideMapLocation = '/select-rider-map-location';
+  static const String selectCarScreen = '/select-car-screen';
+  static const String carDetailsScreen = '/car-details-screen';
+  static const String bookingCheckoutScreen = '/booking-checkout-screen';
+  static const String tripHistoryScreen = '/trip-history-screen';
+  static const String orderStatusScreen = '/order-status-screen';
+  static const String tripCompletedConfirmationScreen = '/trip-complete-confirmation-screen';
+  static const String taxiCouponScreen = '/taxi-coupon-screen';
+
 
   static String getInitialRoute() => '$initial';
   static String getSplashRoute(NotificationBody body) {
@@ -168,10 +187,10 @@ class RouteHelper {
     return '$map?address=$_data&page=$page';
   }
   static String getAddressRoute() => '$address';
-  static String getOrderSuccessRoute(String orderID, bool codDelivery) {
-    return '$orderSuccess?id=$orderID&cod-delivery=$codDelivery';
+  static String getOrderSuccessRoute(String orderID) {
+    return '$orderSuccess?id=$orderID';
   }
-  static String getPaymentRoute(String id, int user, String type, double amount, double maximumCodOrderAmount, bool codDelivery) => '$payment?id=$id&user=$user&type=$type&amount=$amount&cod=$maximumCodOrderAmount&cod-delivery=$codDelivery';
+  static String getPaymentRoute(String id, int user, String type, double amount, bool codDelivery) => '$payment?id=$id&user=$user&type=$type&amount=$amount&cod-delivery=$codDelivery';
   static String getCheckoutRoute(String page,{int storeId}) => '$checkout?page=$page&store-id=$storeId';
   static String getOrderTrackingRoute(int id) => '$orderTracking?id=$id';
   static String getBasicCampaignRoute(BasicCampaignModel basicCampaignModel) {
@@ -191,7 +210,7 @@ class RouteHelper {
   static String getReviewRoute() => '$rateReview';
   static String getUpdateRoute(bool isUpdate) => '$update?update=${isUpdate.toString()}';
   static String getCartRoute() => '$cart';
-  static String getAddAddressRoute(bool fromCheckout, int zoneId) => '$addAddress?page=${fromCheckout ? 'checkout' : 'address'}&zone_id=$zoneId';
+  static String getAddAddressRoute(bool fromCheckout, bool fromRide, int zoneId) => '$addAddress?page=${fromCheckout ? 'checkout' : 'address'}&ride=$fromRide&zone_id=$zoneId';
   static String getEditAddressRoute(AddressModel address) {
     String _data = base64Url.encode(utf8.encode(jsonEncode(address.toJson())));
     return '$editAddress?data=$_data';
@@ -233,6 +252,37 @@ class RouteHelper {
   static String getRestaurantRegistrationRoute() => '$restaurantRegistration';
   static String getDeliverymanRegistrationRoute() => '$deliveryManRegistration';
   static String getRefundRequestRoute(String orderID) => '$refund?id=$orderID';
+
+  static String getSelectRideMapLocationRoute(String riderType, AddressModel addressModel, Vehicles vehicle) {
+    String _riderType = base64Url.encode(utf8.encode(jsonEncode(riderType)));
+    String _address = 'null';
+    String _vehicle = 'null';
+    if(addressModel != null){
+      _address = base64Url.encode(utf8.encode(jsonEncode(addressModel)));
+    }
+    if(vehicle != null){
+      _vehicle = base64Url.encode(utf8.encode(jsonEncode(vehicle)));
+    }
+    return '$selectRideMapLocation?rider_type=$_riderType&address=$_address&vehicle=$_vehicle';
+  }
+  static String getSelectCarScreenRoute(UserInformationBody filterBody, ){
+    String _body = base64Url.encode(utf8.encode(jsonEncode(filterBody)));
+    return '$selectCarScreen?body=$_body';
+  }
+  static String getCarDetailsScreen(Vehicles vehicle, UserInformationBody filterBody) {
+    String _vehicle = base64Url.encode(utf8.encode(jsonEncode(vehicle)));
+    String _body = base64Url.encode(utf8.encode(jsonEncode(filterBody)));
+    return '$carDetailsScreen?vehicle=$_vehicle&body=$_body';
+  }
+  static String getBookingCheckoutScreen(Vehicles vehicle, UserInformationBody filterBody) {
+    String _vehicle = base64Url.encode(utf8.encode(jsonEncode(vehicle)));
+    String _body = base64Url.encode(utf8.encode(jsonEncode(filterBody)));
+    return '$bookingCheckoutScreen?vehicle=$_vehicle&body=$_body';
+  }
+  static String getTripHistoryScreen() => '$tripHistoryScreen';
+  static String getOrderStatusScreen() => '$orderStatusScreen';
+  static String getTripCompletedConfirmationScreen() => '$tripCompletedConfirmationScreen';
+  static String getTaxiCouponScreen() => '$taxiCouponScreen';
 
   static List<GetPage> routes = [
     GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0))),
@@ -306,13 +356,12 @@ class RouteHelper {
       return getRoute(MapScreen(fromStore: Get.parameters['page'] == 'store', address: _data));
     }),
     GetPage(name: address, page: () => getRoute(AddressScreen())),
-    GetPage(name: orderSuccess, page: () => getRoute(OrderSuccessfulScreen(orderID: Get.parameters['id'],
-        isCashOnDelivery: Get.parameters['cod-delivery'] == 'true' ? true : false),
+    GetPage(name: orderSuccess, page: () => getRoute(OrderSuccessfulScreen(orderID: Get.parameters['id']),
     )),
     GetPage(name: payment, page: () => getRoute(PaymentScreen(orderModel: OrderModel(
         id: int.parse(Get.parameters['id']), orderType: Get.parameters['type'], userId: int.parse(Get.parameters['user']),
-        orderAmount: double.parse(Get.parameters['amount'])), maximumCodOrderAmount: double.parse(Get.parameters['cod'])
-        , isCashOnDelivery: Get.parameters['cod-delivery'] == 'true' ? true : false),
+        orderAmount: double.parse(Get.parameters['amount'])),
+        isCashOnDelivery: Get.parameters['cod-delivery'] == 'true' ? true : false),
     )),
     GetPage(name: checkout, page: () {
       CheckoutScreen _checkoutScreen = Get.arguments;
@@ -345,10 +394,10 @@ class RouteHelper {
     GetPage(name: update, page: () => UpdateScreen(isUpdate: Get.parameters['update'] == 'true')),
     GetPage(name: cart, page: () => getRoute(CartScreen(fromNav: false))),
     GetPage(name: addAddress, page: () => getRoute(AddAddressScreen(
-      fromCheckout: Get.parameters['page'] == 'checkout', zoneId: int.parse(Get.parameters['zone_id']),
+      fromCheckout: Get.parameters['page'] == 'checkout', fromRide: Get.parameters['ride'] == 'true', zoneId: int.parse(Get.parameters['zone_id']),
     ))),
     GetPage(name: editAddress, page: () => getRoute(AddAddressScreen(
-      fromCheckout: false,
+      fromCheckout: false, fromRide: false,
       address: AddressModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['data'].replaceAll(' ', '+'))))),
     ))),
     GetPage(name: rateReview, page: () => getRoute(Get.arguments != null ? Get.arguments : NotFound())),
@@ -391,10 +440,41 @@ class RouteHelper {
     GetPage(name: restaurantRegistration, page: () => StoreRegistrationScreen()),
     GetPage(name: deliveryManRegistration, page: () => DeliveryManRegistrationScreen()),
     GetPage(name: refund, page: () => RefundRequestScreen(orderId: Get.parameters['id'])),
+
+    GetPage(name: selectRideMapLocation, page: () {
+    AddressModel _addressModel;
+    Vehicles _vehicle;
+    if(Get.parameters['address'] != 'null') {
+      _addressModel = AddressModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['address'].replaceAll(' ', '+')))));
+    }
+    if(Get.parameters['vehicle'] != 'null') {
+      _vehicle = Vehicles.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['vehicle'].replaceAll(' ', '+')))));
+    }
+    return getRoute(SelectMapLocation(
+        riderType: jsonDecode(utf8.decode(base64Url.decode(Get.parameters['rider_type'].replaceAll(' ', '+')))),
+        address: _addressModel, vehicle: _vehicle,
+      ),
+    );
+    }),
+    GetPage(name: selectCarScreen, page: () => SelectCarScreen(
+        filterBody: UserInformationBody.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['body'].replaceAll(' ', '+')))))),
+    ),
+    GetPage(name: carDetailsScreen, page: () => CarDetailsScreen(
+      vehicle: Vehicles.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['vehicle'].replaceAll(' ', '+'))))),
+      filterBody: UserInformationBody.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['body'].replaceAll(' ', '+'))))),
+    )),
+    GetPage(name: bookingCheckoutScreen, page: () => BookingCheckoutScreen(
+      vehicle: Vehicles.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['vehicle'].replaceAll(' ', '+'))))),
+      filterBody: UserInformationBody.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['body'].replaceAll(' ', '+'))))),
+    )),
+    GetPage(name: tripHistoryScreen, page: () => TripHistoryScreen()),
+    GetPage(name: orderStatusScreen, page: () => OrderStatusScreen()),
+    GetPage(name: tripCompletedConfirmationScreen, page: () => TripCompletedConfirmationScreen()),
+    GetPage(name: taxiCouponScreen, page: () => TaxiCouponScreen()),
   ];
 
   static getRoute(Widget navigateTo) {
-    int _minimumVersion = 0;
+    double _minimumVersion = 0;
     if(GetPlatform.isAndroid) {
       _minimumVersion = Get.find<SplashController>().configModel.appMinimumVersionAndroid;
     }else if(GetPlatform.isIOS) {

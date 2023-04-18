@@ -89,6 +89,19 @@ class AppConstants {
   static const String DM_REGISTER_URI = '/api/v1/auth/delivery-man/store';
   static const String REFUND_REASONS_URI = '/api/v1/customer/order/refund-reasons';
   static const String REFUND_REQUEST_URI = '/api/v1/customer/order/refund-request';
+  static const String DIRECTION_URI = '/api/v1/config/direction-api';
+  static const String VEHICLES_LIST = '/api/v1/vehicles/list';
+  static const String TAXI_COUPON_URI = '/api/v1/coupon/list/taxi';
+  static const String TAXI_BANNER_URI = '/api/v1/banners/taxi';
+  static const String TOP_RATED_VEHICLES_LIST = '/api/v1/vehicles/top-rated/list';
+  static const String BRAND_LIST = '/api/v1/vehicles/brand/list';
+  static const String TAXI_COUPON_APPLY_URI = '/api/v1/coupon/apply/taxi?code=';
+  static const String TRIP_PLACE_URI = '/api/v1/trip/place';
+  static const String RUNNING_TRIP_URI = '/api/v1/trip/list';
+  static const String VEHICLE_CHARGE_URI = '/api/v1/vehicle/extra_charge';
+  static const String VEHICLES_URI = '/api/v1/get-vehicles';
+  static const String STORE_RECOMMENDER_ITEM_URI = '/api/v1/items/recommended';
+  static const String ORDER_CANCELLATION_URI = '/api/v1/customer/order/cancellation-reasons';
 
   //MESSAGING
   static const String CONVERSATION_LIST_URI = '/api/v1/customer/message/list';
@@ -113,6 +126,7 @@ class AppConstants {
 
   static const String TOPIC = 'all_zone_customer';
   static const String ZONE_ID = 'zoneId';
+  static const String OPERATION_AREA_ID = 'operationAreaId';
   static const String MODULE_ID = 'moduleId';
   static const String CACHE_MODULE_ID = 'cacheModuleId';
   static const String LOCALIZATION_KEY = 'X-localization';
@@ -131,6 +145,8 @@ class AppConstants {
   ];
 
   static List<LanguageModel> languages = [
-    LanguageModel(imageUrl: Images.english, languageName: 'Español', countryCode: 'MX', languageCode: 'es'),
+    LanguageModel(imageUrl: Images.english, languageName: 'English', countryCode: 'US', languageCode: 'en'),
+    LanguageModel(imageUrl: Images.arabic, languageName: 'عربى', countryCode: 'SA', languageCode: 'ar'),
+    LanguageModel(imageUrl: Images.arabic, languageName: 'Spanish', countryCode: 'ES', languageCode: 'es'),
   ];
 }

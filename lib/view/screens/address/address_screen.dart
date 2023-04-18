@@ -43,7 +43,7 @@ class _AddressScreenState extends State<AddressScreen> {
       floatingActionButton: ResponsiveHelper.isDesktop(context) ? null : FloatingActionButton(
         child: Icon(Icons.add, color: Theme.of(context).cardColor),
         backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () => Get.toNamed(RouteHelper.getAddAddressRoute(false, 0)),
+        onPressed: () => Get.toNamed(RouteHelper.getAddAddressRoute(false, false, 0)),
       ),
       floatingActionButtonLocation: ResponsiveHelper.isDesktop(context) ? FloatingActionButtonLocation.centerFloat : null,
       body: _isLoggedIn ? GetBuilder<LocationController>(builder: (locationController) {
@@ -65,7 +65,7 @@ class _AddressScreenState extends State<AddressScreen> {
                         Text('address'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
                         TextButton.icon(
                           icon: Icon(Icons.add), label: Text('add_address'.tr),
-                          onPressed: () => Get.toNamed(RouteHelper.getAddAddressRoute(false, 0)),
+                          onPressed: () => Get.toNamed(RouteHelper.getAddAddressRoute(false, false, 0)),
                         ),
                       ]),
                     ) : SizedBox.shrink(),

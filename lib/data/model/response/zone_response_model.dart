@@ -3,12 +3,14 @@ class ZoneResponseModel {
   List<int> _zoneIds;
   String _message;
   List<ZoneData> _zoneData;
-  ZoneResponseModel(this._isSuccess, this._message, this._zoneIds, this._zoneData);
+  List<int> _areaIds;
+  ZoneResponseModel(this._isSuccess, this._message, this._zoneIds, this._zoneData, this._areaIds);
 
   String get message => _message;
   List<int> get zoneIds => _zoneIds;
   bool get isSuccess => _isSuccess;
   List<ZoneData> get zoneData => _zoneData;
+  List<int> get areaIds => _areaIds;
 }
 
 class ZoneData {
@@ -123,6 +125,7 @@ class Pivot {
   int moduleId;
   double perKmShippingCharge;
   double minimumShippingCharge;
+  double maximumShippingCharge;
   double maximumCodOrderAmount;
 
   Pivot({
@@ -130,6 +133,7 @@ class Pivot {
     this.moduleId,
     this.perKmShippingCharge,
     this.minimumShippingCharge,
+    this.maximumShippingCharge,
     this.maximumCodOrderAmount,
   });
 
@@ -138,6 +142,7 @@ class Pivot {
     moduleId = json['module_id'];
     perKmShippingCharge = json['per_km_shipping_charge'] != null ? json['per_km_shipping_charge'].toDouble() : null;
     minimumShippingCharge = json['minimum_shipping_charge'] != null ? json['minimum_shipping_charge'].toDouble() : null;
+    maximumShippingCharge = json['maximum_shipping_charge'] != null ? json['maximum_shipping_charge'].toDouble() : null;
     maximumCodOrderAmount = json['maximum_cod_order_amount'] != null ? json['maximum_cod_order_amount'].toDouble() : null;
   }
 
@@ -147,6 +152,7 @@ class Pivot {
     data['module_id'] = this.moduleId;
     data['per_km_shipping_charge'] = this.perKmShippingCharge;
     data['minimum_shipping_charge'] = this.minimumShippingCharge;
+    data['maximum_shipping_charge'] = this.maximumShippingCharge;
     data['maximum_cod_order_amount'] = this.maximumCodOrderAmount;
     return data;
   }

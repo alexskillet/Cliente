@@ -77,12 +77,16 @@ class SplashController extends GetxController implements GetxService {
   Future<void> initSharedData() async {
     if(!GetPlatform.isWeb) {
       _module = null;
-      _cacheModule = splashRepo.getCacheModule();
       splashRepo.initSharedData();
     }else {
       _module = await splashRepo.initSharedData();
     }
-    await setModule(_module, notify: false);
+    _cacheModule = splashRepo.getCacheModule();
+    setModule(_module, notify: false);
+  }
+
+  void setCacheConfigModule(ModuleModel cacheModule){
+    _configModel.moduleConfig.module = Module.fromJson(_data['module_config'][cacheModule.moduleType]);
   }
 
   bool showIntro() {
@@ -101,8 +105,10 @@ class SplashController extends GetxController implements GetxService {
     _module = module;
     splashRepo.setModule(module);
     if(module != null) {
+      if(_configModel != null) {
+        _configModel.moduleConfig.module = Module.fromJson(_data['module_config'][module.moduleType]);
+      }
       splashRepo.setCacheModule(module);
-      _configModel.moduleConfig.module = Module.fromJson(_data['module_config'][module.moduleType]);
       Get.find<CartController>().getCartData();
     }
     if(Get.find<AuthController>().isLoggedIn()) {

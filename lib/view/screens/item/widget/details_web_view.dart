@@ -91,7 +91,7 @@ class DetailsWebView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ItemTitleView(item: itemController.item),
+                        ItemTitleView(item: itemController.item, inStock: Get.find<SplashController>().configModel.moduleConfig.module.stock && stock <= 0),
                         SizedBox(height: 35),
                         ListView.builder(
                           shrinkWrap: true,
@@ -172,7 +172,7 @@ class DetailsWebView extends StatelessWidget {
                               SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                               Text(PriceConverter.convertPrice(itemController.cartIndex != -1 ?
                               (cartController.cartList[itemController.cartIndex].discountedPrice * cartController.cartList[itemController.cartIndex].quantity)
-                                  : priceWithAddOns ?? 0.0), style: robotoBold.copyWith(
+                                  : priceWithAddOns ?? 0.0), textDirection: TextDirection.ltr, style: robotoBold.copyWith(
                                 color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeLarge,
                               )),
                             ]);

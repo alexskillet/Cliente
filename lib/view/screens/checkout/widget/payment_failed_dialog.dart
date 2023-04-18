@@ -55,8 +55,7 @@ class PaymentFailedDialog extends StatelessWidget {
               isCashOnDelivery ? CustomButton(
                 buttonText: 'switch_to_cash_on_delivery'.tr,
                 onPressed: () {
-                  print('-------orderAmount : $orderAmount----maxCodOrderAmount : $maxCodOrderAmount----orderType : $orderType');
-                  if((orderAmount < maxCodOrderAmount && orderType != 'parcel') || orderType == 'parcel'){
+                  if((((maxCodOrderAmount != null && orderAmount < maxCodOrderAmount) || maxCodOrderAmount == null || maxCodOrderAmount == 0) && orderType != 'parcel') || orderType == 'parcel'){
                     orderController.switchToCOD(orderID);
                   }else{
                     if(Get.isDialogOpen) {
@@ -70,13 +69,17 @@ class PaymentFailedDialog extends StatelessWidget {
               SizedBox(width: Get.find<SplashController>().configModel.cashOnDelivery ? Dimensions.PADDING_SIZE_LARGE : 0),
               TextButton(
                 onPressed: () {
-                  Get.offAllNamed(RouteHelper.getInitialRoute());
+                  Get.find<OrderController>().cancelOrder(int.parse(orderID), 'Digital payment issue').then((success) {
+                    if(success){
+                      Get.offAllNamed(RouteHelper.getInitialRoute());
+                    }
+                  });
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: Theme.of(context).disabledColor.withOpacity(0.3), minimumSize: Size(Dimensions.WEB_MAX_WIDTH, 40), padding: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
                 ),
-                child: Text('continue_with_order_fail'.tr, textAlign: TextAlign.center, style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge.color)),
+                child: Text('cancel_order'.tr, textAlign: TextAlign.center, style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge.color)),
               ),
             ]) : Center(child: CircularProgressIndicator());
           }),

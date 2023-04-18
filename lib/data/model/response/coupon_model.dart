@@ -13,6 +13,7 @@ class CouponModel {
   String data;
   String createdAt;
   String updatedAt;
+  Store store;
 
   CouponModel(
       {this.id,
@@ -28,7 +29,8 @@ class CouponModel {
         this.limit,
         this.data,
         this.createdAt,
-        this.updatedAt});
+        this.updatedAt,
+        this.store});
 
   CouponModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -45,6 +47,9 @@ class CouponModel {
     data = json['data'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    if(json['store'] != null){
+      store = Store.fromJson(json['store']);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -63,6 +68,25 @@ class CouponModel {
     data['data'] = this.data;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    return data;
+  }
+}
+
+class Store {
+  int id;
+  String name;
+
+  Store({this.id, this.name});
+
+  Store.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
     return data;
   }
 }
