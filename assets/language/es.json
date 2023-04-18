@@ -661,8 +661,13 @@
   "i_have_read_and_agreed_with": "He leído y estoy de acuerdo con",
   "please_accept_privacy_policy_trams_conditions_refund_policy_first": "Por favor acepte la Política de Privacidad, Tranvías y Condiciones y Política de Reembolso",
   "add_voucher": "Agregar cupón",
+<<<<<<< HEAD
   "promo_code": "Código promocional",
 "ride_sharing": "Compartir viaje",
+=======
+  "promo_code": "Código promocional"
+	"ride_sharing": "Compartir viaje",
+>>>>>>> master
 "where_to_go": "¿A dónde ir?",
 "trip_history":"Historial de viajes",
 "type_or_select_from_map": "Escriba o seleccione en el mapa",
@@ -770,5 +775,9 @@
 "no_reasons_available": "No hay razones disponibles",
 "you_did_not_select_select_any_reason": "No seleccionó ningún motivo",
 "switch_to_cod": "Cambiar a COD",
+<<<<<<< HEAD
 "cancellation_note": "Nota de cancelación"
+=======
+"cancellation_note": "Nota de cancelación"							  
+>>>>>>> master
 }
