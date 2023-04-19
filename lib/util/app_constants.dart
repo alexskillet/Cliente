@@ -4,7 +4,7 @@ import 'package:sixam_mart/util/images.dart';
 
 class AppConstants {
   static const String APP_NAME = 'LavaGo';
-  static const double APP_VERSION = 2.0;
+  static const double APP_VERSION = 2.1;
 
   static const String BASE_URL = 'https://socio.lavago.app';
   static const String CATEGORY_URI = '/api/v1/categories';
@@ -145,8 +145,6 @@ class AppConstants {
   ];
 
   static List<LanguageModel> languages = [
-    LanguageModel(imageUrl: Images.english, languageName: 'English', countryCode: 'US', languageCode: 'en'),
-    LanguageModel(imageUrl: Images.arabic, languageName: 'عربى', countryCode: 'SA', languageCode: 'ar'),
     LanguageModel(imageUrl: Images.arabic, languageName: 'Spanish', countryCode: 'ES', languageCode: 'es'),
   ];
 }
