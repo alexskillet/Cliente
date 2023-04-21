@@ -267,7 +267,11 @@
 	"you_can_not_reorder_a_campaign": "No puedes volver a ordenar una campaña",
 	"reorder": "Volver a ordenar",
 	"order_tracking": "Seguimiento de pedido",
+<<<<<<< HEAD
 	"closed_now": "Clic para reservar mañana",
+=======
+	"closed_now": "Cerrado ahora, Puedes reservar cuando abra",
+>>>>>>> Desarrollo
 	"are_you_sure_to_cancel": "¿Estás seguro de que deseas cancelar este pedido?",
 	"if_you_exit_from_payment": "Si sales de este proceso de pago, tu pedido fallará.",
 	"favourite": "Favorito",
@@ -399,7 +403,10 @@
 	"prescription": "Receta",
 	"are_you_sure_want_to_switch": "¿Estás seguro de querer cambiar a",
 	"select_the_type_of_stores_for_your_order": "Selecciona el típo de servicio que deseas agendar",
+<<<<<<< HEAD
 	"select_the_type_of_modules_for_your_order": "Selecciona el típo de servicio que deseas agendar",
+=======
+>>>>>>> Desarrollo
 	"parcel": "Paquete",
 	"instant_same_day_delivery": "Entrega instantánea el mismo día",
 	"send_things_to_your_destination_instantly_and_safely": "Envía cosas a tu destino de manera instantánea y segura",

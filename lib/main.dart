@@ -67,12 +67,32 @@ Future<void> main() async {
   runApp(MyApp(languages: _languages, body: _body));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final Map<String, Map<String, String>> languages;
   final NotificationBody body;
   MyApp({@required this.languages, @required this.body});
 
-  void _route() {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    _route();
+  }
+
+  void _route() async {
+    if(GetPlatform.isWeb) {
+      await Get.find<SplashController>().initSharedData();
+      if(Get.find<LocationController>().getUserAddress() != null && Get.find<LocationController>().getUserAddress().zoneIds == null) {
+        Get.find<AuthController>().clearSharedAddress();
+      }
+      Get.find<CartController>().getCartData();
+    }
     Get.find<SplashController>().getConfigData().then((bool isSuccess) async {
       if (isSuccess) {
         if (Get.find<AuthController>().isLoggedIn()) {
@@ -85,14 +105,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(GetPlatform.isWeb) {
-      Get.find<SplashController>().initSharedData();
-      if(Get.find<LocationController>().getUserAddress() != null && Get.find<LocationController>().getUserAddress().zoneIds == null) {
-        Get.find<AuthController>().clearSharedAddress();
-      }
-      Get.find<CartController>().getCartData();
-      _route();
-    }
 
     return GetBuilder<ThemeController>(builder: (themeController) {
       return GetBuilder<LocalizationController>(builder: (localizeController) {
@@ -108,9 +120,9 @@ class MyApp extends StatelessWidget {
                 : themeController.darkColor) : themeController.lightColor == null ? light()
                 : light(color: themeController.lightColor),
             locale: localizeController.locale,
-            translations: Messages(languages: languages),
+            translations: Messages(languages: widget.languages),
             fallbackLocale: Locale(AppConstants.languages[0].languageCode, AppConstants.languages[0].countryCode),
-            initialRoute: GetPlatform.isWeb ? RouteHelper.getInitialRoute() : RouteHelper.getSplashRoute(body),
+            initialRoute: GetPlatform.isWeb ? RouteHelper.getInitialRoute() : RouteHelper.getSplashRoute(widget.body),
             getPages: RouteHelper.routes,
             defaultTransition: Transition.topLevel,
             transitionDuration: Duration(milliseconds: 500),

@@ -108,7 +108,7 @@ class PopularItemView extends StatelessWidget {
                                         itemController.getStartingPrice(_itemList[index]),
                                         discount: _itemList[index].discount,
                                         discountType: _itemList[index].discountType,
-                                      ),
+                                      ), textDirection: TextDirection.ltr,
                                       style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall),
                                     ),
                                     SizedBox(width: _itemList[index].discount > 0 ? Dimensions.PADDING_SIZE_EXTRA_SMALL : 0),
@@ -117,7 +117,7 @@ class PopularItemView extends StatelessWidget {
                                       style: robotoMedium.copyWith(
                                         fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor,
                                         decoration: TextDecoration.lineThrough,
-                                      ),
+                                      ), textDirection: TextDirection.ltr,
                                     )) : SizedBox(),
                                   ]),
                                 ),

@@ -38,11 +38,11 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   Timer _timer;
 
   void _loadData() async {
+    await Get.find<OrderController>().trackOrder(widget.orderID, null, true);
     await Get.find<LocationController>().getCurrentLocation(true, notify: false, defaultLatLng: LatLng(
       double.parse(Get.find<LocationController>().getUserAddress().latitude),
       double.parse(Get.find<LocationController>().getUserAddress().longitude),
     ));
-    Get.find<OrderController>().trackOrder(widget.orderID, null, true);
   }
 
   void _startApiCall(){
@@ -102,13 +102,13 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
               _controller = controller;
               _isLoading = false;
               setMarker(
-                _track.store, _track.deliveryMan,
+                _track.orderType == 'parcel' ? Store(latitude: _track.receiverDetails.latitude, longitude: _track.receiverDetails.longitude,
+                    address: _track.receiverDetails.address, name: _track.receiverDetails.contactPersonName) : _track.store, _track.deliveryMan,
                 _track.orderType == 'take_away' ? Get.find<LocationController>().position.latitude == 0 ? _track.deliveryAddress : AddressModel(
                   latitude: Get.find<LocationController>().position.latitude.toString(),
                   longitude: Get.find<LocationController>().position.longitude.toString(),
                   address: Get.find<LocationController>().address,
-                ) : _track.deliveryAddress,
-                _track.orderType == 'take_away',
+                ) : _track.deliveryAddress, _track.orderType == 'take_away', _track.orderType == 'parcel',
               );
             },
           ),
@@ -137,9 +137,9 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
     );
   }
 
-  void setMarker(Store store, DeliveryMan deliveryMan, AddressModel addressModel, bool takeAway) async {
+  void setMarker(Store store, DeliveryMan deliveryMan, AddressModel addressModel, bool takeAway, bool parcel) async {
     try {
-      Uint8List restaurantImageData = await convertAssetToUnit8List(Images.restaurant_marker, width: 100);
+      Uint8List restaurantImageData = await convertAssetToUnit8List(parcel ? Images.user_marker : Images.restaurant_marker, width: 100);
       Uint8List deliveryBoyImageData = await convertAssetToUnit8List(Images.delivery_man_marker, width: 100);
       Uint8List destinationImageData = await convertAssetToUnit8List(
         takeAway ? Images.my_location_marker : Images.user_marker,
@@ -174,23 +174,24 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
         zoomToFit(_controller, bounds, centerBounds, padding: 1.5);
       }
 
-      // Marker
+      /// user for normal order , but sender for parcel order
       _markers = HashSet<Marker>();
       addressModel != null ? _markers.add(Marker(
         markerId: MarkerId('destination'),
         position: LatLng(double.parse(addressModel.latitude), double.parse(addressModel.longitude)),
         infoWindow: InfoWindow(
-          title: 'Destination',
+          title: parcel ? 'Sender' : 'Destination',
           snippet: addressModel.address,
         ),
         icon: GetPlatform.isWeb ? BitmapDescriptor.defaultMarker : BitmapDescriptor.fromBytes(destinationImageData),
       )) : SizedBox();
 
+      ///store for normal order , but receiver for parcel order
       store != null ? _markers.add(Marker(
         markerId: MarkerId('store'),
         position: LatLng(double.parse(store.latitude), double.parse(store.longitude)),
         infoWindow: InfoWindow(
-          title: Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText ? 'store'.tr : 'store'.tr,
+          title: parcel ? 'Receiver' : Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText ? 'store'.tr : 'store'.tr,
           snippet: store.address,
         ),
         icon: GetPlatform.isWeb ? BitmapDescriptor.defaultMarker : BitmapDescriptor.fromBytes(restaurantImageData),
@@ -206,6 +207,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
         rotation: _rotation,
         icon: GetPlatform.isWeb ? BitmapDescriptor.defaultMarker : BitmapDescriptor.fromBytes(deliveryBoyImageData),
       )) : SizedBox();
+
     }catch(e) {}
     setState(() {});
   }

@@ -119,7 +119,15 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   ItemImageView(item: itemController.item),
                   SizedBox(height: 20),
 
-                  ItemTitleView(item: itemController.item, inStorePage: widget.inStorePage, isCampaign: itemController.item.availableDateStarts != null),
+                  Builder(
+                    builder: (context) {
+                      print('~~~~~~~1${(Get.find<SplashController>().configModel.moduleConfig.module.stock && _stock <= 0)}');
+                      return ItemTitleView(
+                        item: itemController.item, inStorePage: widget.inStorePage, isCampaign: itemController.item.availableDateStarts != null,
+                        inStock: (Get.find<SplashController>().configModel.moduleConfig.module.stock && _stock <= 0),
+                      );
+                    }
+                  ),
                   Divider(height: 20, thickness: 2),
 
                   // Variation
@@ -218,7 +226,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       Text('${'total_amount'.tr}:', style:robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
                       SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                       Text(PriceConverter.convertPrice(itemController.cartIndex != -1 ? (cartController.cartList[itemController.cartIndex].discountedPrice * cartController.cartList[itemController.cartIndex].quantity)
-                          : _priceWithAddons ?? 0.0), style:robotoBold.copyWith(
+                          : _priceWithAddons ?? 0.0), textDirection: TextDirection.ltr, style:robotoBold.copyWith(
                         color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeLarge,
                       )),
                     ]);
@@ -238,42 +246,47 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
               )))),
             )),
 
-            Container(
-              width: 1170,
-              padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-              child: CustomButton(
-                buttonText: (Get.find<SplashController>().configModel.moduleConfig.module.stock && _stock <= 0) ? 'out_of_stock'.tr
-                    : itemController.item.availableDateStarts != null ? 'order_now'.tr : itemController.cartIndex != -1 ? 'update_in_cart'.tr : 'add_to_cart'.tr,
-                onPressed: (!Get.find<SplashController>().configModel.moduleConfig.module.stock || _stock > 0) ?  () {
-                  if(!Get.find<SplashController>().configModel.moduleConfig.module.stock || _stock > 0) {
-                    if(itemController.item.availableDateStarts != null) {
-                      Get.toNamed(RouteHelper.getCheckoutRoute('campaign'), arguments: CheckoutScreen(
-                        storeId: null, fromCart: false, cartList: [_cartModel],
-                      ));
-                    }else {
-                      if (Get.find<CartController>().existAnotherStoreItem(_cartModel.item.storeId, Get.find<SplashController>().module.id)) {
-                        Get.dialog(ConfirmationDialog(
-                          icon: Images.warning,
-                          title: 'are_you_sure_to_reset'.tr,
-                          description: Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
-                              ? 'if_you_continue'.tr : 'if_you_continue_without_another_store'.tr,
-                          onYesPressed: () {
-                            Get.back();
-                            Get.find<CartController>().removeAllAndAddToCart(_cartModel);
+            Builder(
+              builder: (context) {
+                print('~~~~~~~~~${(Get.find<SplashController>().configModel.moduleConfig.module.stock && _stock <= 0)}');
+                return Container(
+                  width: 1170,
+                  padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                  child: CustomButton(
+                    buttonText: (Get.find<SplashController>().configModel.moduleConfig.module.stock && _stock <= 0) ? 'out_of_stock'.tr
+                        : itemController.item.availableDateStarts != null ? 'order_now'.tr : itemController.cartIndex != -1 ? 'update_in_cart'.tr : 'add_to_cart'.tr,
+                    onPressed: (!Get.find<SplashController>().configModel.moduleConfig.module.stock || _stock > 0) ?  () {
+                      if(!Get.find<SplashController>().configModel.moduleConfig.module.stock || _stock > 0) {
+                        if(itemController.item.availableDateStarts != null) {
+                          Get.toNamed(RouteHelper.getCheckoutRoute('campaign'), arguments: CheckoutScreen(
+                            storeId: null, fromCart: false, cartList: [_cartModel],
+                          ));
+                        }else {
+                          if (Get.find<CartController>().existAnotherStoreItem(_cartModel.item.storeId, Get.find<SplashController>().module.id)) {
+                            Get.dialog(ConfirmationDialog(
+                              icon: Images.warning,
+                              title: 'are_you_sure_to_reset'.tr,
+                              description: Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+                                  ? 'if_you_continue'.tr : 'if_you_continue_without_another_store'.tr,
+                              onYesPressed: () {
+                                Get.back();
+                                Get.find<CartController>().removeAllAndAddToCart(_cartModel);
+                                showCartSnackBar(context);
+                              },
+                            ), barrierDismissible: false);
+                          } else {
+                            if(itemController.cartIndex == -1) {
+                              Get.find<CartController>().addToCart(_cartModel, itemController.cartIndex);
+                            }
+                            _key.currentState.shake();
                             showCartSnackBar(context);
-                          },
-                        ), barrierDismissible: false);
-                      } else {
-                        if(itemController.cartIndex == -1) {
-                          Get.find<CartController>().addToCart(_cartModel, itemController.cartIndex);
+                          }
                         }
-                        _key.currentState.shake();
-                        showCartSnackBar(context);
                       }
-                    }
-                  }
-                } : null,
-              ),
+                    } : null,
+                  ),
+                );
+              }
             ),
 
           ]) : Center(child: CircularProgressIndicator()),

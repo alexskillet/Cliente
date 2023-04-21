@@ -11,9 +11,9 @@ class ConfigModel {
   DefaultLocation defaultLocation;
   String currencySymbol;
   String currencySymbolDirection;
-  int appMinimumVersionAndroid;
+  double appMinimumVersionAndroid;
   String appUrlAndroid;
-  int appMinimumVersionIos;
+  double appMinimumVersionIos;
   String appUrlIos;
   bool customerVerification;
   bool scheduleOrder;
@@ -52,6 +52,7 @@ class ConfigModel {
   int refEarningStatus;
   double refEarningExchangeRate;
   List<SocialLogin> socialLogin;
+  List<SocialLogin> appleLogin;
   bool refundActiveStatus;
   int refundPolicyStatus;
   int cancellationPolicyStatus;
@@ -111,6 +112,7 @@ class ConfigModel {
         this.refEarningStatus,
         this.refEarningExchangeRate,
         this.socialLogin,
+        this.appleLogin,
         this.refundActiveStatus,
         this.refundPolicyStatus,
         this.cancellationPolicyStatus,
@@ -134,9 +136,9 @@ class ConfigModel {
         : null;
     currencySymbol = json['currency_symbol'];
     currencySymbolDirection = json['currency_symbol_direction'];
-    appMinimumVersionAndroid = json['app_minimum_version_android'];
+    appMinimumVersionAndroid = json['app_minimum_version_android'] != null ? json['app_minimum_version_android'].toDouble() : 0.0;
     appUrlAndroid = json['app_url_android'];
-    appMinimumVersionIos = json['app_minimum_version_ios'];
+    appMinimumVersionIos = json['app_minimum_version_ios'] != null ? json['app_minimum_version_ios'].toDouble() : 0.0;
     appUrlIos = json['app_url_ios'];
     customerVerification = json['customer_verification'];
     scheduleOrder = json['schedule_order'];
@@ -195,6 +197,12 @@ class ConfigModel {
       socialLogin = <SocialLogin>[];
       json['social_login'].forEach((v) {
         socialLogin.add(new SocialLogin.fromJson(v));
+      });
+    }
+    if (json['apple_login'] != null) {
+      appleLogin = <SocialLogin>[];
+      json['apple_login'].forEach((v) {
+        appleLogin.add(new SocialLogin.fromJson(v));
       });
     }
     refundPolicyStatus = json['refund_policy'];
@@ -276,6 +284,9 @@ class ConfigModel {
     if (this.socialLogin != null) {
       data['social_login'] = this.socialLogin.map((v) => v.toJson()).toList();
     }
+    if (this.appleLogin != null) {
+      data['apple_login'] = this.appleLogin.map((v) => v.toJson()).toList();
+    }
     data['tax_included'] = this.taxIncluded;
     return data;
   }
@@ -300,6 +311,8 @@ class BaseUrls {
   String landingPageImageUrl;
   String businessLogoUrl;
   String refundImageUrl;
+  String vehicleImageUrl;
+  String vehicleBrandImageUrl;
 
   BaseUrls(
       {this.itemImageUrl,
@@ -320,6 +333,8 @@ class BaseUrls {
         this.landingPageImageUrl,
         this.businessLogoUrl,
         this.refundImageUrl,
+        this.vehicleImageUrl,
+        this.vehicleBrandImageUrl,
       });
 
   BaseUrls.fromJson(Map<String, dynamic> json) {
@@ -341,6 +356,8 @@ class BaseUrls {
     landingPageImageUrl = json['landing_page_image_url'];
     businessLogoUrl = json['business_logo_url'];
     refundImageUrl = json['refund_image_url'];
+    vehicleImageUrl = json['vehicle_image_url'];
+    vehicleBrandImageUrl = json['vehicle_brand_image_url'];
   }
 
   Map<String, dynamic> toJson() {
@@ -363,6 +380,8 @@ class BaseUrls {
     data['landing_page_image_url'] = this.landingPageImageUrl;
     data['business_logo_url'] = this.businessLogoUrl;
     data['refund_image_url'] = this.refundImageUrl;
+    data['vehicle_image_url'] = this.vehicleImageUrl;
+    data['vehicle_brand_image_url'] = this.vehicleBrandImageUrl;
     return data;
   }
 }
@@ -435,6 +454,7 @@ class Module {
   bool orderAttachment;
   bool showRestaurantText;
   bool isParcel;
+  bool isTaxi;
   bool newVariation;
   String description;
 
@@ -448,6 +468,7 @@ class Module {
         this.orderAttachment,
         this.showRestaurantText,
         this.isParcel,
+        this.isTaxi,
         this.newVariation,
         this.description,
       });
@@ -461,6 +482,7 @@ class Module {
     orderAttachment = json['order_attachment'];
     showRestaurantText = json['show_restaurant_text'];
     isParcel = json['is_parcel'];
+    isTaxi = json['is_taxi'];
     newVariation = json['new_variation'];
     description = json['description'];
   }
@@ -476,6 +498,7 @@ class Module {
     data['order_attachment'] = this.orderAttachment;
     data['show_restaurant_text'] = this.showRestaurantText;
     data['is_parcel'] = this.isParcel;
+    data['is_taxi'] = this.isTaxi;
     data['new_variation'] = this.newVariation;
     data['description'] = this.description;
     return data;
@@ -580,18 +603,21 @@ class LandingPageLinks {
 class SocialLogin {
   String loginMedium;
   bool status;
+  String clientId;
 
-  SocialLogin({this.loginMedium, this.status});
+  SocialLogin({this.loginMedium, this.status, this.clientId});
 
   SocialLogin.fromJson(Map<String, dynamic> json) {
     loginMedium = json['login_medium'];
     status = json['status'];
+    clientId = json['client_id'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['login_medium'] = this.loginMedium;
     data['status'] = this.status;
+    data['client_id'] = this.clientId;
     return data;
   }
 }

@@ -11,6 +11,7 @@ import 'package:sixam_mart/data/model/body/delivery_man_body.dart';
 import 'package:sixam_mart/data/model/body/store_body.dart';
 import 'package:sixam_mart/data/model/body/signup_body.dart';
 import 'package:sixam_mart/data/model/body/social_log_in_body.dart';
+import 'package:sixam_mart/data/model/response/delivery_man_vehicles.dart';
 import 'package:sixam_mart/data/model/response/module_model.dart';
 import 'package:sixam_mart/data/model/response/response_model.dart';
 import 'package:sixam_mart/data/model/response/zone_model.dart';
@@ -46,6 +47,9 @@ class AuthController extends GetxController implements GetxService {
   int _deliveryTimeTypeIndex = 0;
   List<ModuleModel> _moduleList;
   int _selectedModuleIndex = 0;
+  List<DeliveryManVehicleModel> _vehicles;
+  List<int> _vehicleIds;
+  int _vehicleIndex = 0;
 
   bool get isLoading => _isLoading;
   bool get notification => _notification;
@@ -66,6 +70,31 @@ class AuthController extends GetxController implements GetxService {
   int get deliveryTimeTypeIndex => _deliveryTimeTypeIndex;
   List<ModuleModel> get moduleList => _moduleList;
   int get selectedModuleIndex => _selectedModuleIndex;
+  List<DeliveryManVehicleModel> get vehicles => _vehicles;
+  List<int> get vehicleIds => _vehicleIds;
+  int get vehicleIndex => _vehicleIndex;
+
+  Future<void> getVehicleList() async {
+    Response response = await authRepo.getVehicleList();
+    if (response.statusCode == 200) {
+      _vehicles = [];
+      _vehicleIds = [];
+      _vehicleIds.add(0);
+      response.body.forEach((vehicle) => _vehicles.add(DeliveryManVehicleModel.fromJson(vehicle)));
+      response.body.forEach((vehicle) => _vehicleIds.add(DeliveryManVehicleModel.fromJson(vehicle).id));
+
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
+
+  void setVehicleIndex(int index, bool notify) {
+    _vehicleIndex = index;
+    if(notify) {
+      update();
+    }
+  }
 
   Future<ResponseModel> registration(SignUpBody signUpBody) async {
     _isLoading = true;
@@ -112,7 +141,7 @@ class AuthController extends GetxController implements GetxService {
   Future<void> loginWithSocialMedia(SocialLogInBody socialLogInBody) async {
     _isLoading = true;
     update();
-    Response response = await authRepo.loginWithSocialMedia(socialLogInBody);
+    Response response = await authRepo.loginWithSocialMedia(socialLogInBody, 60);
     if (response.statusCode == 200) {
       String _token = response.body['token'];
       if(_token != null && _token.isNotEmpty) {

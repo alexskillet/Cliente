@@ -123,7 +123,7 @@ class BestReviewedItemView extends StatelessWidget {
                                       itemController.getStartingPrice(_itemList[index]), discount: itemController.getDiscount(_itemList[index]),
                                       discountType: itemController.getDiscountType(_itemList[index]),
                                     ),
-                                    style: robotoMedium,
+                                    style: robotoMedium, textDirection: TextDirection.ltr,
                                   ),
                                 ]),
                               ]),

@@ -45,7 +45,7 @@ class _WalletBottomSheetState extends State<WalletBottomSheet> {
               maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
-          Text('$_exchangePointRate ' + 'points'.tr + '= ${PriceConverter.convertPrice(1)}',
+          Text('$_exchangePointRate ' + 'points'.tr + '= ${PriceConverter.convertPrice(1)}', textDirection: TextDirection.ltr,
               style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor)),
           SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 

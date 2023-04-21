@@ -20,14 +20,15 @@ import 'package:get/get.dart';
 
 class OrderSuccessfulScreen extends StatefulWidget {
   final String orderID;
-  final bool isCashOnDelivery;
-  OrderSuccessfulScreen({@required this.orderID, @required this.isCashOnDelivery});
+  OrderSuccessfulScreen({@required this.orderID});
 
   @override
   State<OrderSuccessfulScreen> createState() => _OrderSuccessfulScreenState();
 }
 
 class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
+
+  bool _isCashOnDeliveryActive = false;
 
   @override
   void initState() {
@@ -63,11 +64,15 @@ class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
                   break;
                 }
               }
+              if(zData.id ==  Get.find<LocationController>().getUserAddress().zoneId){
+                _isCashOnDeliveryActive = zData.cashOnDelivery;
+              }
             }
 
+            print('----maximum : $_maximumCodOrderAmount / $success / ${orderController.trackModel.paymentStatus}');
             if (!success && !Get.isDialogOpen) {
               Future.delayed(Duration(seconds: 1), () {
-                Get.dialog(PaymentFailedDialog(orderID: widget.orderID, isCashOnDelivery: widget.isCashOnDelivery, orderAmount: total, maxCodOrderAmount: _maximumCodOrderAmount, orderType: parcel ? 'parcel' : 'delivery'), barrierDismissible: false);
+                Get.dialog(PaymentFailedDialog(orderID: widget.orderID, isCashOnDelivery: _isCashOnDeliveryActive, orderAmount: total, maxCodOrderAmount: _maximumCodOrderAmount, orderType: parcel ? 'parcel' : 'delivery'), barrierDismissible: false);
               });
             }
           }

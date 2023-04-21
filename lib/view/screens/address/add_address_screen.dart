@@ -21,9 +21,10 @@ import 'package:get/get.dart';
 
 class AddAddressScreen extends StatefulWidget {
   final bool fromCheckout;
+  final bool fromRide;
   final AddressModel address;
   final int zoneId;
-  AddAddressScreen({@required this.fromCheckout, this.address, this.zoneId});
+  AddAddressScreen({@required this.fromCheckout, @required this.fromRide, this.address, this.zoneId});
 
   @override
   State<AddAddressScreen> createState() => _AddAddressScreenState();
@@ -330,7 +331,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                     );
 
                     if(widget.address == null) {
-                      locationController.addAddress(_addressModel, widget.fromCheckout, widget.zoneId).then((response) {
+                      locationController.addAddress(_addressModel, widget.fromCheckout,  widget.fromRide, widget.zoneId).then((response) {
                         if(response.isSuccess) {
                           Get.back(result: _addressModel);
                           showCustomSnackBar('new_address_added_successfully'.tr, isError: false);

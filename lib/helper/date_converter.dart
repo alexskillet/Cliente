@@ -20,6 +20,10 @@ class DateConverter {
     return DateFormat('yyyy-MM-dd ${_timeFormatter()}').format(dateTime);
   }
 
+  static String dateToDate(DateTime dateTime) {
+    return DateFormat('yyyy-MM-dd').format(dateTime);
+  }
+
   static String dateTimeStringToDateTime(String dateTime) {
     return DateFormat('dd MMM yyyy  ${_timeFormatter()}').format(DateFormat('yyyy-MM-dd HH:mm:ss').parse(dateTime));
   }
@@ -38,6 +42,10 @@ class DateConverter {
 
   static String isoStringToLocalString(String dateTime) {
     return DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.parse(dateTime).toLocal());
+  }
+
+  static String isoStringToReadableString(String dateTime) {
+    return DateFormat('dd MMMM, yyyy HH:mm a').format(DateTime.parse(dateTime).toLocal());
   }
 
   static String isoStringToDateTimeString(String dateTime) {
@@ -62,6 +70,10 @@ class DateConverter {
 
   static DateTime convertStringTimeToDate(String time) {
     return DateFormat('HH:mm').parse(time);
+  }
+
+  static String convertTimeToTimeDate(DateTime time) {
+    return DateFormat('HH:mm').format(time);
   }
 
   static bool isAvailable(String start, String end, {DateTime time}) {

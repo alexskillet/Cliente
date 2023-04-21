@@ -8,6 +8,7 @@ class DeliveryManBody {
   String identityNumber;
   String earning;
   String zoneId;
+  String vehicleId;
 
   DeliveryManBody(
       {this.fName,
@@ -19,6 +20,7 @@ class DeliveryManBody {
         this.identityNumber,
         this.earning,
         this.zoneId,
+        this.vehicleId,
       });
 
   DeliveryManBody.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class DeliveryManBody {
     identityNumber = json['identity_number'];
     earning = json['earning'];
     zoneId = json['zone_id'];
+    vehicleId = json['vehicle_id'];
   }
 
   Map<String, String> toJson() {
@@ -44,6 +47,7 @@ class DeliveryManBody {
     data['identity_number'] = this.identityNumber;
     data['earning'] = this.earning;
     data['zone_id'] = this.zoneId;
+    data['vehicle_id'] = this.vehicleId;
     return data;
   }
 }

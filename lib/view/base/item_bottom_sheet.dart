@@ -44,6 +44,11 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
   void initState() {
     super.initState();
 
+    if(Get.find<SplashController>().module == null){
+      if(Get.find<SplashController>().cacheModule != null){
+        Get.find<SplashController>().setCacheConfigModule(Get.find<SplashController>().cacheModule);
+      }
+    }
     _newVariation = Get.find<SplashController>().getModuleConfig(widget.item.moduleType).newVariation;
     Get.find<ItemController>().initData(widget.item, widget.cart);
   }
@@ -62,7 +67,7 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
       child: GetBuilder<ItemController>(builder: (itemController) {
         double _startingPrice;
         double _endingPrice;
-        if (widget.item.choiceOptions.length != 0) {
+        if (widget.item.choiceOptions.length != 0 && widget.item.foodVariations.isEmpty) {
           List<double> _priceList = [];
           widget.item.variations.forEach((variation) => _priceList.add(variation.price));
           _priceList.sort((a, b) => a.compareTo(b));
@@ -197,11 +202,11 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
                         '${PriceConverter.convertPrice(_startingPrice, discount: _discount, discountType: _discountType)}'
                             '${_endingPrice != null ? ' - ${PriceConverter.convertPrice(_endingPrice, discount: _discount,
                             discountType: _discountType)}' : ''}',
-                        style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
+                        style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge), textDirection: TextDirection.ltr,
                       ),
                       _price > priceWithDiscount ? Text(
                         '${PriceConverter.convertPrice(_startingPrice)}'
-                            '${_endingPrice != null ? ' - ${PriceConverter.convertPrice(_endingPrice)}' : ''}',
+                            '${_endingPrice != null ? ' - ${PriceConverter.convertPrice(_endingPrice)}' : ''}', textDirection: TextDirection.ltr,
                         style: robotoMedium.copyWith(color: Theme.of(context).disabledColor, decoration: TextDecoration.lineThrough),
                       ) : SizedBox(),
                     ]),
@@ -335,7 +340,7 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
                                     style: robotoRegular.copyWith(
                                       color: itemController.addOnActiveList[index] ? Colors.white : Colors.black,
                                       fontSize: Dimensions.fontSizeExtraSmall,
-                                    ),
+                                    ), textDirection: TextDirection.ltr,
                                   ),
                                 ]),
                               ),
@@ -385,13 +390,13 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
                       (_price * itemController.quantity) + addonsCost,
                       discount: _discount, discountType: _discountType,
                     ),
-                    style: robotoBold.copyWith(color: Theme.of(context).primaryColor),
+                    style: robotoBold.copyWith(color: Theme.of(context).primaryColor), textDirection: TextDirection.ltr,
                   ),
                   SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                   _discount > 0 ? Text(
                     PriceConverter.convertPrice(
                       (_price * itemController.quantity) + addonsCost,
-                    ),
+                    ), textDirection: TextDirection.ltr,
                     style: robotoMedium.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall, decoration: TextDecoration.lineThrough),
                   ) : SizedBox(),
                 ]),
@@ -652,7 +657,7 @@ class NewVariationView extends StatelessWidget {
                   Text(
                     '${item.foodVariations[index].variationValues[i].optionPrice > 0 ? '+'
                         + PriceConverter.convertPrice(item.foodVariations[index].variationValues[i].optionPrice) : 'free'.tr}',
-                    maxLines: 1, overflow: TextOverflow.ellipsis,
+                    maxLines: 1, overflow: TextOverflow.ellipsis, textDirection: TextDirection.ltr,
                     style: itemController.selectedVariations[index][i] ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall)
                         : robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor),
                   ),

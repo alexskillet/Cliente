@@ -16,6 +16,7 @@ class ItemImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('=========${Get.find<SplashController>().configModel.baseUrls.campaignImageUrl}');
     List<String> _imageList = [];
     _imageList.add(item.image);
     _imageList.addAll(item.images);
@@ -24,6 +25,7 @@ class ItemImageView extends StatelessWidget {
       builder: (itemController) {
         String _baseUrl = item.availableDateStarts == null ? Get.find<SplashController>().
             configModel.baseUrls.itemImageUrl : Get.find<SplashController>().configModel.baseUrls.campaignImageUrl;
+        print('-----------$_baseUrl');
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -39,6 +41,7 @@ class ItemImageView extends StatelessWidget {
                     controller: _controller,
                     itemCount: _imageList.length,
                     itemBuilder: (context, index) {
+                      print('>>>>>>>>>>$_baseUrl/${_imageList[index]}');
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: CustomImage(

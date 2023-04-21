@@ -27,8 +27,8 @@ class AuthRepo {
     return await apiClient.postData(AppConstants.LOGIN_URI, {"phone": phone, "password": password});
   }
 
-  Future<Response> loginWithSocialMedia(SocialLogInBody socialLogInBody) async {
-    return await apiClient.postData(AppConstants.SOCIAL_LOGIN_URL, socialLogInBody.toJson());
+  Future<Response> loginWithSocialMedia(SocialLogInBody socialLogInBody, int timeout) async {
+    return await apiClient.postData(AppConstants.SOCIAL_LOGIN_URL, socialLogInBody.toJson(), timeout: timeout);
   }
 
   Future<Response> registerWithSocialMedia(SocialLogInBody socialLogInBody) async {
@@ -103,7 +103,7 @@ class AuthRepo {
   Future<bool> saveUserToken(String token) async {
     apiClient.token = token;
     apiClient.updateHeader(
-      token, null, sharedPreferences.getString(AppConstants.LANGUAGE_CODE),
+      token, null, null, sharedPreferences.getString(AppConstants.LANGUAGE_CODE),
       Get.find<SplashController>().module != null ? Get.find<SplashController>().module.id : null,
       null, null
     );
@@ -127,7 +127,7 @@ class AuthRepo {
     sharedPreferences.setStringList(AppConstants.CART_LIST, []);
     sharedPreferences.remove(AppConstants.USER_ADDRESS);
     apiClient.token = null;
-    apiClient.updateHeader(null, null, null, null, null, null);
+    apiClient.updateHeader(null, null, null, null, null, null, null);
     return true;
   }
 
@@ -203,5 +203,9 @@ class AuthRepo {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
+  }
+
+  Future<Response> getVehicleList() async {
+    return await apiClient.getData(AppConstants.VEHICLES_URI);
   }
 }

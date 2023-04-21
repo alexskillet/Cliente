@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sixam_mart/controller/auth_controller.dart';
+import 'package:sixam_mart/controller/location_controller.dart';
 import 'package:sixam_mart/controller/order_controller.dart';
 import 'package:sixam_mart/controller/parcel_controller.dart';
 import 'package:sixam_mart/controller/splash_controller.dart';
@@ -9,6 +10,7 @@ import 'package:sixam_mart/controller/user_controller.dart';
 import 'package:sixam_mart/data/model/body/place_order_body.dart';
 import 'package:sixam_mart/data/model/response/address_model.dart';
 import 'package:sixam_mart/data/model/response/parcel_category_model.dart';
+import 'package:sixam_mart/data/model/response/zone_response_model.dart';
 import 'package:sixam_mart/helper/price_converter.dart';
 import 'package:sixam_mart/helper/responsive_helper.dart';
 import 'package:sixam_mart/helper/route_helper.dart';
@@ -42,6 +44,8 @@ class ParcelRequestScreen extends StatefulWidget {
 class _ParcelRequestScreenState extends State<ParcelRequestScreen> {
   TextEditingController _tipController = TextEditingController();
   bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+  bool _isCashOnDeliveryActive = false;
+  bool _isDigitalPaymentActive = false;
 
   @override
   void initState() {
@@ -50,7 +54,18 @@ class _ParcelRequestScreenState extends State<ParcelRequestScreen> {
     if(_isLoggedIn) {
       Get.find<ParcelController>().getDistance(widget.pickedUpAddress, widget.destinationAddress);
       Get.find<ParcelController>().setPayerIndex(0, false);
-      Get.find<ParcelController>().setPaymentIndex(Get.find<SplashController>().configModel.cashOnDelivery ? 0 : 1, false);
+      for(ZoneData zData in Get.find<LocationController>().getUserAddress().zoneData){
+        if(zData.id ==  Get.find<LocationController>().getUserAddress().zoneId){
+          _isCashOnDeliveryActive = zData.cashOnDelivery;
+          _isDigitalPaymentActive = zData.digitalPayment;
+          if(Get.find<ParcelController>().payerIndex == 0) {
+            Get.find<ParcelController>().setPaymentIndex(_isCashOnDeliveryActive ? 0 : _isDigitalPaymentActive ? 1 : 2, false);
+          }else{
+            Get.find<ParcelController>().setPaymentIndex(0, false);
+          }
+
+        }
+      }
       if (Get.find<UserController>().userInfoModel == null) {
         Get.find<UserController>().getUserInfo();
       }
@@ -75,6 +90,7 @@ class _ParcelRequestScreenState extends State<ParcelRequestScreen> {
             _charge = _parcelMinimumShippingCharge;
           }
         }
+
 
         return _isLoggedIn ? Column(children: [
 
@@ -136,7 +152,7 @@ class _ParcelRequestScreenState extends State<ParcelRequestScreen> {
                     Text('delivery_fee'.tr, style: robotoRegular),
                     Text(
                       parcelController.distance == -1 ? 'calculating'.tr : PriceConverter.convertPrice(_charge),
-                      style: robotoBold.copyWith(color: Theme.of(context).primaryColor),
+                      style: robotoBold.copyWith(color: Theme.of(context).primaryColor), textDirection: TextDirection.ltr,
                     ),
                   ]),
                 ]))
@@ -225,7 +241,7 @@ class _ParcelRequestScreenState extends State<ParcelRequestScreen> {
                     Text(parcelController.payerTypes[0].tr, style: robotoRegular),
                   ]),
                 )),
-                Get.find<SplashController>().configModel.cashOnDelivery ? Expanded(child: InkWell(
+                _isCashOnDeliveryActive ? Expanded(child: InkWell(
                   onTap: () => parcelController.setPayerIndex(1, true),
                   child: Row(children: [
                     Radio<String>(
@@ -240,14 +256,14 @@ class _ParcelRequestScreenState extends State<ParcelRequestScreen> {
               ]),
               SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
-              Get.find<SplashController>().configModel.cashOnDelivery ? PaymentButton(
+              _isCashOnDeliveryActive ? PaymentButton(
                 icon: Images.cash_on_delivery,
                 title: 'cash_on_delivery'.tr,
                 subtitle: 'pay_your_payment_after_getting_item'.tr,
                 isSelected: parcelController.paymentIndex == 0,
                 onTap: () => parcelController.setPaymentIndex(0, true),
               ) : SizedBox(),
-              (Get.find<SplashController>().configModel.digitalPayment && parcelController.payerIndex == 0) ? PaymentButton(
+              (_isDigitalPaymentActive && parcelController.payerIndex == 0) ? PaymentButton(
                 icon: Images.digital_payment,
                 title: 'digital_payment'.tr,
                 subtitle: 'faster_and_safe_way'.tr,
@@ -287,10 +303,10 @@ class _ParcelRequestScreenState extends State<ParcelRequestScreen> {
               .userInfoModel.id}&&callback=$protocol//$hostname${RouteHelper.orderSuccess}?id=$orderID&status=';
           html.window.open(selectedUrl,"_self");
         } else{
-          Get.offNamed(RouteHelper.getPaymentRoute(orderID, Get.find<UserController>().userInfoModel.id, 'parcel', orderAmount, maxCodAmount, Get.find<SplashController>().configModel.cashOnDelivery));
+          Get.offNamed(RouteHelper.getPaymentRoute(orderID, Get.find<UserController>().userInfoModel.id, 'parcel', orderAmount, _isCashOnDeliveryActive));
         }
       }else {
-        Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID, Get.find<SplashController>().configModel.cashOnDelivery));
+        Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID));
       }
       Get.find<OrderController>().updateTips(-1, notify: false);
     }else {

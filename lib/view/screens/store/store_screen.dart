@@ -16,6 +16,7 @@ import 'package:sixam_mart/util/styles.dart';
 import 'package:sixam_mart/view/base/custom_image.dart';
 import 'package:sixam_mart/view/base/footer_view.dart';
 import 'package:sixam_mart/view/base/item_view.dart';
+import 'package:sixam_mart/view/base/item_widget.dart';
 import 'package:sixam_mart/view/base/menu_drawer.dart';
 import 'package:sixam_mart/view/base/paginated_list_view.dart';
 import 'package:sixam_mart/view/base/web_menu_bar.dart';
@@ -50,6 +51,7 @@ class _StoreScreenState extends State<StoreScreen> {
     if(Get.find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(true);
     }
+    Get.find<StoreController>().getRestaurantRecommendedItemList(widget.store.id, false);
     Get.find<StoreController>().getStoreItemList(widget.store.id, 1, 'all', false);
 
     scrollController.addListener(() {
@@ -166,22 +168,23 @@ class _StoreScreenState extends State<StoreScreen> {
                         _store.discount.discountType == 'percent' ? '${_store.discount.discount}% OFF'
                             : '${PriceConverter.convertPrice(_store.discount.discount)} OFF',
                         style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).cardColor),
+                          textDirection: TextDirection.ltr,
                       ),
                       Text(
                         _store.discount.discountType == 'percent'
                             ? '${'enjoy'.tr} ${_store.discount.discount}% ${'off_on_all_categories'.tr}'
                             : '${'enjoy'.tr} ${PriceConverter.convertPrice(_store.discount.discount)}'
                             ' ${'off_on_all_categories'.tr}',
-                        style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).cardColor),
+                        style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).cardColor), textDirection: TextDirection.ltr,
                       ),
                       SizedBox(height: (_store.discount.minPurchase != 0 || _store.discount.maxDiscount != 0) ? 5 : 0),
                       _store.discount.minPurchase != 0 ? Text(
                         '[ ${'minimum_purchase'.tr}: ${PriceConverter.convertPrice(_store.discount.minPurchase)} ]',
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).cardColor),
+                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).cardColor), textDirection: TextDirection.ltr,
                       ) : SizedBox(),
                       _store.discount.maxDiscount != 0 ? Text(
                         '[ ${'maximum_discount'.tr}: ${PriceConverter.convertPrice(_store.discount.maxDiscount)} ]',
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).cardColor),
+                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).cardColor), textDirection: TextDirection.ltr,
                       ) : SizedBox(),
                       Text(
                         '[ ${'daily_time'.tr}: ${DateConverter.convertTimeToTime(_store.discount.startTime)} '
@@ -189,6 +192,44 @@ class _StoreScreenState extends State<StoreScreen> {
                         style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).cardColor),
                       ),
                     ]),
+                  ) : SizedBox(),
+                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+                  storeController.recommendedItemModel != null && storeController.recommendedItemModel.items.length > 0 ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('recommended_items'.tr, style: robotoMedium),
+                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+
+                      SizedBox(
+                        height: ResponsiveHelper.isDesktop(context) ? 150 : 120,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: storeController.recommendedItemModel.items.length,
+                          physics: BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.symmetric(vertical: 20) : EdgeInsets.symmetric(vertical: 10) ,
+                              child: Container(
+                                width: ResponsiveHelper.isDesktop(context) ? 500 : 300,
+                                decoration: ResponsiveHelper.isDesktop(context) ? null : BoxDecoration(
+                                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_DEFAULT),
+                                    color: Theme.of(context).cardColor,
+                                    border: Border.all(color: Theme.of(context).disabledColor, width: 0.2),
+                                    boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], blurRadius: 5)]
+                                ),
+                                padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL, left: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+                                child: ItemWidget(
+                                  isStore: false, item: storeController.recommendedItemModel.items[index],
+                                  store: null, index: index, length: null, isCampaign: false, inStore: true,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ) : SizedBox(),
                 ]),
               ))),

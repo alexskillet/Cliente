@@ -101,7 +101,7 @@ class StoreDescriptionView extends StatelessWidget {
             )),
             SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
             Text(
-              PriceConverter.convertPrice(store.minimumOrder),
+              PriceConverter.convertPrice(store.minimumOrder), textDirection: TextDirection.ltr,
               style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).primaryColor),
             ),
           ]),

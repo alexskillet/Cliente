@@ -94,13 +94,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return GetBuilder<SplashController>(builder: (splashController) {
       bool _showMobileModule = !ResponsiveHelper.isDesktop(context) && splashController.module == null && splashController.configModel.module == null;
       bool _isParcel = splashController.module != null && splashController.configModel.moduleConfig.module.isParcel;
+      // bool _isTaxiBooking = splashController.module != null && splashController.configModel.moduleConfig.module.isTaxi;
 
       return Scaffold(
         appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
         endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
         backgroundColor: ResponsiveHelper.isDesktop(context) ? Theme.of(context).cardColor : splashController.module == null
             ? Theme.of(context).colorScheme.background : null,
-        body: _isParcel ? ParcelCategoryScreen() : SafeArea(
+        body: /*_isTaxiBooking ? RiderHomeScreen() : */_isParcel ? ParcelCategoryScreen() : SafeArea(
           child: RefreshIndicator(
             onRefresh: () async {
               if(Get.find<SplashController>().module != null) {

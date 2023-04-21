@@ -100,7 +100,7 @@ class LocationController extends GetxController implements GetxService {
     _addressModel = AddressModel(
       latitude: _myPosition.latitude.toString(), longitude: _myPosition.longitude.toString(), addressType: 'others',
       zoneId: _responseModel.isSuccess ? _responseModel.zoneIds[0] : 0, zoneIds: _responseModel.zoneIds,
-      address: _addressFromGeocode, zoneData: _responseModel.zoneData,
+      address: _addressFromGeocode, zoneData: _responseModel.zoneData, areaIds: _responseModel.areaIds,
     );
     _loading = false;
     update();
@@ -129,7 +129,17 @@ class LocationController extends GetxController implements GetxService {
       response.body['zone_data'].forEach((data) {
         _zoneData.add(ZoneData.fromJson(data));
       });
-      _responseModel = ZoneResponseModel(true, '', _zoneIds, _zoneData);
+      List<int> _areaIds = [];
+      ///for taxi booking
+      // if(response.body['area_id'] != null){
+      //   jsonDecode(response.body['area_id']).forEach((areaId) {
+      //     _areaIds.add(int.parse(areaId.toString()));
+      //   });
+      // }else{
+      //   showCustomSnackBar('outside_of_city'.tr);
+      // }
+
+      _responseModel = ZoneResponseModel(true, '', _zoneIds, _zoneData, _areaIds);
       if(updateInAddress) {
         AddressModel _address = getUserAddress();
         _address.zoneData = _zoneData;
@@ -137,7 +147,7 @@ class LocationController extends GetxController implements GetxService {
       }
     }else {
       _inZone = false;
-      _responseModel = ZoneResponseModel(false, response.statusText, [], []);
+      _responseModel = ZoneResponseModel(false, response.statusText, [], [], []);
     }
     if(markerLoad) {
       _loading = false;
@@ -156,6 +166,8 @@ class LocationController extends GetxController implements GetxService {
     _address.zoneIds.addAll(_response.zoneIds);
     _address.zoneData = [];
     _address.zoneData.addAll(_response.zoneData);
+    _address.areaIds = [];
+    _address.areaIds.addAll(_response.areaIds);
     await saveUserAddress(_address);
     update();
   }
@@ -236,14 +248,19 @@ class LocationController extends GetxController implements GetxService {
     }
   }
 
-  Future<ResponseModel> addAddress(AddressModel addressModel, bool fromCheckout, int storeZoneId) async {
+  Future<ResponseModel> addAddress(AddressModel addressModel, bool fromCheckout, bool fromRide, int storeZoneId) async {
     _isLoading = true;
     update();
     Response response = await locationRepo.addAddress(addressModel);
     _isLoading = false;
     ResponseModel responseModel;
     if (response.statusCode == 200) {
-      if(fromCheckout && !response.body['zone_ids'].contains(storeZoneId)) {
+      if(fromRide){
+        getAddressList();
+        String message = response.body["message"];
+        responseModel = ResponseModel(true, message);
+      }
+      else if(fromCheckout && !response.body['zone_ids'].contains(storeZoneId)) {
         responseModel = ResponseModel(false, Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
             ? 'your_selected_location_is_from_different_zone'.tr : 'your_selected_location_is_from_different_zone_store'.tr);
       }else {
@@ -277,7 +294,7 @@ class LocationController extends GetxController implements GetxService {
 
   Future<bool> saveUserAddress(AddressModel address) async {
     String userAddress = jsonEncode(address.toJson());
-    return await locationRepo.saveUserAddress(userAddress, address.zoneIds, address.latitude, address.longitude);
+    return await locationRepo.saveUserAddress(userAddress, address.zoneIds, address.areaIds, address.latitude, address.longitude);
   }
 
   AddressModel getUserAddress() {
@@ -320,6 +337,8 @@ class LocationController extends GetxController implements GetxService {
         address.zoneIds.addAll(response.zoneIds);
         address.zoneData = [];
         address.zoneData.addAll(response.zoneData);
+        address.areaIds = [];
+        address.areaIds.addAll(response.areaIds);
         autoNavigate(address, fromSignUp, route, canRoute, isDesktop);
       } else {
         Get.back();

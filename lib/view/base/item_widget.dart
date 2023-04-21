@@ -103,7 +103,7 @@ class ItemWidget extends StatelessWidget {
                     image: '${isCampaign ? _baseUrls.campaignImageUrl : isStore ? _baseUrls.storeImageUrl
                         : _baseUrls.itemImageUrl}'
                         '/${isStore ? store != null ? store.logo : '' : item.image}',
-                    height: _desktop ? 120 : 65, width: _desktop ? 120 : 80, fit: BoxFit.cover,
+                    height: _desktop ? 120 : length == null ? 100 : 65, width: _desktop ? 120 : 80, fit: BoxFit.cover,
                   ),
                 ),
                 DiscountTag(
@@ -147,7 +147,7 @@ class ItemWidget extends StatelessWidget {
 
                     Text(
                       PriceConverter.convertPrice(item.price, discount: _discount, discountType: _discountType),
-                      style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
+                      style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall), textDirection: TextDirection.ltr,
                     ),
                     SizedBox(width: _discount > 0 ? Dimensions.PADDING_SIZE_EXTRA_SMALL : 0),
 
@@ -157,7 +157,7 @@ class ItemWidget extends StatelessWidget {
                         fontSize: Dimensions.fontSizeExtraSmall,
                         color: Theme.of(context).disabledColor,
                         decoration: TextDecoration.lineThrough,
-                      ),
+                      ), textDirection: TextDirection.ltr,
                     ) : SizedBox(),
 
                   ]),
@@ -199,7 +199,7 @@ class ItemWidget extends StatelessWidget {
             ]),
           )),
 
-          _desktop ? SizedBox() : Padding(
+          _desktop || length == null ? SizedBox() : Padding(
             padding: EdgeInsets.only(left: _desktop ? 130 : 90),
             child: Divider(color: index == length-1 ? Colors.transparent : Theme.of(context).disabledColor),
           ),

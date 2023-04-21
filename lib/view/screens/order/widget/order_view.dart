@@ -116,13 +116,13 @@ class OrderView extends StatelessWidget {
                                 )) : SizedBox(),
 
                                 _isPrescription ? Positioned(left: 0, top: 10, child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                  padding: EdgeInsets.symmetric(horizontal: 2),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.horizontal(right: Radius.circular(Dimensions.RADIUS_SMALL)),
                                     color: Theme.of(context).primaryColor,
                                   ),
                                   child: Text('prescription'.tr, style: robotoMedium.copyWith(
-                                    fontSize: Dimensions.fontSizeExtraSmall, color: Colors.white,
+                                    fontSize: 10, color: Colors.white,
                                   )),
                                 )) : SizedBox(),
                               ]),

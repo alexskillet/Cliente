@@ -61,7 +61,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                       Text(
                           'one_referral'.tr + '= ' + PriceConverter.convertPrice(Get.find<SplashController>().configModel != null
                               ? Get.find<SplashController>().configModel.refEarningExchangeRate.toDouble() : 0.0),
-                          style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault),
+                          style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault), textDirection: TextDirection.ltr,
                       ),
                       SizedBox(height: 40),
 
@@ -82,7 +82,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                                 height: ResponsiveHelper.isDesktop(context) ? 250 : 150, fit: BoxFit.contain),
                             SizedBox(width: 120, child: Text(
                                 'get'.tr + ' ${PriceConverter.convertPrice(Get.find<SplashController>().configModel != null ? Get.find<SplashController>().configModel.refEarningExchangeRate.toDouble() : 0.0)} ' +
-                                    'on_joining'.tr , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall), textAlign: TextAlign.center),
+                                    'on_joining'.tr , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall), textAlign: TextAlign.center, textDirection: TextDirection.ltr),
                             ),
                           ]),
                         ]),

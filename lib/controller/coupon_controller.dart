@@ -11,6 +11,7 @@ class CouponController extends GetxController implements GetxService {
   CouponController({@required this.couponRepo});
 
   List<CouponModel> _couponList;
+  List<CouponModel> _taxiCouponList;
   CouponModel _coupon;
   double _discount = 0.0;
   bool _isLoading = false;
@@ -21,12 +22,24 @@ class CouponController extends GetxController implements GetxService {
   bool get isLoading => _isLoading;
   bool get freeDelivery => _freeDelivery;
   List<CouponModel> get couponList => _couponList;
+  List<CouponModel> get taxiCouponList => _taxiCouponList;
 
   Future<void> getCouponList() async {
     Response response = await couponRepo.getCouponList();
     if (response.statusCode == 200) {
       _couponList = [];
       response.body.forEach((category) => _couponList.add(CouponModel.fromJson(category)));
+      update();
+    } else {
+      ApiChecker.checkApi(response);
+    }
+  }
+
+  Future<void> getTaxiCouponList() async {
+    Response response = await couponRepo.getTaxiCouponList();
+    if (response.statusCode == 200) {
+      _taxiCouponList = [];
+      response.body.forEach((category) => _taxiCouponList.add(CouponModel.fromJson(category)));
       update();
     } else {
       ApiChecker.checkApi(response);
@@ -76,6 +89,33 @@ class CouponController extends GetxController implements GetxService {
     } else {
       _discount = 0.0;
       ApiChecker.checkApi(response);
+    }
+    _isLoading = false;
+    update();
+    return _discount;
+  }
+
+  Future<double> applyTaxiCoupon(String coupon, double orderAmount, int providerId) async {
+    _isLoading = true;
+    _discount = 0;
+    update();
+    Response response = await couponRepo.applyTaxiCoupon(coupon, providerId);
+    if (response.statusCode == 200) {
+      _coupon = CouponModel.fromJson(response.body);
+      if (_coupon.minPurchase != null && _coupon.minPurchase < orderAmount) {
+        if (_coupon.discountType == 'percent') {
+          if (_coupon.maxDiscount != null && _coupon.maxDiscount > 0) {
+            _discount = (_coupon.discount * orderAmount / 100) < _coupon.maxDiscount ? (_coupon.discount * orderAmount / 100) : _coupon.maxDiscount;
+          } else {
+            _discount = _coupon.discount * orderAmount / 100;
+          }
+        } else {
+          _discount = _coupon.discount;
+        }
+      } else {
+        _discount = 0.0;
+        ApiChecker.checkApi(response);
+      }
     }
     _isLoading = false;
     update();

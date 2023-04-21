@@ -1,5 +1,6 @@
 import 'package:sixam_mart/controller/location_controller.dart';
 import 'package:sixam_mart/controller/parcel_controller.dart';
+import 'package:sixam_mart/controller/rider_controller.dart';
 import 'package:sixam_mart/data/model/response/prediction_model.dart';
 import 'package:sixam_mart/helper/responsive_helper.dart';
 import 'package:sixam_mart/util/dimensions.dart';
@@ -11,13 +12,15 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class LocationSearchDialog extends StatelessWidget {
   final GoogleMapController mapController;
   final bool isPickedUp;
-  LocationSearchDialog({@required this.mapController, this.isPickedUp});
+  final bool isRider;
+  final bool isFrom;
+  LocationSearchDialog({@required this.mapController, this.isPickedUp, this.isRider = false, this.isFrom = false});
 
   @override
   Widget build(BuildContext context) {
     final TextEditingController _controller = TextEditingController();
 
-    return Container(
+    return Scrollable(viewportBuilder: (context,viewPortOffset) => Container(
       margin: EdgeInsets.only(top: ResponsiveHelper.isWeb() ? 80 : 0),
       padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
       alignment: Alignment.topCenter,
@@ -46,7 +49,11 @@ class LocationSearchDialog extends StatelessWidget {
             ),
           ),
           suggestionsCallback: (pattern) async {
-            return await Get.find<LocationController>().searchLocation(context, pattern);
+            if(pattern.isNotEmpty){
+              return await Get.find<LocationController>().searchLocation(context, pattern);
+            }else{
+              return null;
+            }
           },
           itemBuilder: (context, PredictionModel suggestion) {
             return Padding(
@@ -62,15 +69,19 @@ class LocationSearchDialog extends StatelessWidget {
             );
           },
           onSuggestionSelected: (PredictionModel suggestion) {
-            if(isPickedUp == null) {
-              Get.find<LocationController>().setLocation(suggestion.placeId, suggestion.description, mapController);
+            if(isRider){
+              Get.find<RiderController>().setLocationFromPlace(suggestion.placeId, suggestion.description, isFrom);
             }else {
-              Get.find<ParcelController>().setLocationFromPlace(suggestion.placeId, suggestion.description, isPickedUp);
+              if(isPickedUp == null) {
+                Get.find<LocationController>().setLocation(suggestion.placeId, suggestion.description, mapController);
+              }else {
+                Get.find<ParcelController>().setLocationFromPlace(suggestion.placeId, suggestion.description, isPickedUp);
+              }
             }
             Get.back();
           },
         )),
       ),
-    );
+    ));
   }
 }

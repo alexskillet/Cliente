@@ -16,10 +16,13 @@ class ItemTitleView extends StatelessWidget {
   final Item item;
   final bool inStorePage;
   final bool isCampaign;
-  ItemTitleView({@required this.item,  this.inStorePage = false, this.isCampaign = false});
+  final bool inStock;
+  ItemTitleView({@required this.item,  this.inStorePage = false, this.isCampaign = false, @required this.inStock});
 
   @override
   Widget build(BuildContext context) {
+    print('-----------$inStock');
+    print(inStock ? 'out_of_stock'.tr : 'in_stock'.tr);
     final bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
     double _startingPrice;
     double _endingPrice;
@@ -71,13 +74,14 @@ class ItemTitleView extends StatelessWidget {
             Text(
               '${PriceConverter.convertPrice(_startingPrice, discount: item.discount, discountType: item.discountType)}'
                   '${_endingPrice!= null ? ' - ${PriceConverter.convertPrice(_endingPrice, discount: item.discount, discountType: item.discountType)}' : ''}',
-              style: robotoBold.copyWith(color: Theme.of(context).primaryColor, fontSize: 30),
+              style: robotoBold.copyWith(color: Theme.of(context).primaryColor, fontSize: 30), textDirection: TextDirection.ltr,
             ),
             const SizedBox(width: 10),
             item.discount > 0 ? Flexible(
               child: Text(
                 '${PriceConverter.convertPrice(_startingPrice)}'
                     '${_endingPrice!= null ? ' - ${PriceConverter.convertPrice(_endingPrice)}' : ''}',
+                textDirection: TextDirection.ltr,
                 style: robotoRegular.copyWith(color: Colors.red, decoration: TextDecoration.lineThrough,fontSize: Dimensions.fontSizeLarge),
               ),
             ) : SizedBox(),
@@ -85,9 +89,9 @@ class ItemTitleView extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
               decoration: BoxDecoration(
-                color: item.stock == 0 ? Colors.red : Colors.green, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                color: inStock ? Colors.red : Colors.green, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
               ),
-              child: Text(item.stock == 0 ? 'out_of_stock'.tr : 'in_stock'.tr, style: robotoRegular.copyWith(
+              child: Text(inStock ? 'out_of_stock'.tr : 'in_stock'.tr, style: robotoRegular.copyWith(
                 color: Colors.white,
                 fontSize: Dimensions.fontSizeSmall,
               )),
@@ -165,13 +169,13 @@ class ItemTitleView extends StatelessWidget {
                 Text(
                   '${PriceConverter.convertPrice(_startingPrice, discount: item.discount, discountType: item.discountType)}'
                       '${_endingPrice!= null ? ' - ${PriceConverter.convertPrice(_endingPrice, discount: item.discount, discountType: item.discountType)}' : ''}',
-                  style: robotoMedium.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeLarge),
+                  style: robotoMedium.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeLarge), textDirection: TextDirection.ltr,
                 ),
                 SizedBox(height: 5),
 
                 item.discount > 0 ? Text(
                   '${PriceConverter.convertPrice(_startingPrice)}'
-                      '${_endingPrice!= null ? ' - ${PriceConverter.convertPrice(_endingPrice)}' : ''}',
+                      '${_endingPrice!= null ? ' - ${PriceConverter.convertPrice(_endingPrice)}' : ''}', textDirection: TextDirection.ltr,
                   style: robotoRegular.copyWith(color: Theme.of(context).hintColor, decoration: TextDecoration.lineThrough),
                 ) : SizedBox(),
                 SizedBox(height: item.discount > 0 ? 5 : 0),
@@ -191,9 +195,9 @@ class ItemTitleView extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                 decoration: BoxDecoration(
-                  color: item.stock == 0 ? Colors.red : Colors.green, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                  color: inStock ? Colors.red : Colors.green, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                 ),
-                child: Text(item.stock == 0 ? 'out_of_stock'.tr : 'in_stock'.tr, style: robotoRegular.copyWith(
+                child: Text(inStock ? 'out_of_stock'.tr : 'in_stock'.tr, style: robotoRegular.copyWith(
                   color: Colors.white,
                   fontSize: Dimensions.fontSizeSmall,
                 )),

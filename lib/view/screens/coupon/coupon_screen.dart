@@ -134,12 +134,18 @@ class _CouponScreenState extends State<CouponScreen> {
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
                                 SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                Flexible(child: Text(
+                                couponController.couponList[index].store == null ?  Flexible(child: Text(
                                   couponController.couponList[index].couponType.tr + '${couponController.couponList[index].couponType
                                       == 'store_wise' ? ' (${couponController.couponList[index].data})' : ''}',
                                   style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
-                                )),
+                                )) : SizedBox(),
+
+                                couponController.couponList[index].store != null ? Flexible(child: Text(
+                                  couponController.couponList[index].couponType.tr + ' (${couponController.couponList[index].store.name})',
+                                  style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
+                                  maxLines: 2, overflow: TextOverflow.ellipsis,
+                                )) : SizedBox(),
                               ]),
 
                               Row(children: [
@@ -152,7 +158,7 @@ class _CouponScreenState extends State<CouponScreen> {
                                 Text(
                                   PriceConverter.convertPrice(couponController.couponList[index].minPurchase),
                                   style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
-                                  maxLines: 1, overflow: TextOverflow.ellipsis,
+                                  maxLines: 1, overflow: TextOverflow.ellipsis, textDirection: TextDirection.ltr,
                                 ),
                               ]),
 
@@ -166,7 +172,7 @@ class _CouponScreenState extends State<CouponScreen> {
                                 Text(
                                   PriceConverter.convertPrice(couponController.couponList[index].maxDiscount),
                                   style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
-                                  maxLines: 1, overflow: TextOverflow.ellipsis,
+                                  maxLines: 1, overflow: TextOverflow.ellipsis, textDirection: TextDirection.ltr,
                                 ),
                               ]),
 

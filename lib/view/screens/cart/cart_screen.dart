@@ -91,7 +91,13 @@ class _CartScreenState extends State<CartScreen> {
                           // Total
                           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                             Text('item_price'.tr, style: robotoRegular),
-                            Text(PriceConverter.convertPrice(cartController.itemPrice), style: robotoRegular),
+                            Text(PriceConverter.convertPrice(cartController.itemPrice), style: robotoRegular, textDirection: TextDirection.ltr),
+                          ]),
+                          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                            Text('discount'.tr, style: robotoRegular),
+                            Text('(-) ${PriceConverter.convertPrice(cartController.itemDiscountPrice)}', style: robotoRegular, textDirection: TextDirection.ltr),
                           ]),
                           SizedBox(height: Get.find<SplashController>().configModel.moduleConfig.module.addOn ? 10 : 0),
 
@@ -99,22 +105,22 @@ class _CartScreenState extends State<CartScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('addons'.tr, style: robotoRegular),
-                              Text('(+) ${PriceConverter.convertPrice(cartController.addOns)}', style: robotoRegular),
+                              Text('(+) ${PriceConverter.convertPrice(cartController.addOns)}', style: robotoRegular, textDirection: TextDirection.ltr),
                             ],
                           ) : SizedBox(),
 
-                          Get.find<SplashController>().configModel.moduleConfig.module.addOn ? Padding(
+                          Padding(
                             padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
                             child: Divider(thickness: 1, color: Theme.of(context).hintColor.withOpacity(0.5)),
-                          ) : SizedBox(),
+                          ),
 
-                          Get.find<SplashController>().configModel.moduleConfig.module.addOn ? Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('subtotal'.tr, style: robotoMedium),
-                              Text(PriceConverter.convertPrice(cartController.subTotal), style: robotoMedium),
+                              Text(PriceConverter.convertPrice(cartController.subTotal), style: robotoMedium, textDirection: TextDirection.ltr),
                             ],
-                          ) : SizedBox(),
+                          ),
 
                           ResponsiveHelper.isDesktop(context) ? CheckoutButton(cartController: cartController, availableList: cartController.availableList) : SizedBox.shrink(),
 

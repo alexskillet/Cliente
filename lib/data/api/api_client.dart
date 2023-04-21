@@ -38,13 +38,13 @@ class ApiClient extends GetxService {
       }catch(e) {}
     }
     updateHeader(
-      token, _addressModel == null ? null : _addressModel.zoneIds,
+      token, _addressModel == null ? null : _addressModel.zoneIds, _addressModel == null ? null : _addressModel.areaIds,
       sharedPreferences.getString(AppConstants.LANGUAGE_CODE), _moduleID, _addressModel == null ? null : _addressModel.latitude,
         _addressModel == null ? null : _addressModel.longitude
     );
   }
 
-  void updateHeader(String token, List<int> zoneIDs, String languageCode, int moduleID, String latitude, String longitude) {
+  void updateHeader(String token, List<int> zoneIDs, List<int> operationIds, String languageCode, int moduleID, String latitude, String longitude) {
     Map<String, String> _header = {};
     if(moduleID != null) {
       _header.addAll({AppConstants.MODULE_ID: moduleID.toString()});
@@ -52,6 +52,8 @@ class ApiClient extends GetxService {
     _header.addAll({
       'Content-Type': 'application/json; charset=UTF-8',
       AppConstants.ZONE_ID: zoneIDs != null ? jsonEncode(zoneIDs) : null,
+      ///this will add in ride module
+      // AppConstants.OPERATION_AREA_ID: operationIds != null ? jsonEncode(operationIds) : null,
       AppConstants.LOCALIZATION_KEY: languageCode ?? AppConstants.languages[0].languageCode,
       AppConstants.LATITUDE: latitude != null ? jsonEncode(latitude) : null,
       AppConstants.LONGITUDE: longitude != null ? jsonEncode(longitude) : null,
@@ -76,7 +78,7 @@ class ApiClient extends GetxService {
     }
   }
 
-  Future<Response> postData(String uri, dynamic body, {Map<String, String> headers}) async {
+  Future<Response> postData(String uri, dynamic body, {Map<String, String> headers, int timeout}) async {
     try {
       if(Foundation.kDebugMode) {
         print('====> API Call: $uri\nHeader: $_mainHeaders');
@@ -86,7 +88,7 @@ class ApiClient extends GetxService {
         Uri.parse(appBaseUrl+uri),
         body: jsonEncode(body),
         headers: headers ?? _mainHeaders,
-      ).timeout(Duration(seconds: timeoutInSeconds));
+      ).timeout(Duration(seconds: timeout ?? timeoutInSeconds));
       return handleResponse(_response, uri);
     } catch (e) {
       return Response(statusCode: 1, statusText: noInternetMessage);

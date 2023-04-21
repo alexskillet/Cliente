@@ -42,5 +42,9 @@ class StoreRepo {
   Future<Response> getStoreReviewList(String storeID) async {
     return await apiClient.getData('${AppConstants.STORE_REVIEW_URI}?store_id=$storeID');
   }
+  
+  Future<Response> getStoreRecommendedItemList(int storeId) async {
+    return await apiClient.getData('${AppConstants.STORE_RECOMMENDER_ITEM_URI}?store_id=$storeId&offset=1&limit=50');
+  }
 
 }

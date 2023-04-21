@@ -1,5 +1,6 @@
 import 'package:sixam_mart/controller/campaign_controller.dart';
 import 'package:sixam_mart/controller/item_controller.dart';
+import 'package:sixam_mart/controller/localization_controller.dart';
 import 'package:sixam_mart/controller/splash_controller.dart';
 import 'package:sixam_mart/controller/theme_controller.dart';
 import 'package:sixam_mart/helper/price_converter.dart';
@@ -114,12 +115,13 @@ class WebCampaignView extends StatelessWidget {
                         ),
                         SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
-                        Row(
+                        Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               child: Text(
                                 PriceConverter.convertPrice(campaignController.itemCampaignList[index].price),
-                                style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall),
+                                style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall), textDirection: TextDirection.ltr,
+                                textAlign: Get.find<LocalizationController>().isLtr ? TextAlign.left : TextAlign.right,
                               ),
                             ),
                             Icon(Icons.star, color: Theme.of(context).primaryColor, size: 12),

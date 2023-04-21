@@ -49,6 +49,7 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
     Get.find<AuthController>().setIdentityTypeIndex(Get.find<AuthController>().identityTypeList[0], false);
     Get.find<AuthController>().setDMTypeIndex(Get.find<AuthController>().dmTypeList[0], false);
     Get.find<AuthController>().getZoneList();
+    Get.find<AuthController>().getVehicleList();
   }
 
   @override
@@ -294,6 +295,36 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
                 ]),
                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
+                authController.vehicleIds != null ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(
+                    'vehicle_type'.tr,
+                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
+                  ),
+                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                      // boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 2, blurRadius: 5, offset: Offset(0, 5))],
+                    ),
+                    child: DropdownButton<int>(
+                      value: authController.vehicleIndex,
+                      items: authController.vehicleIds.map((int value) {
+                        return DropdownMenuItem<int>(
+                          value: authController.vehicleIds.indexOf(value),
+                          child: Text(value != 0 ? authController.vehicles[(authController.vehicleIds.indexOf(value)-1)].type : 'Select'),
+                        );
+                      }).toList(),
+                      onChanged: (int value) {
+                        authController.setVehicleIndex(value, true);
+                      },
+                      isExpanded: true,
+                      underline: SizedBox(),
+                    ),
+                  ),
+                ]) : CircularProgressIndicator(),
+                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
                 Text(
                   'identity_images'.tr,
                   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
@@ -420,11 +451,14 @@ class _DeliveryManRegistrationScreenState extends State<DeliveryManRegistrationS
       showCustomSnackBar('enter_delivery_man_identity_number'.tr);
     }else if(authController.pickedImage == null) {
       showCustomSnackBar('upload_delivery_man_image'.tr);
+    }else if(authController.vehicleIndex-1 == -1) {
+      showCustomSnackBar('please_select_vehicle_for_the_deliveryman'.tr);
     }else {
       authController.registerDeliveryMan(DeliveryManBody(
         fName: _fName, lName: _lName, password: _password, phone: _numberWithCountryCode, email: _email,
         identityNumber: _identityNumber, identityType: authController.identityTypeList[authController.identityTypeIndex],
         earning: authController.dmTypeIndex == 0 ? '1' : '0', zoneId: authController.zoneList[authController.selectedZoneIndex].id.toString(),
+        vehicleId: authController.vehicles[authController.vehicleIndex - 1].id.toString(),
       ));
     }
   }

@@ -3,7 +3,10 @@ import 'dart:io';
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sixam_mart/controller/location_controller.dart';
+import 'package:sixam_mart/controller/splash_controller.dart';
 import 'package:sixam_mart/data/model/response/order_model.dart';
+import 'package:sixam_mart/data/model/response/zone_response_model.dart';
 import 'package:sixam_mart/helper/route_helper.dart';
 import 'package:sixam_mart/util/app_constants.dart';
 import 'package:sixam_mart/util/dimensions.dart';
@@ -13,9 +16,8 @@ import 'package:sixam_mart/view/screens/checkout/widget/payment_failed_dialog.da
 
 class PaymentScreen extends StatefulWidget {
   final OrderModel orderModel;
-  final double maximumCodOrderAmount;
   final bool isCashOnDelivery;
-  PaymentScreen({@required this.orderModel, @required this.maximumCodOrderAmount, @required this.isCashOnDelivery});
+  PaymentScreen({@required this.orderModel, @required this.isCashOnDelivery});
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -27,6 +29,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   bool _isLoading = true;
   PullToRefreshController pullToRefreshController;
   MyInAppBrowser browser;
+  double _maximumCodOrderAmount;
 
   @override
   void initState() {
@@ -37,7 +40,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   void _initData() async {
-    browser = MyInAppBrowser(orderID: widget.orderModel.id.toString(), orderType: widget.orderModel.orderType, orderAmount: widget.orderModel.orderAmount, maxCodOrderAmount: widget.maximumCodOrderAmount, isCashOnDelivery: widget.isCashOnDelivery);
+    for(ZoneData zData in Get.find<LocationController>().getUserAddress().zoneData) {
+      for(Modules m in zData.modules) {
+        if(m.id == Get.find<SplashController>().module.id) {
+          _maximumCodOrderAmount = m.pivot.maximumCodOrderAmount;
+          break;
+        }
+      }
+    }
+
+    browser = MyInAppBrowser(orderID: widget.orderModel.id.toString(), orderType: widget.orderModel.orderType, orderAmount: widget.orderModel.orderAmount, maxCodOrderAmount: _maximumCodOrderAmount, isCashOnDelivery: widget.isCashOnDelivery);
 
     if (Platform.isAndroid) {
       await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
@@ -104,7 +116,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Future<bool> _exitApp() async {
-    return Get.dialog(PaymentFailedDialog(orderID: widget.orderModel.id.toString(), orderAmount: widget.orderModel.orderAmount, maxCodOrderAmount: widget.maximumCodOrderAmount, orderType: widget.orderModel.orderType, isCashOnDelivery: widget.isCashOnDelivery));
+    return Get.dialog(PaymentFailedDialog(orderID: widget.orderModel.id.toString(), orderAmount: widget.orderModel.orderAmount, maxCodOrderAmount: _maximumCodOrderAmount, orderType: widget.orderModel.orderType, isCashOnDelivery: widget.isCashOnDelivery));
   }
 
 }
@@ -190,9 +202,9 @@ class MyInAppBrowser extends InAppBrowser {
         close();
       }
       if (_isSuccess) {
-        Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID, isCashOnDelivery));
+        Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID));
       } else if (_isFailed || _isCancel) {
-        Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID, isCashOnDelivery));
+        Get.offNamed(RouteHelper.getOrderSuccessRoute(orderID));
       }
     }
   }

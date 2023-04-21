@@ -67,8 +67,8 @@ class SplashRepo {
     }catch(e) {}
     apiClient.updateHeader(
       sharedPreferences.getString(AppConstants.TOKEN), _addressModel == null ? null : _addressModel.zoneIds,
-      sharedPreferences.getString(AppConstants.LANGUAGE_CODE), storeCategoryID,
-        _addressModel == null ? null : _addressModel.latitude, _addressModel == null ? null : _addressModel.longitude,
+      _addressModel == null ? null : _addressModel.areaIds, sharedPreferences.getString(AppConstants.LANGUAGE_CODE),
+      storeCategoryID, _addressModel == null ? null : _addressModel.latitude, _addressModel == null ? null : _addressModel.longitude,
     );
   }
 
@@ -82,7 +82,7 @@ class SplashRepo {
       _addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.USER_ADDRESS)));
     }catch(e) {}
     apiClient.updateHeader(
-      sharedPreferences.getString(AppConstants.TOKEN), _addressModel == null ? null : _addressModel.zoneIds,
+      sharedPreferences.getString(AppConstants.TOKEN), _addressModel == null ? null : _addressModel.zoneIds, _addressModel == null ? null : _addressModel.areaIds,
       sharedPreferences.getString(AppConstants.LANGUAGE_CODE), module != null ? module.id : null,
         _addressModel == null ? null : _addressModel.latitude, _addressModel == null ? null : _addressModel.longitude
     );

@@ -19,12 +19,14 @@ class CartController extends GetxController implements GetxService {
 
   double _subTotal = 0;
   double _itemPrice = 0;
+  double _itemDiscountPrice = 0;
   double _addOns = 0;
   List<List<AddOns>> _addOnsList = [];
   List<bool> _availableList = [];
 
   double get subTotal => _subTotal;
   double get itemPrice => _itemPrice;
+  double get itemDiscountPrice => _itemDiscountPrice;
   double get addOns => _addOns;
   List<List<AddOns>> get addOnsList => _addOnsList;
   List<bool> get availableList => _availableList;
@@ -33,6 +35,7 @@ class CartController extends GetxController implements GetxService {
     _addOnsList = [];
     _availableList = [];
     _itemPrice = 0;
+    _itemDiscountPrice = 0;
     _addOns = 0;
     cartList.forEach((cartModel) {
 
@@ -53,8 +56,9 @@ class CartController extends GetxController implements GetxService {
         _addOns = _addOns + (_addOnList[index].price * cartModel.addOnIds[index].quantity);
       }
       _itemPrice = _itemPrice + (cartModel.price * cartModel.quantity);
+      _itemDiscountPrice = _itemDiscountPrice + ((cartModel.price - cartModel.discountedPrice) * cartModel.quantity);
     });
-    _subTotal = _itemPrice + _addOns;
+    _subTotal = (_itemPrice - _itemDiscountPrice) + _addOns;
 
     return _subTotal;
   }
@@ -65,7 +69,7 @@ class CartController extends GetxController implements GetxService {
 
     _allCartList.addAll(cartRepo.getCartList());
 
-    if(Get.find<SplashController>().module != null){
+    if(Get.find<SplashController>().module != null) {
       _cartList = [];
       for(CartModel cartItem in cartRepo.getCartList()){
         if(cartItem.item.moduleId == Get.find<SplashController>().module.id){
@@ -80,9 +84,6 @@ class CartController extends GetxController implements GetxService {
             _cartList.add(cartItem);
           }
         }
-      }else{
-        _cartList = [];
-        _cartList.addAll(cartRepo.getCartList());
       }
     }
 
