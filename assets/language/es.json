@@ -399,6 +399,7 @@
 	"prescription": "Receta",
 	"are_you_sure_want_to_switch": "¿Estás seguro de querer cambiar a",
 	"select_the_type_of_stores_for_your_order": "Selecciona el típo de servicio que deseas agendar",
+	"select_the_type_of_modules_for_your_order": "Selecciona el típo de servicio que deseas agendar",
 	"parcel": "Paquete",
 	"instant_same_day_delivery": "Entrega instantánea el mismo día",
 	"send_things_to_your_destination_instantly_and_safely": "Envía cosas a tu destino de manera instantánea y segura",
