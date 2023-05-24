@@ -28,6 +28,6 @@ final robotoBlack = TextStyle(
 
 
 final BoxDecoration riderContainerDecoration = BoxDecoration(
-    borderRadius: BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL)),
-    color: Theme.of(Get.context).primaryColor.withOpacity(0.1), shape: BoxShape.rectangle,
+    borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
+    color: Theme.of(Get.context!).primaryColor.withOpacity(0.1), shape: BoxShape.rectangle,
 );

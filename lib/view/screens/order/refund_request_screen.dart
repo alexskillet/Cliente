@@ -10,8 +10,8 @@ import 'package:sixam_mart/view/base/custom_app_bar.dart';
 import 'package:sixam_mart/view/base/custom_button.dart';
 import 'package:sixam_mart/view/base/custom_text_field.dart';
 class RefundRequestScreen extends StatefulWidget {
-  final String orderId;
-  const RefundRequestScreen({Key key, @required this.orderId}) : super(key: key);
+  final String? orderId;
+  const RefundRequestScreen({Key? key, required this.orderId}) : super(key: key);
 
   @override
   State<RefundRequestScreen> createState() => _RefundRequestScreenState();
@@ -35,9 +35,9 @@ class _RefundRequestScreenState extends State<RefundRequestScreen> {
       body: GetBuilder<OrderController>(
           builder: (orderController) {
             return Center(
-              child: (orderController.refundReasons != null && orderController.refundReasons.isNotEmpty) ? Container(
+              child: (orderController.refundReasons != null && orderController.refundReasons!.isNotEmpty) ? Container(
                 width: context.width > 700 ? 700 : context.width,
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
+                padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
                 alignment: Alignment.center,
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
@@ -45,20 +45,20 @@ class _RefundRequestScreenState extends State<RefundRequestScreen> {
                     child: SingleChildScrollView(
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Text('what_is_wrong_with_this_order'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault)),
-                        SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                        const SizedBox(height: Dimensions.paddingSizeDefault),
 
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
                           decoration: BoxDecoration(
-                              color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                              color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               border: Border.all(color: Theme.of(context).disabledColor)),
                           child: DropdownButton<String>(
-                            value: orderController.refundReasons[orderController.selectedReasonIndex],
-                            items: orderController.refundReasons.map((String items) {
-                              return DropdownMenuItem(value: items, child: Text(items.tr));
+                            value: orderController.refundReasons![orderController.selectedReasonIndex],
+                            items: orderController.refundReasons!.map((String? items) {
+                              return DropdownMenuItem(value: items, child: Text(items!.tr));
                             }).toList(),
                             onChanged: (value){
-                              orderController.selectReason(orderController.refundReasons.indexOf(value));
+                              orderController.selectReason(orderController.refundReasons!.indexOf(value));
                               if(_noteController.text.isNotEmpty){
                                 _noteController.text = '';
                               }
@@ -67,17 +67,17 @@ class _RefundRequestScreenState extends State<RefundRequestScreen> {
                               }
                             },
                             isExpanded: true,
-                            underline: SizedBox(),
+                            underline: const SizedBox(),
                           ),
                         ),
-                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                        const SizedBox(height: Dimensions.paddingSizeLarge),
 
                         orderController.selectedReasonIndex != 0 ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text('additional_note'.tr, style: robotoMedium),
-                          SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                          const SizedBox(height: Dimensions.paddingSizeDefault),
 
                           Container(
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), border: Border.all(color: Theme.of(context).disabledColor)),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.radiusSmall), border: Border.all(color: Theme.of(context).disabledColor)),
                             child: CustomTextField(
                               controller: _noteController,
                               hintText: 'ex_please_provide_any_note'.tr,
@@ -88,23 +88,23 @@ class _RefundRequestScreenState extends State<RefundRequestScreen> {
                             ),
                           ),
 
-                          SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                          const SizedBox(height: Dimensions.paddingSizeLarge),
 
                           DottedBorder(
                             color: Theme.of(context).disabledColor,
                             strokeWidth: 2,
                             strokeCap: StrokeCap.butt,
-                            dashPattern: [8, 5],
-                            padding: EdgeInsets.all(0),
+                            dashPattern: const [8, 5],
+                            padding: const EdgeInsets.all(0),
                             borderType: BorderType.RRect,
-                            radius: Radius.circular(Dimensions.RADIUS_SMALL),
+                            radius: const Radius.circular(Dimensions.radiusSmall),
                             child: Stack(children: [
                               ClipRRect(
-                                borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                 child: orderController.refundImage != null ? GetPlatform.isWeb ? Image.network(
-                                  orderController.refundImage.path, width: context.width, height: 150, fit: BoxFit.cover,
+                                  orderController.refundImage!.path, width: context.width, height: 150, fit: BoxFit.cover,
                                 ) : Image.file(
-                                  File(orderController.refundImage.path), width: context.width, height: 150, fit: BoxFit.cover,
+                                  File(orderController.refundImage!.path), width: context.width, height: 150, fit: BoxFit.cover,
                                 ) : InkWell(
                                   onTap: () => orderController.pickRefundImage(false),
                                   child: Container(
@@ -112,7 +112,7 @@ class _RefundRequestScreenState extends State<RefundRequestScreen> {
                                     child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
 
                                       Icon(Icons.cloud_download_rounded, size: 34, color: Theme.of(context).disabledColor),
-                                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                      const SizedBox(height: Dimensions.paddingSizeSmall),
 
                                       Text('upload_image'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraLarge, color: Theme.of(context).disabledColor)),
                                     ]),
@@ -125,10 +125,10 @@ class _RefundRequestScreenState extends State<RefundRequestScreen> {
                                   onTap: () => orderController.pickRefundImage(false),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                      borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                     ),
                                     child: Container(
-                                      margin: EdgeInsets.all(25),
+                                      margin: const EdgeInsets.all(25),
                                       decoration: BoxDecoration(
                                         border: Border.all(width: 2, color: Theme.of(context).disabledColor),
                                         shape: BoxShape.circle,
@@ -137,10 +137,10 @@ class _RefundRequestScreenState extends State<RefundRequestScreen> {
                                     ),
                                   ),
                                 ),
-                              ) : SizedBox(),
+                              ) : const SizedBox(),
                             ]),
                           ),
-                        ]) : SizedBox(),
+                        ]) : const SizedBox(),
 
                       ]),
                     ),
@@ -149,10 +149,10 @@ class _RefundRequestScreenState extends State<RefundRequestScreen> {
                   !orderController.isLoading ? CustomButton(
                     buttonText: 'submit_refund_request'.tr,
                     onPressed: () => orderController.submitRefundRequest(_noteController.text.trim(), widget.orderId),
-                  ) : Center(child: CircularProgressIndicator()),
+                  ) : const Center(child: CircularProgressIndicator()),
 
                 ]),
-              ) : CircularProgressIndicator(),
+              ) : const CircularProgressIndicator(),
             );
           }
       ),

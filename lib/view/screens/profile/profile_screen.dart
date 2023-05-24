@@ -21,12 +21,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+  final bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
 
   @override
   void initState() {
@@ -39,15 +41,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool _showWalletCard = Get.find<SplashController>().configModel.customerWalletStatus == 1
-        || Get.find<SplashController>().configModel.loyaltyPointStatus == 1;
+    final bool showWalletCard = Get.find<SplashController>().configModel!.customerWalletStatus == 1
+        || Get.find<SplashController>().configModel!.loyaltyPointStatus == 1;
 
     return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
-      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+      appBar: ResponsiveHelper.isDesktop(context) ? const WebMenuBar() : null,
+      endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       backgroundColor: Theme.of(context).cardColor,
       body: GetBuilder<UserController>(builder: (userController) {
-        return (_isLoggedIn && userController.userInfoModel == null) ? Center(child: CircularProgressIndicator()) : ProfileBgWidget(
+        return (_isLoggedIn && userController.userInfoModel == null) ? const Center(child: CircularProgressIndicator()) : ProfileBgWidget(
           backButton: true,
           circularImage: Container(
             decoration: BoxDecoration(
@@ -56,49 +58,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             alignment: Alignment.center,
             child: ClipOval(child: CustomImage(
-              image: '${Get.find<SplashController>().configModel.baseUrls.customerImageUrl}'
-                  '/${(userController.userInfoModel != null && _isLoggedIn) ? userController.userInfoModel.image : ''}',
+              image: '${Get.find<SplashController>().configModel!.baseUrls!.customerImageUrl}'
+                  '/${(userController.userInfoModel != null && _isLoggedIn) ? userController.userInfoModel!.image : ''}',
               height: 100, width: 100, fit: BoxFit.cover,
             )),
           ),
-          mainWidget: SingleChildScrollView(physics: BouncingScrollPhysics(), child: FooterView(minHeight:_isLoggedIn ? 0.6 : 0.35,
+          mainWidget: SingleChildScrollView(physics: const BouncingScrollPhysics(), child: FooterView(minHeight:_isLoggedIn ? 0.6 : 0.35,
             child: Center(child: Container(
-              width: Dimensions.WEB_MAX_WIDTH, height: context.height, color: Theme.of(context).cardColor,
-              padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+              width: Dimensions.webMaxWidth, height: context.height, color: Theme.of(context).cardColor,
+              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
               child: Column(children: [
 
                 Text(
-                  _isLoggedIn ? '${userController.userInfoModel.fName} ${userController.userInfoModel.lName}' : 'guest'.tr,
+                  _isLoggedIn ? '${userController.userInfoModel!.fName} ${userController.userInfoModel!.lName}' : 'guest'.tr,
                   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
 
                 _isLoggedIn ? Row(children: [
-                  ProfileCard(title: 'since_joining'.tr, data: '${userController.userInfoModel.memberSinceDays} ${'days'.tr}'),
-                  SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                  ProfileCard(title: 'total_order'.tr, data: userController.userInfoModel.orderCount.toString()),
-                ]) : SizedBox(),
+                  ProfileCard(title: 'since_joining'.tr, data: '${userController.userInfoModel!.memberSinceDays} ${'days'.tr}'),
+                  const SizedBox(width: Dimensions.paddingSizeSmall),
+                  ProfileCard(title: 'total_order'.tr, data: userController.userInfoModel!.orderCount.toString()),
+                ]) : const SizedBox(),
 
-                SizedBox(height: _showWalletCard ? Dimensions.PADDING_SIZE_SMALL : 0),
-                (_showWalletCard && _isLoggedIn) ? Row(children: [
-                  Get.find<SplashController>().configModel.customerWalletStatus == 1 ? ProfileCard(
+                SizedBox(height: showWalletCard ? Dimensions.paddingSizeSmall : 0),
+                (showWalletCard && _isLoggedIn) ? Row(children: [
+                  Get.find<SplashController>().configModel!.customerWalletStatus == 1 ? ProfileCard(
                     title: 'wallet_amount'.tr,
-                    data: PriceConverter.convertPrice(userController.userInfoModel.walletBalance),
-                  ) : SizedBox.shrink(),
-                  SizedBox(width: Get.find<SplashController>().configModel.customerWalletStatus == 1
-                      && Get.find<SplashController>().configModel.loyaltyPointStatus == 1 ? Dimensions.PADDING_SIZE_SMALL : 0.0),
-                  Get.find<SplashController>().configModel.loyaltyPointStatus == 1 ? ProfileCard(
+                    data: PriceConverter.convertPrice(userController.userInfoModel!.walletBalance),
+                  ) : const SizedBox.shrink(),
+                  SizedBox(width: Get.find<SplashController>().configModel!.customerWalletStatus == 1
+                      && Get.find<SplashController>().configModel!.loyaltyPointStatus == 1 ? Dimensions.paddingSizeSmall : 0.0),
+                  Get.find<SplashController>().configModel!.loyaltyPointStatus == 1 ? ProfileCard(
                     title: 'loyalty_points'.tr,
-                    data: userController.userInfoModel.loyaltyPoint != null ? userController.userInfoModel.loyaltyPoint.toString() : '0',
-                  ) : SizedBox.shrink(),
-                ]) : SizedBox(),
+                    data: userController.userInfoModel!.loyaltyPoint != null ? userController.userInfoModel!.loyaltyPoint.toString() : '0',
+                  ) : const SizedBox.shrink(),
+                ]) : const SizedBox(),
 
                 SizedBox(height: _isLoggedIn ? 30 : 0),
 
                 ProfileButton(icon: Icons.dark_mode, title: 'dark_mode'.tr, isButtonActive: Get.isDarkMode, onTap: () {
                   Get.find<ThemeController>().toggleTheme();
                 }),
-                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                const SizedBox(height: Dimensions.paddingSizeSmall),
 
                 _isLoggedIn ? GetBuilder<AuthController>(builder: (authController) {
                   return ProfileButton(
@@ -107,18 +109,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     authController.setNotificationActive(!authController.notification);
                   },
                   );
-                }) : SizedBox(),
-                SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 0),
+                }) : const SizedBox(),
+                SizedBox(height: _isLoggedIn ? Dimensions.paddingSizeSmall : 0),
 
-                _isLoggedIn ? userController.userInfoModel.socialId == null ? ProfileButton(icon: Icons.lock, title: 'change_password'.tr, onTap: () {
+                _isLoggedIn ? userController.userInfoModel!.socialId == null ? ProfileButton(icon: Icons.lock, title: 'change_password'.tr, onTap: () {
                   Get.toNamed(RouteHelper.getResetPasswordRoute('', '', 'password-change'));
-                }) : SizedBox() : SizedBox(),
-                SizedBox(height: _isLoggedIn ? userController.userInfoModel.socialId == null ? Dimensions.PADDING_SIZE_SMALL : 0 : 0),
+                }) : const SizedBox() : const SizedBox(),
+                SizedBox(height: _isLoggedIn ? userController.userInfoModel!.socialId == null ? Dimensions.paddingSizeSmall : 0 : 0),
 
                 ProfileButton(icon: Icons.edit, title: 'edit_profile'.tr, onTap: () {
                   Get.toNamed(RouteHelper.getUpdateProfileRoute());
                 }),
-                SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : Dimensions.PADDING_SIZE_LARGE),
+                SizedBox(height: _isLoggedIn ? Dimensions.paddingSizeSmall : Dimensions.paddingSizeLarge),
 
                 _isLoggedIn ? ProfileButton(
                   icon: Icons.delete, title: 'delete_account'.tr,
@@ -129,13 +131,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onYesPressed: () => userController.removeUser(),
                     ), useSafeArea: false);
                   },
-                ) : SizedBox(),
-                SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_LARGE : 0),
+                ) : const SizedBox(),
+                SizedBox(height: _isLoggedIn ? Dimensions.paddingSizeLarge : 0),
 
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Text('${'version'.tr}:', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall)),
-                  SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  Text(AppConstants.APP_VERSION.toString(), style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall)),
+                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                  Text(AppConstants.appVersion.toString(), style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall)),
                 ]),
 
               ]),

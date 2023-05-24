@@ -18,7 +18,7 @@ import 'package:get/get.dart';
 
 class OrderView extends StatelessWidget {
   final bool isRunning;
-  OrderView({@required this.isRunning});
+  const OrderView({Key? key, required this.isRunning}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +26,12 @@ class OrderView extends StatelessWidget {
 
     return Scaffold(
       body: GetBuilder<OrderController>(builder: (orderController) {
-        PaginatedOrderModel paginatedOrderModel;
+        PaginatedOrderModel? paginatedOrderModel;
         if(orderController.runningOrderModel != null && orderController.historyOrderModel != null) {
           paginatedOrderModel = isRunning ? orderController.runningOrderModel : orderController.historyOrderModel;
         }
 
-        return paginatedOrderModel != null ? paginatedOrderModel.orders.length > 0 ? RefreshIndicator(
+        return paginatedOrderModel != null ? paginatedOrderModel.orders!.isNotEmpty ? RefreshIndicator(
           onRefresh: () async {
             if(isRunning) {
               await orderController.getRunningOrders(1, isUpdate: true);
@@ -41,46 +41,46 @@ class OrderView extends StatelessWidget {
           },
           child: Scrollbar(child: SingleChildScrollView(
             controller: scrollController,
-            physics: AlwaysScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             child: FooterView(
               child: SizedBox(
-                width: Dimensions.WEB_MAX_WIDTH,
+                width: Dimensions.webMaxWidth,
                 child: PaginatedListView(
                   scrollController: scrollController,
-                  onPaginate: (int offset) {
+                  onPaginate: (int? offset) {
                     if(isRunning) {
-                      Get.find<OrderController>().getRunningOrders(offset, isUpdate: true);
+                      Get.find<OrderController>().getRunningOrders(offset!, isUpdate: true);
                     }else {
-                      Get.find<OrderController>().getHistoryOrders(offset, isUpdate: true);
+                      Get.find<OrderController>().getHistoryOrders(offset!, isUpdate: true);
                     }
                   },
-                  totalSize: paginatedOrderModel != null ? paginatedOrderModel.totalSize : null,
-                  offset: paginatedOrderModel != null ? paginatedOrderModel.offset : null,
+                  totalSize: paginatedOrderModel.totalSize,
+                  offset: paginatedOrderModel.offset,
                   itemView: ListView.builder(
-                    padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                    itemCount: paginatedOrderModel.orders.length,
-                    physics: NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                    itemCount: paginatedOrderModel.orders!.length,
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      bool _isParcel = paginatedOrderModel.orders[index].orderType == 'parcel';
-                      bool _isPrescription = paginatedOrderModel.orders[index].prescriptionOrder;
+                      bool isParcel = paginatedOrderModel!.orders![index].orderType == 'parcel';
+                      bool isPrescription = paginatedOrderModel.orders![index].prescriptionOrder!;
 
                       return InkWell(
                         onTap: () {
                           Get.toNamed(
-                            RouteHelper.getOrderDetailsRoute(paginatedOrderModel.orders[index].id),
+                            RouteHelper.getOrderDetailsRoute(paginatedOrderModel!.orders![index].id),
                             arguments: OrderDetailsScreen(
-                              orderId: paginatedOrderModel.orders[index].id,
-                              orderModel: paginatedOrderModel.orders[index],
+                              orderId: paginatedOrderModel.orders![index].id,
+                              orderModel: paginatedOrderModel.orders![index],
                             ),
                           );
                         },
                         child: Container(
-                          padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL) : null,
-                          margin: ResponsiveHelper.isDesktop(context) ? EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL) : null,
+                          padding: ResponsiveHelper.isDesktop(context) ? const EdgeInsets.all(Dimensions.paddingSizeSmall) : null,
+                          margin: ResponsiveHelper.isDesktop(context) ? const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall) : null,
                           decoration: ResponsiveHelper.isDesktop(context) ? BoxDecoration(
-                            color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                            boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], blurRadius: 5, spreadRadius: 1)],
+                            color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                            boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, blurRadius: 5, spreadRadius: 1)],
                           ) : null,
                           child: Column(children: [
 
@@ -89,104 +89,104 @@ class OrderView extends StatelessWidget {
                               Stack(children: [
                                 Container(
                                   height: 60, width: 60, alignment: Alignment.center,
-                                  decoration: _isParcel ? BoxDecoration(
-                                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                  decoration: isParcel ? BoxDecoration(
+                                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                     color: Theme.of(context).primaryColor.withOpacity(0.2),
                                   ) : null,
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                     child: CustomImage(
-                                      image: _isParcel ? '${Get.find<SplashController>().configModel.baseUrls.parcelCategoryImageUrl}'
-                                          '/${paginatedOrderModel.orders[index].parcelCategory != null ? paginatedOrderModel.orders[index].parcelCategory.image : ''}'
-                                          : '${Get.find<SplashController>().configModel.baseUrls.storeImageUrl}/${paginatedOrderModel.orders[index].store != null
-                                          ? paginatedOrderModel.orders[index].store.logo : ''}',
-                                      height: _isParcel ? 35 : 60, width: _isParcel ? 35 : 60, fit: _isParcel ? null : BoxFit.cover,
+                                      image: isParcel ? '${Get.find<SplashController>().configModel!.baseUrls!.parcelCategoryImageUrl}'
+                                          '/${paginatedOrderModel.orders![index].parcelCategory != null ? paginatedOrderModel.orders![index].parcelCategory!.image : ''}'
+                                          : '${Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl}/${paginatedOrderModel.orders![index].store != null
+                                          ? paginatedOrderModel.orders![index].store!.logo : ''}',
+                                      height: isParcel ? 35 : 60, width: isParcel ? 35 : 60, fit: isParcel ? null : BoxFit.cover,
                                     ),
                                   ),
                                 ),
-                                _isParcel ? Positioned(left: 0, top: 10, child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                isParcel ? Positioned(left: 0, top: 10, child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.horizontal(right: Radius.circular(Dimensions.RADIUS_SMALL)),
+                                    borderRadius: const BorderRadius.horizontal(right: Radius.circular(Dimensions.radiusSmall)),
                                     color: Theme.of(context).primaryColor,
                                   ),
                                   child: Text('parcel'.tr, style: robotoMedium.copyWith(
                                     fontSize: Dimensions.fontSizeExtraSmall, color: Colors.white,
                                   )),
-                                )) : SizedBox(),
+                                )) : const SizedBox(),
 
-                                _isPrescription ? Positioned(left: 0, top: 10, child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 2),
+                                isPrescription ? Positioned(left: 0, top: 10, child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 2),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.horizontal(right: Radius.circular(Dimensions.RADIUS_SMALL)),
+                                    borderRadius: const BorderRadius.horizontal(right: Radius.circular(Dimensions.radiusSmall)),
                                     color: Theme.of(context).primaryColor,
                                   ),
                                   child: Text('prescription'.tr, style: robotoMedium.copyWith(
                                     fontSize: 10, color: Colors.white,
                                   )),
-                                )) : SizedBox(),
+                                )) : const SizedBox(),
                               ]),
-                              SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                              const SizedBox(width: Dimensions.paddingSizeSmall),
 
                               Expanded(
                                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                   Row(children: [
                                     Text(
-                                      '${_isParcel ? 'delivery_id'.tr : 'order_id'.tr}:',
+                                      '${isParcel ? 'delivery_id'.tr : 'order_id'.tr}:',
                                       style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
                                     ),
-                                    SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                    Text('#${paginatedOrderModel.orders[index].id}', style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall)),
+                                    const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                                    Text('#${paginatedOrderModel.orders![index].id}', style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall)),
                                   ]),
-                                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                  const SizedBox(height: Dimensions.paddingSizeSmall),
                                   Text(
-                                    DateConverter.dateTimeStringToDateTime(paginatedOrderModel.orders[index].createdAt),
+                                    DateConverter.dateTimeStringToDateTime(paginatedOrderModel.orders![index].createdAt!),
                                     style: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall),
                                   ),
                                 ]),
                               ),
-                              SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                              const SizedBox(width: Dimensions.paddingSizeSmall),
 
                               Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                                 Container(
-                                  padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeExtraSmall),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                     color: Theme.of(context).primaryColor.withOpacity(0.1),
                                   ),
-                                  child: Text(paginatedOrderModel.orders[index].orderStatus.tr, style: robotoMedium.copyWith(
+                                  child: Text(paginatedOrderModel.orders![index].orderStatus!.tr, style: robotoMedium.copyWith(
                                     fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).primaryColor,
                                   )),
                                 ),
-                                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                const SizedBox(height: Dimensions.paddingSizeSmall),
                                 isRunning ? InkWell(
-                                  onTap: () => Get.toNamed(RouteHelper.getOrderTrackingRoute(paginatedOrderModel.orders[index].id)),
+                                  onTap: () => Get.toNamed(RouteHelper.getOrderTrackingRoute(paginatedOrderModel!.orders![index].id)),
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeExtraSmall),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                      borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                       border: Border.all(width: 1, color: Theme.of(context).primaryColor),
                                     ),
                                     child: Row(children: [
                                       Image.asset(Images.tracking, height: 15, width: 15, color: Theme.of(context).primaryColor),
-                                      SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                      Text(_isParcel ? 'track_delivery'.tr : 'track_order'.tr, style: robotoMedium.copyWith(
+                                      const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                                      Text(isParcel ? 'track_delivery'.tr : 'track_order'.tr, style: robotoMedium.copyWith(
                                         fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).primaryColor,
                                       )),
                                     ]),
                                   ),
                                 ) : Text(
-                                  '${paginatedOrderModel.orders[index].detailsCount} ${paginatedOrderModel.orders[index].detailsCount > 1 ? 'items'.tr : 'item'.tr}',
+                                  '${paginatedOrderModel.orders![index].detailsCount} ${paginatedOrderModel.orders![index].detailsCount! > 1 ? 'items'.tr : 'item'.tr}',
                                   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall),
                                 ),
                               ]),
 
                             ]),
 
-                            (index == paginatedOrderModel.orders.length-1 || ResponsiveHelper.isDesktop(context)) ? SizedBox() : Padding(
-                              padding: EdgeInsets.only(left: 70),
+                            (index == paginatedOrderModel.orders!.length-1 || ResponsiveHelper.isDesktop(context)) ? const SizedBox() : Padding(
+                              padding: const EdgeInsets.only(left: 70),
                               child: Divider(
-                                color: Theme.of(context).disabledColor, height: Dimensions.PADDING_SIZE_LARGE,
+                                color: Theme.of(context).disabledColor, height: Dimensions.paddingSizeLarge,
                               ),
                             ),
 

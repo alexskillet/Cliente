@@ -7,44 +7,44 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class VegFilterWidget extends StatelessWidget {
-  final String type;
-  final Function(String value) onSelected;
-  VegFilterWidget({@required this.type, @required this.onSelected});
+  final String? type;
+  final Function(String value)? onSelected;
+  const VegFilterWidget({Key? key, required this.type, required this.onSelected}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final bool _ltr = Get.find<LocalizationController>().isLtr;
+    final bool ltr = Get.find<LocalizationController>().isLtr;
 
-    return (Get.find<SplashController>().configModel.moduleConfig.module.vegNonVeg
-    && Get.find<SplashController>().configModel.toggleVegNonVeg) ? Align(alignment: Alignment.center, child: Container(
+    return (Get.find<SplashController>().configModel!.moduleConfig!.module!.vegNonVeg!
+    && Get.find<SplashController>().configModel!.toggleVegNonVeg!) ? Align(alignment: Alignment.center, child: Container(
       height: 30,
-      margin: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
+      margin: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL)),
+        borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
         border: Border.all(color: Theme.of(context).primaryColor),
       ),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: Get.find<ItemController>().itemTypeList.length,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return InkWell(
-            onTap: () => onSelected(Get.find<ItemController>().itemTypeList[index]),
+            onTap: () => onSelected!(Get.find<ItemController>().itemTypeList[index]),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.horizontal(
                   left: Radius.circular(
-                    _ltr ? index == 0 ? Dimensions.RADIUS_SMALL : 0
+                    ltr ? index == 0 ? Dimensions.radiusSmall : 0
                         : index == Get.find<ItemController>().itemTypeList.length-1
-                        ? Dimensions.RADIUS_SMALL : 0,
+                        ? Dimensions.radiusSmall : 0,
                   ),
                   right: Radius.circular(
-                    _ltr ? index == Get.find<ItemController>().itemTypeList.length-1
-                        ? Dimensions.RADIUS_SMALL : 0 : index == 0
-                        ? Dimensions.RADIUS_SMALL : 0,
+                    ltr ? index == Get.find<ItemController>().itemTypeList.length-1
+                        ? Dimensions.radiusSmall : 0 : index == 0
+                        ? Dimensions.radiusSmall : 0,
                   ),
                 ),
                 color: Get.find<ItemController>().itemTypeList[index] == type ? Theme.of(context).primaryColor
@@ -60,6 +60,6 @@ class VegFilterWidget extends StatelessWidget {
           );
         },
       ),
-    )) : SizedBox();
+    )) : const SizedBox();
   }
 }

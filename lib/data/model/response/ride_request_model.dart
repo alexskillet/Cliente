@@ -1,8 +1,8 @@
 class PaginatedRideModel {
-  int totalSize;
-  String limit;
-  int offset;
-  List<RideRequestModel> rides;
+  int? totalSize;
+  String? limit;
+  int? offset;
+  List<RideRequestModel>? rides;
 
   PaginatedRideModel({this.totalSize, this.limit, this.offset, this.rides});
 
@@ -13,18 +13,18 @@ class PaginatedRideModel {
     if (json['data'] != null) {
       rides = [];
       json['data'].forEach((v) {
-        rides.add(new RideRequestModel.fromJson(v));
+        rides!.add(RideRequestModel.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['total_size'] = this.totalSize;
-    data['limit'] = this.limit;
-    data['offset'] = this.offset;
-    if (this.rides != null) {
-      data['data'] = this.rides.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['total_size'] = totalSize;
+    data['limit'] = limit;
+    data['offset'] = offset;
+    if (rides != null) {
+      data['data'] = rides!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -32,30 +32,30 @@ class PaginatedRideModel {
 }
 
 class RideRequestModel {
-  int id;
-  String rideCategory;
-  String zone;
-  String rideStatus;
-  PickupPoint pickupPoint;
-  String pickupAddress;
-  String pickupTime;
-  PickupPoint dropoffPoint;
-  String dropoffAddress;
-  String dropoffTime;
-  double estimatedTime;
-  double estimatedFare;
-  double estimatedDistance;
-  double actualTime;
-  double actualFare;
-  double actualDistance;
-  double totalFare;
-  double tax;
-  String customerName;
-  String customerImage;
-  String otp;
-  Rider rider;
-  String createdAt;
-  String updatedAt;
+  int? id;
+  String? rideCategory;
+  String? zone;
+  String? rideStatus;
+  PickupPoint? pickupPoint;
+  String? pickupAddress;
+  String? pickupTime;
+  PickupPoint? dropoffPoint;
+  String? dropoffAddress;
+  String? dropoffTime;
+  double? estimatedTime;
+  double? estimatedFare;
+  double? estimatedDistance;
+  double? actualTime;
+  double? actualFare;
+  double? actualDistance;
+  double? totalFare;
+  double? tax;
+  String? customerName;
+  String? customerImage;
+  String? otp;
+  Rider? rider;
+  String? createdAt;
+  String? updatedAt;
 
   RideRequestModel(
       {this.id,
@@ -89,67 +89,67 @@ class RideRequestModel {
     rideCategory = json['ride_category'];
     zone = json['zone'];
     rideStatus = json['ride_status'];
-    pickupPoint = json['pickup_point'] != null ? new PickupPoint.fromJson(json['pickup_point']) : null;
+    pickupPoint = json['pickup_point'] != null ? PickupPoint.fromJson(json['pickup_point']) : null;
     pickupAddress = json['pickup_address'];
     pickupTime = json['pickup_time'];
-    dropoffPoint = json['dropoff_point'] != null ? new PickupPoint.fromJson(json['dropoff_point']) : null;
+    dropoffPoint = json['dropoff_point'] != null ? PickupPoint.fromJson(json['dropoff_point']) : null;
     dropoffAddress = json['dropoff_address'];
     dropoffTime = json['dropoff_time'];
     estimatedTime = json['estimated_time'].toDouble();
     estimatedFare = json['estimated_fare'].toDouble();
     estimatedDistance = json['estimated_distance'].toDouble();
-    actualTime = json['actual_time'] != null ? json['actual_time'].toDouble() : null;
-    actualFare = json['actual_fare'] != null ? json['actual_fare'].toDouble() : null;
-    actualDistance = json['actual_distance'] != null ? json['actual_distance'].toDouble() : null;
-    totalFare = json['total_fare'] != null ? json['total_fare'].toDouble() : null;
+    actualTime = json['actual_time']?.toDouble();
+    actualFare = json['actual_fare']?.toDouble();
+    actualDistance = json['actual_distance']?.toDouble();
+    totalFare = json['total_fare']?.toDouble();
     tax = json['tax'].toDouble();
     customerName = json['customer_name'];
     customerImage = json['customer_image'];
     otp = json['otp'].toString();
-    rider = json['rider'] != null ? new Rider.fromJson(json['rider']) : null;
+    rider = json['rider'] != null ? Rider.fromJson(json['rider']) : null;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['ride_category'] = this.rideCategory;
-    data['zone'] = this.zone;
-    data['ride_status'] = this.rideStatus;
-    if (this.pickupPoint != null) {
-      data['pickup_point'] = this.pickupPoint.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['ride_category'] = rideCategory;
+    data['zone'] = zone;
+    data['ride_status'] = rideStatus;
+    if (pickupPoint != null) {
+      data['pickup_point'] = pickupPoint!.toJson();
     }
-    data['pickup_address'] = this.pickupAddress;
-    data['pickup_time'] = this.pickupTime;
-    if (this.dropoffPoint != null) {
-      data['dropoff_point'] = this.dropoffPoint.toJson();
+    data['pickup_address'] = pickupAddress;
+    data['pickup_time'] = pickupTime;
+    if (dropoffPoint != null) {
+      data['dropoff_point'] = dropoffPoint!.toJson();
     }
-    data['dropoff_address'] = this.dropoffAddress;
-    data['dropoff_time'] = this.dropoffTime;
-    data['estimated_time'] = this.estimatedTime;
-    data['estimated_fare'] = this.estimatedFare;
-    data['estimated_distance'] = this.estimatedDistance;
-    data['actual_time'] = this.actualTime;
-    data['actual_fare'] = this.actualFare;
-    data['actual_distance'] = this.actualDistance;
-    data['total_fare'] = this.totalFare;
-    data['tax'] = this.tax;
-    data['customer_name'] = this.customerName;
-    data['customer_image'] = this.customerImage;
-    data['otp'] = this.otp;
-    if (this.rider != null) {
-      data['rider'] = this.rider.toJson();
+    data['dropoff_address'] = dropoffAddress;
+    data['dropoff_time'] = dropoffTime;
+    data['estimated_time'] = estimatedTime;
+    data['estimated_fare'] = estimatedFare;
+    data['estimated_distance'] = estimatedDistance;
+    data['actual_time'] = actualTime;
+    data['actual_fare'] = actualFare;
+    data['actual_distance'] = actualDistance;
+    data['total_fare'] = totalFare;
+    data['tax'] = tax;
+    data['customer_name'] = customerName;
+    data['customer_image'] = customerImage;
+    data['otp'] = otp;
+    if (rider != null) {
+      data['rider'] = rider!.toJson();
     }
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }
 
 class PickupPoint {
-  String type;
-  List<double> coordinates;
+  String? type;
+  List<double>? coordinates;
 
   PickupPoint({this.type, this.coordinates});
 
@@ -159,48 +159,48 @@ class PickupPoint {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    data['coordinates'] = this.coordinates;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['type'] = type;
+    data['coordinates'] = coordinates;
     return data;
   }
 }
 
 class Rider {
-  int id;
-  String fName;
-  String lName;
-  String phone;
-  String email;
-  String identityNumber;
-  String identityType;
-  String identityImage;
-  String image;
-  String fcmToken;
-  int zoneId;
-  String createdAt;
-  String updatedAt;
-  bool status;
-  int active;
-  int earning;
-  int currentOrders;
-  String type;
-  int storeId;
-  String applicationStatus;
-  int orderCount;
-  int assignedOrderCount;
-  int delivery;
-  int rideSharing;
-  String vehicleRegNo;
-  String vehicleRc;
-  String vehicleOwnerNoc;
-  int rideZoneId;
-  int rideCategoryId;
-  double avgRating;
-  int ratingCount;
-  String lat;
-  String lng;
-  String location;
+  int? id;
+  String? fName;
+  String? lName;
+  String? phone;
+  String? email;
+  String? identityNumber;
+  String? identityType;
+  String? identityImage;
+  String? image;
+  String? fcmToken;
+  int? zoneId;
+  String? createdAt;
+  String? updatedAt;
+  bool? status;
+  int? active;
+  int? earning;
+  int? currentOrders;
+  String? type;
+  int? storeId;
+  String? applicationStatus;
+  int? orderCount;
+  int? assignedOrderCount;
+  int? delivery;
+  int? rideSharing;
+  String? vehicleRegNo;
+  String? vehicleRc;
+  String? vehicleOwnerNoc;
+  int? rideZoneId;
+  int? rideCategoryId;
+  double? avgRating;
+  int? ratingCount;
+  String? lat;
+  String? lng;
+  String? location;
 
   Rider(
       {this.id,
@@ -268,7 +268,7 @@ class Rider {
     vehicleOwnerNoc = json['vehicle_owner_noc'];
     rideZoneId = json['ride_zone_id'];
     rideCategoryId = json['ride_category_id'];
-    avgRating = json['avg_rating'] != null ? json['avg_rating'].toDouble() : null;
+    avgRating = json['avg_rating']?.toDouble();
     ratingCount = json['rating_count'];
     lat = json['lat'];
     lng = json['lng'];
@@ -276,41 +276,41 @@ class Rider {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['f_name'] = this.fName;
-    data['l_name'] = this.lName;
-    data['phone'] = this.phone;
-    data['email'] = this.email;
-    data['identity_number'] = this.identityNumber;
-    data['identity_type'] = this.identityType;
-    data['identity_image'] = this.identityImage;
-    data['image'] = this.image;
-    data['fcm_token'] = this.fcmToken;
-    data['zone_id'] = this.zoneId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['status'] = this.status;
-    data['active'] = this.active;
-    data['earning'] = this.earning;
-    data['current_orders'] = this.currentOrders;
-    data['type'] = this.type;
-    data['store_id'] = this.storeId;
-    data['application_status'] = this.applicationStatus;
-    data['order_count'] = this.orderCount;
-    data['assigned_order_count'] = this.assignedOrderCount;
-    data['delivery'] = this.delivery;
-    data['ride_sharing'] = this.rideSharing;
-    data['vehicle_reg_no'] = this.vehicleRegNo;
-    data['vehicle_rc'] = this.vehicleRc;
-    data['vehicle_owner_noc'] = this.vehicleOwnerNoc;
-    data['ride_zone_id'] = this.rideZoneId;
-    data['ride_category_id'] = this.rideCategoryId;
-    data['avg_rating'] = this.avgRating;
-    data['rating_count'] = this.ratingCount;
-    data['lat'] = this.lat;
-    data['lng'] = this.lng;
-    data['location'] = this.location;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['f_name'] = fName;
+    data['l_name'] = lName;
+    data['phone'] = phone;
+    data['email'] = email;
+    data['identity_number'] = identityNumber;
+    data['identity_type'] = identityType;
+    data['identity_image'] = identityImage;
+    data['image'] = image;
+    data['fcm_token'] = fcmToken;
+    data['zone_id'] = zoneId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['status'] = status;
+    data['active'] = active;
+    data['earning'] = earning;
+    data['current_orders'] = currentOrders;
+    data['type'] = type;
+    data['store_id'] = storeId;
+    data['application_status'] = applicationStatus;
+    data['order_count'] = orderCount;
+    data['assigned_order_count'] = assignedOrderCount;
+    data['delivery'] = delivery;
+    data['ride_sharing'] = rideSharing;
+    data['vehicle_reg_no'] = vehicleRegNo;
+    data['vehicle_rc'] = vehicleRc;
+    data['vehicle_owner_noc'] = vehicleOwnerNoc;
+    data['ride_zone_id'] = rideZoneId;
+    data['ride_category_id'] = rideCategoryId;
+    data['avg_rating'] = avgRating;
+    data['rating_count'] = ratingCount;
+    data['lat'] = lat;
+    data['lng'] = lng;
+    data['location'] = location;
     return data;
   }
 }

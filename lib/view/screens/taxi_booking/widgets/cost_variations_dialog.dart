@@ -8,30 +8,30 @@ import 'package:pointer_interceptor/pointer_interceptor.dart';
 class CostVariationsDialog extends StatelessWidget {
   final Function onYesPressed;
   final bool isLogOut;
-  CostVariationsDialog({
+  const CostVariationsDialog({Key? key, 
 
-    @required this.onYesPressed,
+    required this.onYesPressed,
     this.isLogOut = false,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
-      insetPadding: EdgeInsets.all(30),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
+      insetPadding: const EdgeInsets.all(30),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: PointerInterceptor(
         child: SizedBox(width: 500, child: Padding(
-          padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+          padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Text('cost_variations'.tr,style: robotoMedium.copyWith(
                 color: Theme.of(context).primaryColor,
                 fontSize: Dimensions.fontSizeLarge),),
-            SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+            const SizedBox(height: Dimensions.paddingSizeDefault,),
 
             ListView.builder(
                 itemCount: 4,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (context,index){
               return Padding(
@@ -39,11 +39,11 @@ class CostVariationsDialog extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                     border: Border.all(color:index != 0 ? Theme.of(context).disabledColor.withOpacity(.5):Theme.of(context).primaryColor),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL,vertical: Dimensions.PADDING_SIZE_DEFAULT),
+                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall,vertical: Dimensions.paddingSizeDefault),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -51,18 +51,18 @@ class CostVariationsDialog extends StatelessWidget {
                           TextSpan(
                             style: robotoRegular.copyWith(
                               fontSize: Dimensions.fontSizeSmall,
-                              color:Theme.of(Get.context).textTheme.bodyLarge.color.withOpacity(.5),
+                              color:Theme.of(Get.context!).textTheme.bodyLarge!.color!.withOpacity(.5),
                             ),
                             children: [
                               TextSpan(
                                   text: '\$',
                                   style: robotoRegular.copyWith(
-                                      color: Theme.of(Get.context).textTheme.bodyLarge.color,
+                                      color: Theme.of(Get.context!).textTheme.bodyLarge!.color,
                                       fontSize: Dimensions.fontSizeSmall)),
                               TextSpan(
                                   text: '85',
                                   style: robotoBold.copyWith(
-                                      color: Theme.of(Get.context).textTheme.bodyLarge.color,
+                                      color: Theme.of(Get.context!).textTheme.bodyLarge!.color,
                                       fontSize: Dimensions.fontSizeExtraLarge)),
                               TextSpan(
                                   text: '/hr',
@@ -80,8 +80,8 @@ class CostVariationsDialog extends StatelessWidget {
                         if(index == 0)
                         Container(
                           decoration: BoxDecoration(color: Theme.of(context).primaryColor, shape: BoxShape.circle),
-                          padding: EdgeInsets.all(2),
-                          child: Icon(Icons.check, size: 12, color: Colors.white),
+                          padding: const EdgeInsets.all(2),
+                          child: const Icon(Icons.check, size: 12, color: Colors.white),
                         ),
 
                       ],
@@ -89,13 +89,13 @@ class CostVariationsDialog extends StatelessWidget {
                   ),),
               );
             }),
-            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+            const SizedBox(height: Dimensions.paddingSizeExtraLarge),
 
             CustomButton(
               buttonText: 'see_total_cost'.tr,
               fontSize: Dimensions.fontSizeDefault,
               onPressed: () => onYesPressed(),
-              radius: Dimensions.RADIUS_SMALL, height: 40,
+              radius: Dimensions.radiusSmall, height: 40,
               width: 120,
             )
 

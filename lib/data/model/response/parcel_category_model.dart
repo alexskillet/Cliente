@@ -1,12 +1,12 @@
 class ParcelCategoryModel {
-  int id;
-  String image;
-  String name;
-  String description;
-  String createdAt;
-  String updatedAt;
-  double parcelPerKmShippingCharge;
-  double parcelMinimumShippingCharge;
+  int? id;
+  String? image;
+  String? name;
+  String? description;
+  String? createdAt;
+  String? updatedAt;
+  double? parcelPerKmShippingCharge;
+  double? parcelMinimumShippingCharge;
 
   ParcelCategoryModel({
         this.id,
@@ -30,15 +30,15 @@ class ParcelCategoryModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['image'] = this.image;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['parcel_per_km_shipping_charge'] = this.parcelPerKmShippingCharge;
-    data['parcel_minimum_shipping_charge'] = this.parcelMinimumShippingCharge;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['image'] = image;
+    data['name'] = name;
+    data['description'] = description;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['parcel_per_km_shipping_charge'] = parcelPerKmShippingCharge;
+    data['parcel_minimum_shipping_charge'] = parcelMinimumShippingCharge;
     return data;
   }
 }

@@ -1,17 +1,15 @@
 import 'dart:convert';
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:get/get_connect/http/src/request/request.dart';
 
 import 'package:sixam_mart/data/model/response/address_model.dart';
 import 'package:sixam_mart/data/model/response/error_response.dart';
 import 'package:sixam_mart/data/model/response/module_model.dart';
 import 'package:sixam_mart/util/app_constants.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/foundation.dart' as Foundation;
-import 'package:http/http.dart' as Http;
+import 'package:http/http.dart' as http;
 
 class ApiClient extends GetxService {
   final String appBaseUrl;
@@ -19,169 +17,171 @@ class ApiClient extends GetxService {
   static final String noInternetMessage = 'connection_to_api_server_failed'.tr;
   final int timeoutInSeconds = 30;
 
-  String token;
-  Map<String, String> _mainHeaders;
+  String? token;
+  late Map<String, String> _mainHeaders;
 
-  ApiClient({@required this.appBaseUrl, @required this.sharedPreferences}) {
-    token = sharedPreferences.getString(AppConstants.TOKEN);
-    if(Foundation.kDebugMode) {
+  ApiClient({required this.appBaseUrl, required this.sharedPreferences}) {
+    token = sharedPreferences.getString(AppConstants.token);
+    if (kDebugMode) {
       print('Token: $token');
     }
-    AddressModel _addressModel;
+    AddressModel? addressModel;
     try {
-      _addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.USER_ADDRESS)));
-    }catch(e) {}
-    int _moduleID;
-    if(GetPlatform.isWeb && sharedPreferences.containsKey(AppConstants.MODULE_ID)) {
+      addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.userAddress)!));
+    }catch(_) {}
+    int? moduleID;
+    if(GetPlatform.isWeb && sharedPreferences.containsKey(AppConstants.moduleId)) {
       try {
-        _moduleID = ModuleModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.MODULE_ID))).id;
-      }catch(e) {}
+        moduleID = ModuleModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.moduleId)!)).id;
+      }catch(_) {}
     }
     updateHeader(
-      token, _addressModel == null ? null : _addressModel.zoneIds, _addressModel == null ? null : _addressModel.areaIds,
-      sharedPreferences.getString(AppConstants.LANGUAGE_CODE), _moduleID, _addressModel == null ? null : _addressModel.latitude,
-        _addressModel == null ? null : _addressModel.longitude
+      token, addressModel?.zoneIds, addressModel?.areaIds,
+      sharedPreferences.getString(AppConstants.languageCode), moduleID, addressModel?.latitude,
+        addressModel?.longitude
     );
   }
 
-  void updateHeader(String token, List<int> zoneIDs, List<int> operationIds, String languageCode, int moduleID, String latitude, String longitude) {
-    Map<String, String> _header = {};
+  void updateHeader(String? token, List<int>? zoneIDs, List<int>? operationIds, String? languageCode, int? moduleID, String? latitude, String? longitude) {
+    Map<String, String> header = {};
     if(moduleID != null) {
-      _header.addAll({AppConstants.MODULE_ID: moduleID.toString()});
+      header.addAll({AppConstants.moduleId: moduleID.toString()});
     }
-    _header.addAll({
+    header.addAll({
       'Content-Type': 'application/json; charset=UTF-8',
-      AppConstants.ZONE_ID: zoneIDs != null ? jsonEncode(zoneIDs) : null,
+      AppConstants.zoneId: zoneIDs != null ? jsonEncode(zoneIDs) : '',
       ///this will add in ride module
-      // AppConstants.OPERATION_AREA_ID: operationIds != null ? jsonEncode(operationIds) : null,
-      AppConstants.LOCALIZATION_KEY: languageCode ?? AppConstants.languages[0].languageCode,
-      AppConstants.LATITUDE: latitude != null ? jsonEncode(latitude) : null,
-      AppConstants.LONGITUDE: longitude != null ? jsonEncode(longitude) : null,
+      AppConstants.operationAreaId: operationIds != null ? jsonEncode(operationIds) : '',
+      AppConstants.localizationKey: languageCode ?? AppConstants.languages[0].languageCode!,
+      AppConstants.latitude: latitude != null ? jsonEncode(latitude) : '',
+      AppConstants.longitude: longitude != null ? jsonEncode(longitude) : '',
       'Authorization': 'Bearer $token'
     });
-    _mainHeaders = _header;
+    _mainHeaders = header;
   }
 
-  Future<Response> getData(String uri, {Map<String, dynamic> query, Map<String, String> headers}) async {
+  Future<Response> getData(String uri, {Map<String, dynamic>? query, Map<String, String>? headers}) async {
     try {
-      if(Foundation.kDebugMode) {
+      if (kDebugMode) {
         print('====> API Call: $uri\nHeader: $_mainHeaders');
       }
-      Http.Response _response = await Http.get(
+      http.Response response = await http.get(
         Uri.parse(appBaseUrl+uri),
         headers: headers ?? _mainHeaders,
       ).timeout(Duration(seconds: timeoutInSeconds));
-      return handleResponse(_response, uri);
+      return handleResponse(response, uri);
     } catch (e) {
-      print('------------${e.toString()}');
+      if (kDebugMode) {
+        print('------------${e.toString()}');
+      }
       return Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
 
-  Future<Response> postData(String uri, dynamic body, {Map<String, String> headers, int timeout}) async {
+  Future<Response> postData(String uri, dynamic body, {Map<String, String>? headers, int? timeout}) async {
     try {
-      if(Foundation.kDebugMode) {
+      if(kDebugMode) {
         print('====> API Call: $uri\nHeader: $_mainHeaders');
         print('====> API Body: $body');
       }
-      Http.Response _response = await Http.post(
+      http.Response response = await http.post(
         Uri.parse(appBaseUrl+uri),
         body: jsonEncode(body),
         headers: headers ?? _mainHeaders,
       ).timeout(Duration(seconds: timeout ?? timeoutInSeconds));
-      return handleResponse(_response, uri);
+      return handleResponse(response, uri);
     } catch (e) {
       return Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
 
-  Future<Response> postMultipartData(String uri, Map<String, String> body, List<MultipartBody> multipartBody, {Map<String, String> headers}) async {
+  Future<Response> postMultipartData(String uri, Map<String, String> body, List<MultipartBody> multipartBody, {Map<String, String>? headers}) async {
     try {
-      if(Foundation.kDebugMode) {
+      if(kDebugMode) {
         print('====> API Call: $uri\nHeader: $_mainHeaders');
         print('====> API Body: $body with ${multipartBody.length} picture');
       }
-      Http.MultipartRequest _request = Http.MultipartRequest('POST', Uri.parse(appBaseUrl+uri));
-      _request.headers.addAll(headers ?? _mainHeaders);
+      http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse(appBaseUrl+uri));
+      request.headers.addAll(headers ?? _mainHeaders);
       for(MultipartBody multipart in multipartBody) {
         if(multipart.file != null) {
-          Uint8List _list = await multipart.file.readAsBytes();
-          _request.files.add(Http.MultipartFile(
-            multipart.key, multipart.file.readAsBytes().asStream(), _list.length,
+          Uint8List list = await multipart.file!.readAsBytes();
+          request.files.add(http.MultipartFile(
+            multipart.key, multipart.file!.readAsBytes().asStream(), list.length,
             filename: '${DateTime.now().toString()}.png',
           ));
         }
       }
-      _request.fields.addAll(body);
-      Http.Response _response = await Http.Response.fromStream(await _request.send());
-      return handleResponse(_response, uri);
+      request.fields.addAll(body);
+      http.Response response = await http.Response.fromStream(await request.send());
+      return handleResponse(response, uri);
     } catch (e) {
       return Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
 
-  Future<Response> putData(String uri, dynamic body, {Map<String, String> headers}) async {
+  Future<Response> putData(String uri, dynamic body, {Map<String, String>? headers}) async {
     try {
-      if(Foundation.kDebugMode) {
+      if(kDebugMode) {
         print('====> API Call: $uri\nHeader: $_mainHeaders');
         print('====> API Body: $body');
       }
-      Http.Response _response = await Http.put(
+      http.Response response = await http.put(
         Uri.parse(appBaseUrl+uri),
         body: jsonEncode(body),
         headers: headers ?? _mainHeaders,
       ).timeout(Duration(seconds: timeoutInSeconds));
-      return handleResponse(_response, uri);
+      return handleResponse(response, uri);
     } catch (e) {
       return Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
 
-  Future<Response> deleteData(String uri, {Map<String, String> headers}) async {
+  Future<Response> deleteData(String uri, {Map<String, String>? headers}) async {
     try {
-      if(Foundation.kDebugMode) {
+      if(kDebugMode) {
         print('====> API Call: $uri\nHeader: $_mainHeaders');
       }
-      Http.Response _response = await Http.delete(
+      http.Response response = await http.delete(
         Uri.parse(appBaseUrl+uri),
         headers: headers ?? _mainHeaders,
       ).timeout(Duration(seconds: timeoutInSeconds));
-      return handleResponse(_response, uri);
+      return handleResponse(response, uri);
     } catch (e) {
       return Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
 
-  Response handleResponse(Http.Response response, String uri) {
-    dynamic _body;
+  Response handleResponse(http.Response response, String uri) {
+    dynamic body;
     try {
-      _body = jsonDecode(response.body);
-    }catch(e) {}
-    Response _response = Response(
-      body: _body != null ? _body : response.body, bodyString: response.body.toString(),
-      request: Request(headers: response.request.headers, method: response.request.method, url: response.request.url),
+      body = jsonDecode(response.body);
+    }catch(_) {}
+    Response response0 = Response(
+      body: body ?? response.body, bodyString: response.body.toString(),
+      request: Request(headers: response.request!.headers, method: response.request!.method, url: response.request!.url),
       headers: response.headers, statusCode: response.statusCode, statusText: response.reasonPhrase,
     );
-    if(_response.statusCode != 200 && _response.body != null && _response.body is !String) {
-      if(_response.body.toString().startsWith('{errors: [{code:')) {
-        ErrorResponse _errorResponse = ErrorResponse.fromJson(_response.body);
-        _response = Response(statusCode: _response.statusCode, body: _response.body, statusText: _errorResponse.errors[0].message);
-      }else if(_response.body.toString().startsWith('{message')) {
-        _response = Response(statusCode: _response.statusCode, body: _response.body, statusText: _response.body['message']);
+    if(response0.statusCode != 200 && response0.body != null && response0.body is !String) {
+      if(response0.body.toString().startsWith('{errors: [{code:')) {
+        ErrorResponse errorResponse = ErrorResponse.fromJson(response0.body);
+        response0 = Response(statusCode: response0.statusCode, body: response0.body, statusText: errorResponse.errors![0].message);
+      }else if(response0.body.toString().startsWith('{message')) {
+        response0 = Response(statusCode: response0.statusCode, body: response0.body, statusText: response0.body['message']);
       }
-    }else if(_response.statusCode != 200 && _response.body == null) {
-      _response = Response(statusCode: 0, statusText: noInternetMessage);
+    }else if(response0.statusCode != 200 && response0.body == null) {
+      response0 = Response(statusCode: 0, statusText: noInternetMessage);
     }
-    if(Foundation.kDebugMode) {
-      print('====> API Response: [${_response.statusCode}] $uri\n${_response.body}');
+    if(kDebugMode) {
+      print('====> API Response: [${response0.statusCode}] $uri\n${response0.body}');
     }
-    return _response;
+    return response0;
   }
 }
 
 class MultipartBody {
   String key;
-  XFile file;
+  XFile? file;
 
   MultipartBody(this.key, this.file);
 }

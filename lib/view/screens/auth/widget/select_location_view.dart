@@ -17,33 +17,33 @@ import 'package:sixam_mart/view/screens/location/widget/location_search_dialog.d
 
 class SelectLocationView extends StatefulWidget {
   final bool fromView;
-  final GoogleMapController mapController;
-  const SelectLocationView({@required this.fromView, this.mapController});
+  final GoogleMapController? mapController;
+  const SelectLocationView({Key? key, required this.fromView, this.mapController}) : super(key: key);
 
   @override
   State<SelectLocationView> createState() => _SelectLocationViewState();
 }
 
 class _SelectLocationViewState extends State<SelectLocationView> {
-  CameraPosition _cameraPosition;
-  Set<Polygon> _polygons = HashSet<Polygon>();
-  GoogleMapController _mapController;
-  GoogleMapController _screenMapController;
+  late CameraPosition _cameraPosition;
+  final Set<Polygon> _polygons = HashSet<Polygon>();
+  GoogleMapController? _mapController;
+  GoogleMapController? _screenMapController;
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(builder: (authController) {
-      List<int> _zoneIndexList = [];
+      List<int> zoneIndexList = [];
       if(authController.zoneList != null && authController.zoneIds != null) {
-        for(int index=0; index<authController.zoneList.length; index++) {
-          if(authController.zoneIds.contains(authController.zoneList[index].id)) {
-            _zoneIndexList.add(index);
+        for(int index=0; index<authController.zoneList!.length; index++) {
+          if(authController.zoneIds!.contains(authController.zoneList![index].id)) {
+            zoneIndexList.add(index);
           }
         }
       }
 
-      return SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Padding(
-        padding: EdgeInsets.all(widget.fromView ? 0 : Dimensions.PADDING_SIZE_SMALL),
+      return SizedBox(width: Dimensions.webMaxWidth, child: Padding(
+        padding: EdgeInsets.all(widget.fromView ? 0 : Dimensions.paddingSizeSmall),
         child: SingleChildScrollView(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
@@ -52,61 +52,61 @@ class _SelectLocationViewState extends State<SelectLocationView> {
                 'set_your_store_location'.tr,
                 style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall),
               ),
-            ) : SizedBox(),
-            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            ) : const SizedBox(),
+            const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
             InkWell(
               onTap: () async {
-                var _p = await Get.dialog(LocationSearchDialog(mapController: widget.fromView ? _mapController : _screenMapController));
-                Position _position = _p;
-                if(_position != null) {
-                  _cameraPosition = CameraPosition(target: LatLng(_position.latitude, _position.longitude), zoom: 16);
+                var p = await Get.dialog(LocationSearchDialog(mapController: widget.fromView ? _mapController : _screenMapController));
+                Position? position = p;
+                if(position != null) {
+                  _cameraPosition = CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 16);
                   if(!widget.fromView) {
-                    widget.mapController.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition));
+                    widget.mapController!.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition));
                     authController.setLocation(_cameraPosition.target);
                   }
                 }
               },
               child: Container(
                 height: 50,
-                padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
-                decoration: BoxDecoration(color: Theme.of(context).disabledColor.withOpacity(0.5), borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
+                padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
+                decoration: BoxDecoration(color: Theme.of(context).disabledColor.withOpacity(0.5), borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
                 child: Row(children: [
                   Icon(Icons.location_on, size: 25, color: Theme.of(context).primaryColor),
-                  SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                   Expanded(
                     child: GetBuilder<LocationController>(builder: (locationController) {
                       return Text(
-                        locationController.pickAddress.isEmpty ? 'search'.tr : locationController.pickAddress,
+                        locationController.pickAddress!.isEmpty ? 'search'.tr : locationController.pickAddress!,
                         style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge), maxLines: 1, overflow: TextOverflow.ellipsis,
                       );
                     }),
                   ),
-                  SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                  Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyLarge.color),
+                  const SizedBox(width: Dimensions.paddingSizeSmall),
+                  Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyLarge!.color),
                 ]),
               ),
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+            const SizedBox(height: Dimensions.paddingSizeSmall),
 
-            authController.zoneList.length > 0 ? Container(
+            authController.zoneList!.isNotEmpty ? Container(
               height: widget.fromView ? 200 : (context.height * 0.55),
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                 border: Border.all(width: 2, color: Theme.of(context).primaryColor),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                 child: Stack(clipBehavior: Clip.none, children: [
                   GoogleMap(
                     initialCameraPosition: CameraPosition(
                       target: LatLng(
-                        double.parse(Get.find<SplashController>().configModel.defaultLocation.lat ?? '0'),
-                        double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
+                        double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lat ?? '0'),
+                        double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lng ?? '0'),
                       ), zoom: 16,
                     ),
-                    minMaxZoomPreference: MinMaxZoomPreference(0, 16),
+                    minMaxZoomPreference: const MinMaxZoomPreference(0, 16),
                     zoomControlsEnabled: true,
                     compassEnabled: false,
                     indoorViewEnabled: true,
@@ -117,7 +117,7 @@ class _SelectLocationViewState extends State<SelectLocationView> {
                     onCameraIdle: () {
                       authController.setLocation(_cameraPosition.target);
                       if(!widget.fromView) {
-                        widget.mapController.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition));
+                        widget.mapController!.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition));
                       }
                     },
                     onCameraMove: ((position) => _cameraPosition = position),
@@ -129,7 +129,7 @@ class _SelectLocationViewState extends State<SelectLocationView> {
                       }
                     },
                   ),
-                  Center(child: Image.asset(Images.pick_marker, height: 50, width: 50)),
+                  Center(child: Image.asset(Images.pickMarker, height: 50, width: 50)),
                   widget.fromView ? Positioned(
                     top: 10, right: 0,
                     child: InkWell(
@@ -141,36 +141,36 @@ class _SelectLocationViewState extends State<SelectLocationView> {
                       },
                       child: Container(
                         width: 30, height: 30,
-                        margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
+                        margin: const EdgeInsets.only(right: Dimensions.paddingSizeLarge),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.radiusSmall), color: Colors.white),
                         child: Icon(Icons.fullscreen, color: Theme.of(context).primaryColor, size: 20),
                       ),
                     ),
-                  ) : SizedBox(),
+                  ) : const SizedBox(),
                 ]),
               ),
-            ) : SizedBox(),
-            SizedBox(height: authController.zoneList.length > 0 ? Dimensions.PADDING_SIZE_SMALL : 0),
-            authController.zoneList.length > 0 ? Row(children: [
+            ) : const SizedBox(),
+            SizedBox(height: authController.zoneList!.isNotEmpty ? Dimensions.paddingSizeSmall : 0),
+            authController.zoneList!.isNotEmpty ? Row(children: [
               Expanded(child: CustomTextField(
                 hintText: 'latitude'.tr,
                 controller: TextEditingController(
-                  text: authController.restaurantLocation != null ? authController.restaurantLocation.latitude.toString() : '',
+                  text: authController.restaurantLocation != null ? authController.restaurantLocation!.latitude.toString() : '',
                 ),
                 isEnabled: false,
                 showTitle: true,
               )),
-              SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(width: Dimensions.paddingSizeSmall),
               Expanded(child: CustomTextField(
                 hintText: 'longitude'.tr,
                 controller: TextEditingController(
-                  text: authController.restaurantLocation != null ? authController.restaurantLocation.longitude.toString() : '',
+                  text: authController.restaurantLocation != null ? authController.restaurantLocation!.longitude.toString() : '',
                 ),
                 isEnabled: false,
                 showTitle: true,
               )),
-            ]) : SizedBox(),
-            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+            ]) : const SizedBox(),
+            const SizedBox(height: Dimensions.paddingSizeSmall),
 
             Center(
               child: Text(
@@ -178,20 +178,20 @@ class _SelectLocationViewState extends State<SelectLocationView> {
                 style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall),
               ),
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
             authController.zoneIds != null ? Container(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
               decoration: BoxDecoration(
-                color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 2, blurRadius: 5, offset: Offset(0, 5))],
+                color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, spreadRadius: 2, blurRadius: 5, offset: const Offset(0, 5))],
               ),
               child: DropdownButton<int>(
                 value: authController.selectedZoneIndex,
-                items: _zoneIndexList.map((int value) {
+                items: zoneIndexList.map((int value) {
                   return DropdownMenuItem<int>(
                     value: value,
-                    child: Text(authController.zoneList[value].name),
+                    child: Text(authController.zoneList![value].name!),
                   );
                 }).toList(),
                 onChanged: (value) {
@@ -207,18 +207,18 @@ class _SelectLocationViewState extends State<SelectLocationView> {
                   authController.setZoneIndex(value);
                 },
                 isExpanded: true,
-                underline: SizedBox(),
+                underline: const SizedBox(),
               ),
             ) : Center(child: Text('service_not_available_in_this_area'.tr)),
-            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+            const SizedBox(height: Dimensions.paddingSizeSmall),
 
             !widget.fromView ? CustomButton(
               buttonText: 'set_location'.tr,
               onPressed: () {
-                widget.mapController.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition));
+                widget.mapController!.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition));
                 Get.back();
               },
-            ) : SizedBox()
+            ) : const SizedBox()
 
           ]),
         ),

@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:sixam_mart/view/base/menu_drawer.dart';
 
 class ItemCampaignScreen extends StatefulWidget {
+  const ItemCampaignScreen({Key? key}) : super(key: key);
+
   @override
   State<ItemCampaignScreen> createState() => _ItemCampaignScreenState();
 }
@@ -25,9 +27,9 @@ class _ItemCampaignScreenState extends State<ItemCampaignScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'campaigns'.tr),
-      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+      endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: Scrollbar(child: SingleChildScrollView(child: FooterView(child: SizedBox(
-        width: Dimensions.WEB_MAX_WIDTH,
+        width: Dimensions.webMaxWidth,
         child: GetBuilder<CampaignController>(builder: (campController) {
           return ItemsView(
             isStore: false, items: campController.itemCampaignList, stores: null,

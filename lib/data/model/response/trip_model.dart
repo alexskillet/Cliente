@@ -1,8 +1,10 @@
+import 'package:sixam_mart/data/model/response/order_model.dart';
+
 class TripModel {
-  int totalSize;
-  String limit;
-  String offset;
-  Orders orders;
+  int? totalSize;
+  String? limit;
+  String? offset;
+  Orders? orders;
 
   TripModel({this.totalSize, this.limit, this.offset, this.orders});
 
@@ -10,35 +12,35 @@ class TripModel {
     totalSize = json['total_size'];
     limit = json['limit'];
     offset = json['offset'];
-    orders = json['orders'] != null ? new Orders.fromJson(json['orders']) : null;
+    orders = json['orders'] != null ? Orders.fromJson(json['orders']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['total_size'] = this.totalSize;
-    data['limit'] = this.limit;
-    data['offset'] = this.offset;
-    if (this.orders != null) {
-      data['orders'] = this.orders.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['total_size'] = totalSize;
+    data['limit'] = limit;
+    data['offset'] = offset;
+    if (orders != null) {
+      data['orders'] = orders!.toJson();
     }
     return data;
   }
 }
 
 class Orders {
-  int currentPage;
-  List<Data> data;
-  String firstPageUrl;
-  int from;
-  int lastPage;
-  String lastPageUrl;
-  List<Links> links;
-  String nextPageUrl;
-  String path;
-  String perPage;
-  String prevPageUrl;
-  int to;
-  int total;
+  int? currentPage;
+  List<Data>? data;
+  String? firstPageUrl;
+  int? from;
+  int? lastPage;
+  String? lastPageUrl;
+  List<Links>? links;
+  String? nextPageUrl;
+  String? path;
+  String? perPage;
+  String? prevPageUrl;
+  int? to;
+  int? total;
 
   Orders(
       {this.currentPage,
@@ -60,7 +62,7 @@ class Orders {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
     firstPageUrl = json['first_page_url'];
@@ -70,7 +72,7 @@ class Orders {
     if (json['links'] != null) {
       links = <Links>[];
       json['links'].forEach((v) {
-        links.add(new Links.fromJson(v));
+        links!.add(Links.fromJson(v));
       });
     }
     nextPageUrl = json['next_page_url'];
@@ -82,91 +84,91 @@ class Orders {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['current_page'] = this.currentPage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['current_page'] = currentPage;
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['first_page_url'] = this.firstPageUrl;
-    data['from'] = this.from;
-    data['last_page'] = this.lastPage;
-    data['last_page_url'] = this.lastPageUrl;
-    if (this.links != null) {
-      data['links'] = this.links.map((v) => v.toJson()).toList();
+    data['first_page_url'] = firstPageUrl;
+    data['from'] = from;
+    data['last_page'] = lastPage;
+    data['last_page_url'] = lastPageUrl;
+    if (links != null) {
+      data['links'] = links!.map((v) => v.toJson()).toList();
     }
-    data['next_page_url'] = this.nextPageUrl;
-    data['path'] = this.path;
-    data['per_page'] = this.perPage;
-    data['prev_page_url'] = this.prevPageUrl;
-    data['to'] = this.to;
-    data['total'] = this.total;
+    data['next_page_url'] = nextPageUrl;
+    data['path'] = path;
+    data['per_page'] = perPage;
+    data['prev_page_url'] = prevPageUrl;
+    data['to'] = to;
+    data['total'] = total;
     return data;
   }
 }
 
 class Data {
-  int id;
-  int userId;
-  double orderAmount;
-  double couponDiscountAmount;
-  String couponDiscountTitle;
-  String paymentStatus;
-  String orderStatus;
-  double totalTaxAmount;
-  String paymentMethod;
-  String transactionReference;
-  int deliveryAddressId;
-  int deliveryManId;
-  String couponCode;
-  String orderNote;
-  String orderType;
-  int checked;
-  int storeId;
-  String createdAt;
-  String updatedAt;
-  int deliveryCharge;
-  String scheduleAt;
-  String callback;
-  String otp;
-  String pending;
-  String accepted;
-  String confirmed;
-  String processing;
-  String handover;
-  String pickedUp;
-  String delivered;
-  String canceled;
-  String refundRequested;
-  String refunded;
-  String deliveryAddress;
-  int scheduled;
-  int storeDiscountAmount;
-  int originalDeliveryCharge;
-  String failed;
-  String adjusment;
-  int edited;
-  String deliveryTime;
-  String zoneId;
-  int moduleId;
-  String orderAttachment;
-  double distance;
-  int parcelCategoryId;
-  String receiverDetails;
-  String chargePayer;
-  int dmTips;
-  String freeDeliveryBy;
-  String refundRequestCanceled;
-  bool prescriptionOrder;
-  String taxStatus;
-  int tripOrder;
-  int operationAreaId;
-  int providerId;
-  String moduleType;
-  Provider provider;
-  Null deliveryMan;
-  Trip trip;
-  Customer customer;
-  Module module;
+  int? id;
+  int? userId;
+  double? orderAmount;
+  double? couponDiscountAmount;
+  String? couponDiscountTitle;
+  String? paymentStatus;
+  String? orderStatus;
+  double? totalTaxAmount;
+  String? paymentMethod;
+  String? transactionReference;
+  int? deliveryAddressId;
+  int? deliveryManId;
+  String? couponCode;
+  String? orderNote;
+  String? orderType;
+  int? checked;
+  int? storeId;
+  String? createdAt;
+  String? updatedAt;
+  int? deliveryCharge;
+  String? scheduleAt;
+  String? callback;
+  String? otp;
+  String? pending;
+  String? accepted;
+  String? confirmed;
+  String? processing;
+  String? handover;
+  String? pickedUp;
+  String? delivered;
+  String? canceled;
+  String? refundRequested;
+  String? refunded;
+  String? deliveryAddress;
+  int? scheduled;
+  int? storeDiscountAmount;
+  int? originalDeliveryCharge;
+  String? failed;
+  String? adjusment;
+  int? edited;
+  String? deliveryTime;
+  String? zoneId;
+  int? moduleId;
+  String? orderAttachment;
+  double? distance;
+  int? parcelCategoryId;
+  String? receiverDetails;
+  String? chargePayer;
+  int? dmTips;
+  String? freeDeliveryBy;
+  String? refundRequestCanceled;
+  bool? prescriptionOrder;
+  String? taxStatus;
+  int? tripOrder;
+  int? operationAreaId;
+  int? providerId;
+  String? moduleType;
+  Provider? provider;
+  DeliveryMan? deliveryMan;
+  Trip? trip;
+  Customer? customer;
+  Module? module;
 
   Data(
       {this.id,
@@ -291,119 +293,119 @@ class Data {
     providerId = json['provider_id'];
     moduleType = json['module_type'];
     provider = json['provider'] != null
-        ? new Provider.fromJson(json['provider'])
+        ? Provider.fromJson(json['provider'])
         : null;
     deliveryMan = json['delivery_man'];
-    trip = json['trip'] != null ? new Trip.fromJson(json['trip']) : null;
+    trip = json['trip'] != null ? Trip.fromJson(json['trip']) : null;
     customer = json['customer'] != null
-        ? new Customer.fromJson(json['customer'])
+        ? Customer.fromJson(json['customer'])
         : null;
     module =
-    json['module'] != null ? new Module.fromJson(json['module']) : null;
+    json['module'] != null ? Module.fromJson(json['module']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['user_id'] = this.userId;
-    data['order_amount'] = this.orderAmount;
-    data['coupon_discount_amount'] = this.couponDiscountAmount;
-    data['coupon_discount_title'] = this.couponDiscountTitle;
-    data['payment_status'] = this.paymentStatus;
-    data['order_status'] = this.orderStatus;
-    data['total_tax_amount'] = this.totalTaxAmount;
-    data['payment_method'] = this.paymentMethod;
-    data['transaction_reference'] = this.transactionReference;
-    data['delivery_address_id'] = this.deliveryAddressId;
-    data['delivery_man_id'] = this.deliveryManId;
-    data['coupon_code'] = this.couponCode;
-    data['order_note'] = this.orderNote;
-    data['order_type'] = this.orderType;
-    data['checked'] = this.checked;
-    data['store_id'] = this.storeId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['delivery_charge'] = this.deliveryCharge;
-    data['schedule_at'] = this.scheduleAt;
-    data['callback'] = this.callback;
-    data['otp'] = this.otp;
-    data['pending'] = this.pending;
-    data['accepted'] = this.accepted;
-    data['confirmed'] = this.confirmed;
-    data['processing'] = this.processing;
-    data['handover'] = this.handover;
-    data['picked_up'] = this.pickedUp;
-    data['delivered'] = this.delivered;
-    data['canceled'] = this.canceled;
-    data['refund_requested'] = this.refundRequested;
-    data['refunded'] = this.refunded;
-    data['delivery_address'] = this.deliveryAddress;
-    data['scheduled'] = this.scheduled;
-    data['store_discount_amount'] = this.storeDiscountAmount;
-    data['original_delivery_charge'] = this.originalDeliveryCharge;
-    data['failed'] = this.failed;
-    data['adjusment'] = this.adjusment;
-    data['edited'] = this.edited;
-    data['delivery_time'] = this.deliveryTime;
-    data['zone_id'] = this.zoneId;
-    data['module_id'] = this.moduleId;
-    data['order_attachment'] = this.orderAttachment;
-    data['distance'] = this.distance;
-    data['parcel_category_id'] = this.parcelCategoryId;
-    data['receiver_details'] = this.receiverDetails;
-    data['charge_payer'] = this.chargePayer;
-    data['dm_tips'] = this.dmTips;
-    data['free_delivery_by'] = this.freeDeliveryBy;
-    data['refund_request_canceled'] = this.refundRequestCanceled;
-    data['prescription_order'] = this.prescriptionOrder;
-    data['tax_status'] = this.taxStatus;
-    data['trip_order'] = this.tripOrder;
-    data['operation_area_id'] = this.operationAreaId;
-    data['provider_id'] = this.providerId;
-    data['module_type'] = this.moduleType;
-    if (this.provider != null) {
-      data['provider'] = this.provider.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['user_id'] = userId;
+    data['order_amount'] = orderAmount;
+    data['coupon_discount_amount'] = couponDiscountAmount;
+    data['coupon_discount_title'] = couponDiscountTitle;
+    data['payment_status'] = paymentStatus;
+    data['order_status'] = orderStatus;
+    data['total_tax_amount'] = totalTaxAmount;
+    data['payment_method'] = paymentMethod;
+    data['transaction_reference'] = transactionReference;
+    data['delivery_address_id'] = deliveryAddressId;
+    data['delivery_man_id'] = deliveryManId;
+    data['coupon_code'] = couponCode;
+    data['order_note'] = orderNote;
+    data['order_type'] = orderType;
+    data['checked'] = checked;
+    data['store_id'] = storeId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['delivery_charge'] = deliveryCharge;
+    data['schedule_at'] = scheduleAt;
+    data['callback'] = callback;
+    data['otp'] = otp;
+    data['pending'] = pending;
+    data['accepted'] = accepted;
+    data['confirmed'] = confirmed;
+    data['processing'] = processing;
+    data['handover'] = handover;
+    data['picked_up'] = pickedUp;
+    data['delivered'] = delivered;
+    data['canceled'] = canceled;
+    data['refund_requested'] = refundRequested;
+    data['refunded'] = refunded;
+    data['delivery_address'] = deliveryAddress;
+    data['scheduled'] = scheduled;
+    data['store_discount_amount'] = storeDiscountAmount;
+    data['original_delivery_charge'] = originalDeliveryCharge;
+    data['failed'] = failed;
+    data['adjusment'] = adjusment;
+    data['edited'] = edited;
+    data['delivery_time'] = deliveryTime;
+    data['zone_id'] = zoneId;
+    data['module_id'] = moduleId;
+    data['order_attachment'] = orderAttachment;
+    data['distance'] = distance;
+    data['parcel_category_id'] = parcelCategoryId;
+    data['receiver_details'] = receiverDetails;
+    data['charge_payer'] = chargePayer;
+    data['dm_tips'] = dmTips;
+    data['free_delivery_by'] = freeDeliveryBy;
+    data['refund_request_canceled'] = refundRequestCanceled;
+    data['prescription_order'] = prescriptionOrder;
+    data['tax_status'] = taxStatus;
+    data['trip_order'] = tripOrder;
+    data['operation_area_id'] = operationAreaId;
+    data['provider_id'] = providerId;
+    data['module_type'] = moduleType;
+    if (provider != null) {
+      data['provider'] = provider!.toJson();
     }
-    data['delivery_man'] = this.deliveryMan;
-    if (this.trip != null) {
-      data['trip'] = this.trip.toJson();
+    data['delivery_man'] = deliveryMan;
+    if (trip != null) {
+      data['trip'] = trip!.toJson();
     }
-    if (this.customer != null) {
-      data['customer'] = this.customer.toJson();
+    if (customer != null) {
+      data['customer'] = customer!.toJson();
     }
-    if (this.module != null) {
-      data['module'] = this.module.toJson();
+    if (module != null) {
+      data['module'] = module!.toJson();
     }
     return data;
   }
 }
 
 class Provider {
-  int id;
-  String name;
-  String phone;
-  String email;
-  String logo;
-  String coverPhoto;
-  String latitude;
-  String longitude;
-  String address;
-  String footerText;
-  int tax;
-  int comission;
-  String currency;
-  bool status;
-  int totalVehicle;
-  int totalDriver;
-  int totalTrip;
-  int completedTrip;
-  int ongoingTrip;
-  int canceledTrip;
-  int vendorId;
-  int moduleId;
-  int operationAreaId;
-  String createdAt;
-  String updatedAt;
+  int? id;
+  String? name;
+  String? phone;
+  String? email;
+  String? logo;
+  String? coverPhoto;
+  String? latitude;
+  String? longitude;
+  String? address;
+  String? footerText;
+  int? tax;
+  int? comission;
+  String? currency;
+  bool? status;
+  int? totalVehicle;
+  int? totalDriver;
+  int? totalTrip;
+  int? completedTrip;
+  int? ongoingTrip;
+  int? canceledTrip;
+  int? vendorId;
+  int? moduleId;
+  int? operationAreaId;
+  String? createdAt;
+  String? updatedAt;
 
   Provider(
       {this.id,
@@ -461,82 +463,81 @@ class Provider {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['phone'] = this.phone;
-    data['email'] = this.email;
-    data['logo'] = this.logo;
-    data['cover_photo'] = this.coverPhoto;
-    data['latitude'] = this.latitude;
-    data['longitude'] = this.longitude;
-    data['address'] = this.address;
-    data['footer_text'] = this.footerText;
-    data['tax'] = this.tax;
-    data['comission'] = this.comission;
-    data['currency'] = this.currency;
-    data['status'] = this.status;
-    data['total_vehicle'] = this.totalVehicle;
-    data['total_driver'] = this.totalDriver;
-    data['total_trip'] = this.totalTrip;
-    data['completed_trip'] = this.completedTrip;
-    data['ongoing_trip'] = this.ongoingTrip;
-    data['canceled_trip'] = this.canceledTrip;
-    data['vendor_id'] = this.vendorId;
-    data['module_id'] = this.moduleId;
-    data['operation_area_id'] = this.operationAreaId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['phone'] = phone;
+    data['email'] = email;
+    data['logo'] = logo;
+    data['cover_photo'] = coverPhoto;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
+    data['address'] = address;
+    data['footer_text'] = footerText;
+    data['tax'] = tax;
+    data['comission'] = comission;
+    data['currency'] = currency;
+    data['status'] = status;
+    data['total_vehicle'] = totalVehicle;
+    data['total_driver'] = totalDriver;
+    data['total_trip'] = totalTrip;
+    data['completed_trip'] = completedTrip;
+    data['ongoing_trip'] = ongoingTrip;
+    data['canceled_trip'] = canceledTrip;
+    data['vendor_id'] = vendorId;
+    data['module_id'] = moduleId;
+    data['operation_area_id'] = operationAreaId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }
 
 class Trip {
-  int id;
-  int orderId;
-  int userId;
-  int vehicleId;
-  int driverId;
-  int providerId;
-  int moduleId;
-  int operationAreaId;
-  String vehicleCategory;
-  double tripAmount;
-  double couponDiscountAmount;
-  String couponDiscountTitle;
-  String paymentStatus;
-  String tripStatus;
-  double totalTaxAmount;
-  String paymentMethod;
-  String transactionReference;
-  String couponCode;
-  String additionalNote;
-  bool checked;
-  int additionalCharge;
-  int cancelationFare;
-  double estimatedFare;
-  double estimatedTime;
-  double estimatedDistance;
-  double actualFare;
-  double actualTime;
-  double actualDistance;
-  String scheduleAt;
-  bool scheduled;
-  Null callback;
-  String otp;
-  String pending;
-  String accepted;
-  String confirmed;
-  String outForPickup;
-  String arrived;
-  String onTheWay;
-  String dropped;
-  String canceled;
-  String rejected;
-  String failed;
-  double providerDiscountAmount;
-  String createdAt;
-  String updatedAt;
+  int? id;
+  int? orderId;
+  int? userId;
+  int? vehicleId;
+  int? driverId;
+  int? providerId;
+  int? moduleId;
+  int? operationAreaId;
+  String? vehicleCategory;
+  double? tripAmount;
+  double? couponDiscountAmount;
+  String? couponDiscountTitle;
+  String? paymentStatus;
+  String? tripStatus;
+  double? totalTaxAmount;
+  String? paymentMethod;
+  String? transactionReference;
+  String? couponCode;
+  String? additionalNote;
+  bool? checked;
+  int? additionalCharge;
+  int? cancelationFare;
+  double? estimatedFare;
+  double? estimatedTime;
+  double? estimatedDistance;
+  double? actualFare;
+  double? actualTime;
+  double? actualDistance;
+  String? scheduleAt;
+  bool? scheduled;
+  String? otp;
+  String? pending;
+  String? accepted;
+  String? confirmed;
+  String? outForPickup;
+  String? arrived;
+  String? onTheWay;
+  String? dropped;
+  String? canceled;
+  String? rejected;
+  String? failed;
+  double? providerDiscountAmount;
+  String? createdAt;
+  String? updatedAt;
 
   Trip(
       {this.id,
@@ -569,7 +570,6 @@ class Trip {
         this.actualDistance,
         this.scheduleAt,
         this.scheduled,
-        this.callback,
         this.otp,
         this.pending,
         this.accepted,
@@ -596,11 +596,11 @@ class Trip {
     operationAreaId = json['operation_area_id'];
     vehicleCategory = json['vehicle_category'];
     tripAmount = double.parse(json['trip_amount'].toString());
-    couponDiscountAmount = json['coupon_discount_amount'] != null ? json['coupon_discount_amount'].toDouble() : null;
+    couponDiscountAmount = json['coupon_discount_amount']?.toDouble();
     couponDiscountTitle = json['coupon_discount_title'];
     paymentStatus = json['payment_status'];
     tripStatus = json['trip_status'];
-    totalTaxAmount = json['total_tax_amount'] != null ? json['total_tax_amount'].toDouble() : null;
+    totalTaxAmount = json['total_tax_amount']?.toDouble();
     paymentMethod = json['payment_method'];
     transactionReference = json['transaction_reference'];
     couponCode = json['coupon_code'];
@@ -608,15 +608,14 @@ class Trip {
     checked = json['checked'];
     additionalCharge = json['additional_charge'];
     cancelationFare = json['cancelation_fare'];
-    estimatedFare = json['estimated_fare'] != null ? json['estimated_fare'].toDouble() : null;
-    estimatedTime = json['estimated_time'] != null ? json['estimated_time'].toDouble() : null;
-    estimatedDistance = json['estimated_distance'] != null ? json['estimated_distance'].toDouble() : null;
-    actualFare = json['actual_fare'] != null ? json['actual_fare'].toDouble() : null;
-    actualTime = json['actual_time'] != null ? json['actual_time'].toDouble() : null;
-    actualDistance = json['actual_distance'] != null ? json['actual_distance'].toDouble() : null;
+    estimatedFare = json['estimated_fare']?.toDouble();
+    estimatedTime = json['estimated_time']?.toDouble();
+    estimatedDistance = json['estimated_distance']?.toDouble();
+    actualFare = json['actual_fare']?.toDouble();
+    actualTime = json['actual_time']?.toDouble();
+    actualDistance = json['actual_distance']?.toDouble();
     scheduleAt = json['schedule_at'];
     scheduled = json['scheduled'];
-    callback = json['callback'];
     otp = json['otp'];
     pending = json['pending'];
     accepted = json['accepted'];
@@ -628,83 +627,82 @@ class Trip {
     canceled = json['canceled'];
     rejected = json['rejected'];
     failed = json['failed'];
-    providerDiscountAmount = json['provider_discount_amount'] != null ? json['provider_discount_amount'].toDouble() : null;
+    providerDiscountAmount = json['provider_discount_amount']?.toDouble();
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['order_id'] = this.orderId;
-    data['user_id'] = this.userId;
-    data['vehicle_id'] = this.vehicleId;
-    data['driver_id'] = this.driverId;
-    data['provider_id'] = this.providerId;
-    data['module_id'] = this.moduleId;
-    data['operation_area_id'] = this.operationAreaId;
-    data['vehicle_category'] = this.vehicleCategory;
-    data['trip_amount'] = this.tripAmount;
-    data['coupon_discount_amount'] = this.couponDiscountAmount;
-    data['coupon_discount_title'] = this.couponDiscountTitle;
-    data['payment_status'] = this.paymentStatus;
-    data['trip_status'] = this.tripStatus;
-    data['total_tax_amount'] = this.totalTaxAmount;
-    data['payment_method'] = this.paymentMethod;
-    data['transaction_reference'] = this.transactionReference;
-    data['coupon_code'] = this.couponCode;
-    data['additional_note'] = this.additionalNote;
-    data['checked'] = this.checked;
-    data['additional_charge'] = this.additionalCharge;
-    data['cancelation_fare'] = this.cancelationFare;
-    data['estimated_fare'] = this.estimatedFare;
-    data['estimated_time'] = this.estimatedTime;
-    data['estimated_distance'] = this.estimatedDistance;
-    data['actual_fare'] = this.actualFare;
-    data['actual_time'] = this.actualTime;
-    data['actual_distance'] = this.actualDistance;
-    data['schedule_at'] = this.scheduleAt;
-    data['scheduled'] = this.scheduled;
-    data['callback'] = this.callback;
-    data['otp'] = this.otp;
-    data['pending'] = this.pending;
-    data['accepted'] = this.accepted;
-    data['confirmed'] = this.confirmed;
-    data['out_for_pickup'] = this.outForPickup;
-    data['arrived'] = this.arrived;
-    data['on_the_way'] = this.onTheWay;
-    data['dropped'] = this.dropped;
-    data['canceled'] = this.canceled;
-    data['rejected'] = this.rejected;
-    data['failed'] = this.failed;
-    data['provider_discount_amount'] = this.providerDiscountAmount;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['order_id'] = orderId;
+    data['user_id'] = userId;
+    data['vehicle_id'] = vehicleId;
+    data['driver_id'] = driverId;
+    data['provider_id'] = providerId;
+    data['module_id'] = moduleId;
+    data['operation_area_id'] = operationAreaId;
+    data['vehicle_category'] = vehicleCategory;
+    data['trip_amount'] = tripAmount;
+    data['coupon_discount_amount'] = couponDiscountAmount;
+    data['coupon_discount_title'] = couponDiscountTitle;
+    data['payment_status'] = paymentStatus;
+    data['trip_status'] = tripStatus;
+    data['total_tax_amount'] = totalTaxAmount;
+    data['payment_method'] = paymentMethod;
+    data['transaction_reference'] = transactionReference;
+    data['coupon_code'] = couponCode;
+    data['additional_note'] = additionalNote;
+    data['checked'] = checked;
+    data['additional_charge'] = additionalCharge;
+    data['cancelation_fare'] = cancelationFare;
+    data['estimated_fare'] = estimatedFare;
+    data['estimated_time'] = estimatedTime;
+    data['estimated_distance'] = estimatedDistance;
+    data['actual_fare'] = actualFare;
+    data['actual_time'] = actualTime;
+    data['actual_distance'] = actualDistance;
+    data['schedule_at'] = scheduleAt;
+    data['scheduled'] = scheduled;
+    data['otp'] = otp;
+    data['pending'] = pending;
+    data['accepted'] = accepted;
+    data['confirmed'] = confirmed;
+    data['out_for_pickup'] = outForPickup;
+    data['arrived'] = arrived;
+    data['on_the_way'] = onTheWay;
+    data['dropped'] = dropped;
+    data['canceled'] = canceled;
+    data['rejected'] = rejected;
+    data['failed'] = failed;
+    data['provider_discount_amount'] = providerDiscountAmount;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }
 
 class Customer {
-  int id;
-  String fName;
-  String lName;
-  String phone;
-  String email;
-  String image;
-  int isPhoneVerified;
-  Null emailVerifiedAt;
-  String createdAt;
-  String updatedAt;
-  String cmFirebaseToken;
-  int status;
-  int orderCount;
-  Null loginMedium;
-  Null socialId;
-  int zoneId;
-  double walletBalance;
-  int loyaltyPoint;
-  String refCode;
-  String currentLanguageKey;
+  int? id;
+  String? fName;
+  String? lName;
+  String? phone;
+  String? email;
+  String? image;
+  int? isPhoneVerified;
+  String? emailVerifiedAt;
+  String? createdAt;
+  String? updatedAt;
+  String? cmFirebaseToken;
+  int? status;
+  int? orderCount;
+  String? loginMedium;
+  int? socialId;
+  int? zoneId;
+  double? walletBalance;
+  int? loyaltyPoint;
+  String? refCode;
+  String? currentLanguageKey;
 
   Customer(
       {this.id,
@@ -752,44 +750,44 @@ class Customer {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['f_name'] = this.fName;
-    data['l_name'] = this.lName;
-    data['phone'] = this.phone;
-    data['email'] = this.email;
-    data['image'] = this.image;
-    data['is_phone_verified'] = this.isPhoneVerified;
-    data['email_verified_at'] = this.emailVerifiedAt;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['cm_firebase_token'] = this.cmFirebaseToken;
-    data['status'] = this.status;
-    data['order_count'] = this.orderCount;
-    data['login_medium'] = this.loginMedium;
-    data['social_id'] = this.socialId;
-    data['zone_id'] = this.zoneId;
-    data['wallet_balance'] = this.walletBalance;
-    data['loyalty_point'] = this.loyaltyPoint;
-    data['ref_code'] = this.refCode;
-    data['current_language_key'] = this.currentLanguageKey;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['f_name'] = fName;
+    data['l_name'] = lName;
+    data['phone'] = phone;
+    data['email'] = email;
+    data['image'] = image;
+    data['is_phone_verified'] = isPhoneVerified;
+    data['email_verified_at'] = emailVerifiedAt;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['cm_firebase_token'] = cmFirebaseToken;
+    data['status'] = status;
+    data['order_count'] = orderCount;
+    data['login_medium'] = loginMedium;
+    data['social_id'] = socialId;
+    data['zone_id'] = zoneId;
+    data['wallet_balance'] = walletBalance;
+    data['loyalty_point'] = loyaltyPoint;
+    data['ref_code'] = refCode;
+    data['current_language_key'] = currentLanguageKey;
     return data;
   }
 }
 
 class Module {
-  int id;
-  String moduleName;
-  String moduleType;
-  String thumbnail;
-  String status;
-  int storesCount;
-  String createdAt;
-  String updatedAt;
-  String icon;
-  int themeId;
-  String description;
-  int allZoneService;
+  int? id;
+  String? moduleName;
+  String? moduleType;
+  String? thumbnail;
+  String? status;
+  int? storesCount;
+  String? createdAt;
+  String? updatedAt;
+  String? icon;
+  int? themeId;
+  String? description;
+  int? allZoneService;
 
   Module(
       {this.id,
@@ -821,27 +819,27 @@ class Module {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['module_name'] = this.moduleName;
-    data['module_type'] = this.moduleType;
-    data['thumbnail'] = this.thumbnail;
-    data['status'] = this.status;
-    data['stores_count'] = this.storesCount;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['icon'] = this.icon;
-    data['theme_id'] = this.themeId;
-    data['description'] = this.description;
-    data['all_zone_service'] = this.allZoneService;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['module_name'] = moduleName;
+    data['module_type'] = moduleType;
+    data['thumbnail'] = thumbnail;
+    data['status'] = status;
+    data['stores_count'] = storesCount;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['icon'] = icon;
+    data['theme_id'] = themeId;
+    data['description'] = description;
+    data['all_zone_service'] = allZoneService;
     return data;
   }
 }
 
 class Links {
-  String url;
-  String label;
-  bool active;
+  String? url;
+  String? label;
+  bool? active;
 
   Links({this.url, this.label, this.active});
 
@@ -852,10 +850,10 @@ class Links {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['url'] = this.url;
-    data['label'] = this.label;
-    data['active'] = this.active;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['url'] = url;
+    data['label'] = label;
+    data['active'] = active;
     return data;
   }
 }

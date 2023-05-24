@@ -36,19 +36,19 @@ import 'package:sixam_mart/view/screens/store/widget/review_dialog.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
-  final OrderModel orderModel;
-  final int orderId;
+  final OrderModel? orderModel;
+  final int? orderId;
   final bool fromNotification;
-  OrderDetailsScreen({@required this.orderModel, @required this.orderId, this.fromNotification = false});
+  const OrderDetailsScreen({Key? key, required this.orderModel, required this.orderId, this.fromNotification = false}) : super(key: key);
 
   @override
-  _OrderDetailsScreenState createState() => _OrderDetailsScreenState();
+  OrderDetailsScreenState createState() => OrderDetailsScreenState();
 }
 
-class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
-  Timer _timer;
-  double _maxCodOrderAmount;
-  bool _isCashOnDeliveryActive = true;
+class OrderDetailsScreenState extends State<OrderDetailsScreen> {
+  Timer? _timer;
+  double? _maxCodOrderAmount;
+  bool? _isCashOnDeliveryActive = true;
 
   void _loadData(BuildContext context, bool reload) async {
     await Get.find<OrderController>().trackOrder(widget.orderId.toString(), reload ? null : widget.orderModel, false);
@@ -60,7 +60,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   }
 
   void _startApiCall(){
-    _timer = Timer.periodic(Duration(seconds: 10), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       Get.find<OrderController>().timerTrackOrder(widget.orderId.toString());
     });
   }
@@ -100,212 +100,214 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             Get.back();
           }
         }),
-        endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+        endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
         body: GetBuilder<OrderController>(builder: (orderController) {
-          double _deliveryCharge = 0;
-          double _itemsPrice = 0;
-          double _discount = 0;
-          double _couponDiscount = 0;
-          double _tax = 0;
-          double _addOns = 0;
-          double _dmTips = 0;
-          OrderModel _order = orderController.trackModel;
-          bool _parcel = false;
-          bool _prescriptionOrder = false;
-          bool _taxIncluded = false;
-          if(orderController.orderDetails != null  && _order != null) {
-            _parcel = _order.orderType == 'parcel';
-            _prescriptionOrder = _order.prescriptionOrder;
-            _deliveryCharge = _order.deliveryCharge;
-            _couponDiscount = _order.couponDiscountAmount;
-            _discount = _order.storeDiscountAmount;
-            _tax = _order.totalTaxAmount;
-            _dmTips = _order.dmTips;
-            _taxIncluded = _order.taxStatus;
-            if(_prescriptionOrder){
-              double orderAmount = _order.orderAmount ?? 0;
-              _itemsPrice = (orderAmount + _discount) - (_tax + _deliveryCharge );
+          double? deliveryCharge = 0;
+          double itemsPrice = 0;
+          double? discount = 0;
+          double? couponDiscount = 0;
+          double? tax = 0;
+          double addOns = 0;
+          double? dmTips = 0;
+          OrderModel? order = orderController.trackModel;
+          bool parcel = false;
+          bool? prescriptionOrder = false;
+          bool? taxIncluded = false;
+          if(orderController.orderDetails != null  && order != null) {
+            parcel = order.orderType == 'parcel';
+            prescriptionOrder = order.prescriptionOrder;
+            deliveryCharge = order.deliveryCharge;
+            couponDiscount = order.couponDiscountAmount;
+            discount = order.storeDiscountAmount;
+            tax = order.totalTaxAmount;
+            dmTips = order.dmTips;
+            taxIncluded = order.taxStatus;
+            if(prescriptionOrder!){
+              double orderAmount = order.orderAmount ?? 0;
+              itemsPrice = (orderAmount + discount!) - (tax! + deliveryCharge! );
             } else{
-              for(OrderDetailsModel orderDetails in orderController.orderDetails) {
-                for(AddOn addOn in orderDetails.addOns) {
-                  _addOns = _addOns + (addOn.price * addOn.quantity);
+              for(OrderDetailsModel orderDetails in orderController.orderDetails!) {
+                for(AddOn addOn in orderDetails.addOns!) {
+                  addOns = addOns + (addOn.price! * addOn.quantity!);
                 }
-                _itemsPrice = _itemsPrice + (orderDetails.price * orderDetails.quantity);
+                itemsPrice = itemsPrice + (orderDetails.price! * orderDetails.quantity!);
               }
             }
 
-            for(ZoneData zData in Get.find<LocationController>().getUserAddress().zoneData) {
-              if(zData.id == _order.store.zoneId){
-                _isCashOnDeliveryActive = zData.cashOnDelivery;
-              }
-              for(Modules m in zData.modules) {
-                if(m.id == _order.store.moduleId) {
-                  _maxCodOrderAmount = m.pivot.maximumCodOrderAmount;
-                  break;
+            if(!parcel){
+              for(ZoneData zData in Get.find<LocationController>().getUserAddress()!.zoneData!) {
+                if(zData.id == order.store!.zoneId){
+                  _isCashOnDeliveryActive = zData.cashOnDelivery;
+                }
+                for(Modules m in zData.modules!) {
+                  if(m.id == order.store!.moduleId) {
+                    _maxCodOrderAmount = m.pivot!.maximumCodOrderAmount;
+                    break;
+                  }
                 }
               }
             }
           }
-          double _subTotal = _itemsPrice + _addOns;
-          double _total = _itemsPrice + _addOns - _discount + (_taxIncluded ? 0 : _tax) + _deliveryCharge - _couponDiscount + _dmTips;
+          double subTotal = itemsPrice + addOns;
+          double total = itemsPrice + addOns - discount! + (taxIncluded! ? 0 : tax!) + deliveryCharge! - couponDiscount! + dmTips!;
 
-          return orderController.orderDetails != null && _order != null ? Column(children: [
+          return orderController.orderDetails != null && order != null ? Column(children: [
 
             Expanded(child: Scrollbar(child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-              child: FooterView(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              physics: const BouncingScrollPhysics(),
+              padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : const EdgeInsets.all(Dimensions.paddingSizeSmall),
+              child: FooterView(child: SizedBox(width: Dimensions.webMaxWidth, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
                 Row(children: [
-                  Text('${_parcel ? 'delivery_id'.tr : 'order_id'.tr}:', style: robotoRegular),
-                  SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  Text(_order.id.toString(), style: robotoMedium),
-                  SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  Expanded(child: SizedBox()),
-                  Icon(Icons.watch_later, size: 17),
-                  SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  Text('${parcel ? 'delivery_id'.tr : 'order_id'.tr}:', style: robotoRegular),
+                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                  Text(order.id.toString(), style: robotoMedium),
+                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                  const Expanded(child: SizedBox()),
+                  const Icon(Icons.watch_later, size: 17),
+                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                   Text(
-                    DateConverter.dateTimeStringToDateTime(_order.createdAt),
+                    DateConverter.dateTimeStringToDateTime(order.createdAt!),
                     style: robotoRegular,
                   ),
                 ]),
-                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                _order.scheduled == 1 ? Row(children: [
+                order.scheduled == 1 ? Row(children: [
                   Text('${'scheduled_at'.tr}:', style: robotoRegular),
-                  SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  Text(DateConverter.dateTimeStringToDateTime(_order.scheduleAt), style: robotoMedium),
-                ]) : SizedBox(),
-                SizedBox(height: _order.scheduled == 1 ? Dimensions.PADDING_SIZE_SMALL : 0),
+                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                  Text(DateConverter.dateTimeStringToDateTime(order.scheduleAt!), style: robotoMedium),
+                ]) : const SizedBox(),
+                SizedBox(height: order.scheduled == 1 ? Dimensions.paddingSizeSmall : 0),
 
-                Get.find<SplashController>().configModel.orderDeliveryVerification ? Row(children: [
+                Get.find<SplashController>().configModel!.orderDeliveryVerification! ? Row(children: [
                   Text('${'delivery_verification_code'.tr}:', style: robotoRegular),
-                  SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  Text(_order.otp, style: robotoMedium),
-                ]) : SizedBox(),
-                SizedBox(height: Get.find<SplashController>().configModel.orderDeliveryVerification ? 10 : 0),
+                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                  Text(order.otp!, style: robotoMedium),
+                ]) : const SizedBox(),
+                SizedBox(height: Get.find<SplashController>().configModel!.orderDeliveryVerification! ? 10 : 0),
 
                 Row(children: [
-                  Text(_order.orderType.tr, style: robotoMedium),
-                  Expanded(child: SizedBox()),
+                  Text(order.orderType!.tr, style: robotoMedium),
+                  const Expanded(child: SizedBox()),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeExtraSmall),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                      color: Theme.of(context).primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                     ),
                     child: Text(
-                      _order.paymentMethod == 'cash_on_delivery' ? 'cash_on_delivery'.tr : _order.paymentMethod == 'wallet' ? 'wallet_payment'.tr : 'digital_payment'.tr,
+                      order.paymentMethod == 'cash_on_delivery' ? 'cash_on_delivery'.tr : order.paymentMethod == 'wallet' ? 'wallet_payment'.tr : 'digital_payment'.tr,
                       style: robotoMedium.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeExtraSmall),
                     ),
                   ),
                 ]),
-                Divider(height: Dimensions.PADDING_SIZE_LARGE),
+                const Divider(height: Dimensions.paddingSizeLarge),
 
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
                   child: Row(children: [
-                    Text('${_parcel ? 'charge_pay_by'.tr : 'item'.tr}:', style: robotoRegular),
-                    SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    Text('${parcel ? 'charge_pay_by'.tr : 'item'.tr}:', style: robotoRegular),
+                    const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                     Text(
-                      _parcel ? _order.chargePayer.tr : orderController.orderDetails.length.toString(),
+                      parcel ? order.chargePayer!.tr : orderController.orderDetails!.length.toString(),
                       style: robotoMedium.copyWith(color: Theme.of(context).primaryColor),
                     ),
-                    Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
                     Container(height: 7, width: 7, decoration: BoxDecoration(
-                      color: (_order.orderStatus == 'failed' || _order.orderStatus == 'canceled' || _order.orderStatus == 'refund_request_canceled')
-                          ? Colors.red : _order.orderStatus == 'refund_requested' ? Colors.yellow : Colors.green,
+                      color: (order.orderStatus == 'failed' || order.orderStatus == 'canceled' || order.orderStatus == 'refund_request_canceled')
+                          ? Colors.red : order.orderStatus == 'refund_requested' ? Colors.yellow : Colors.green,
                       shape: BoxShape.circle,
                     )),
-                    SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                     Text(
-                      _order.orderStatus == 'delivered' ? '${'delivered_at'.tr} ${DateConverter.dateTimeStringToDateTime(_order.delivered)}'
-                          : _order.orderStatus.tr,
+                      order.orderStatus == 'delivered' ? '${'delivered_at'.tr} ${DateConverter.dateTimeStringToDateTime(order.delivered!)}'
+                          : order.orderStatus!.tr,
                       style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
                     ),
                   ]),
                 ),
 
-                _order.orderStatus == 'canceled' ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Divider(height: Dimensions.PADDING_SIZE_LARGE),
+                order.orderStatus == 'canceled' ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Divider(height: Dimensions.paddingSizeLarge),
                   Text('${'cancellation_note'.tr}:', style: robotoMedium),
-                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                  const SizedBox(height: Dimensions.paddingSizeSmall),
 
                   InkWell(
-                    onTap: () => Get.dialog(ReviewDialog(review: ReviewModel(comment: _order.cancellationReason), fromOrderDetails: true)),
+                    onTap: () => Get.dialog(ReviewDialog(review: ReviewModel(comment: order.cancellationReason), fromOrderDetails: true)),
                     child: Text(
-                      '${_order.cancellationReason != null ? _order.cancellationReason : ''}', maxLines: 2, overflow: TextOverflow.ellipsis,
+                      order.cancellationReason ?? '', maxLines: 2, overflow: TextOverflow.ellipsis,
                       style: robotoRegular.copyWith(color: Theme.of(context).disabledColor),
                     ),
                   ),
 
-                ]) : SizedBox(),
+                ]) : const SizedBox(),
 
-                (_order.orderStatus == 'refund_requested' || _order.orderStatus == 'refund_request_canceled') ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Divider(height: Dimensions.PADDING_SIZE_LARGE),
+                (order.orderStatus == 'refund_requested' || order.orderStatus == 'refund_request_canceled') ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Divider(height: Dimensions.paddingSizeLarge),
 
-                  _order.orderStatus == 'refund_requested' ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  order.orderStatus == 'refund_requested' ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
                     RichText(text: TextSpan(children: [
-                      TextSpan(text: '${'refund_note'.tr}:', style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyLarge.color)),
-                      TextSpan(text: '(${(_order.refund != null) ? _order.refund.customerReason : ''})', style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge.color)),
+                      TextSpan(text: '${'refund_note'.tr}:', style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color)),
+                      TextSpan(text: '(${(order.refund != null) ? order.refund!.customerReason : ''})', style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color)),
                     ])),
-                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                    const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                    (_order.refund != null && _order.refund.customerNote != null) ? InkWell(
-                      onTap: () => Get.dialog(ReviewDialog(review: ReviewModel(comment: _order.refund.customerNote), fromOrderDetails: true)),
+                    (order.refund != null && order.refund!.customerNote != null) ? InkWell(
+                      onTap: () => Get.dialog(ReviewDialog(review: ReviewModel(comment: order.refund!.customerNote), fromOrderDetails: true)),
                       child: Text(
-                        '${_order.refund.customerNote}', maxLines: 2, overflow: TextOverflow.ellipsis,
+                        '${order.refund!.customerNote}', maxLines: 2, overflow: TextOverflow.ellipsis,
                         style: robotoRegular.copyWith(color: Theme.of(context).disabledColor),
                       ),
-                    ) : SizedBox(),
-                    SizedBox(height: (_order.refund != null && _order.refund.image != null) ? Dimensions.PADDING_SIZE_SMALL : 0),
+                    ) : const SizedBox(),
+                    SizedBox(height: (order.refund != null && order.refund!.image != null) ? Dimensions.paddingSizeSmall : 0),
 
-                    (_order.refund != null && _order.refund.image != null && _order.refund.image.isNotEmpty) ? InkWell(
+                    (order.refund != null && order.refund!.image != null && order.refund!.image!.isNotEmpty) ? InkWell(
                       onTap: () => showDialog(context: context, builder: (context) {
-                        return ImageDialog(imageUrl: '${Get.find<SplashController>().configModel.baseUrls.refundImageUrl}/${_order.refund.image.isNotEmpty ? _order.refund.image[0] : ''}');
+                        return ImageDialog(imageUrl: '${Get.find<SplashController>().configModel!.baseUrls!.refundImageUrl}/${order.refund!.image!.isNotEmpty ? order.refund!.image![0] : ''}');
                       }),
                       child: CustomImage(
                         height: 40, width: 40, fit: BoxFit.cover,
-                        image: _order.refund != null ? '${Get.find<SplashController>().configModel.baseUrls.refundImageUrl}/${_order.refund.image.isNotEmpty ? _order.refund.image[0] : ''}' : '',
+                        image: order.refund != null ? '${Get.find<SplashController>().configModel!.baseUrls!.refundImageUrl}/${order.refund!.image!.isNotEmpty ? order.refund!.image![0] : ''}' : '',
                       ),
-                    ) : SizedBox(),
+                    ) : const SizedBox(),
                   ]) : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text('${'refund_cancellation_note'.tr}:', style: robotoMedium),
-                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                    const SizedBox(height: Dimensions.paddingSizeSmall),
 
                     InkWell(
-                      onTap: () => Get.dialog(ReviewDialog(review: ReviewModel(comment: _order.refund.adminNote), fromOrderDetails: true)),
+                      onTap: () => Get.dialog(ReviewDialog(review: ReviewModel(comment: order.refund!.adminNote), fromOrderDetails: true)),
                       child: Text(
-                        '${_order.refund != null ? _order.refund.adminNote : ''}', maxLines: 2, overflow: TextOverflow.ellipsis,
+                        '${order.refund != null ? order.refund!.adminNote : ''}', maxLines: 2, overflow: TextOverflow.ellipsis,
                         style: robotoRegular.copyWith(color: Theme.of(context).disabledColor),
                       ),
                     ),
 
                   ]),
-                ]) : SizedBox(),
+                ]) : const SizedBox(),
 
-                Divider(height: Dimensions.PADDING_SIZE_LARGE),
-                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                const Divider(height: Dimensions.paddingSizeLarge),
+                const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                _parcel ? CardWidget(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                  DetailsWidget(title: 'sender_details'.tr, address: _order.deliveryAddress),
-                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                  DetailsWidget(title: 'receiver_details'.tr, address: _order.receiverDetails),
+                parcel ? CardWidget(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                  DetailsWidget(title: 'sender_details'.tr, address: order.deliveryAddress),
+                  const SizedBox(height: Dimensions.paddingSizeLarge),
+                  DetailsWidget(title: 'receiver_details'.tr, address: order.receiverDetails),
                 ])) : ListView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: orderController.orderDetails.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: orderController.orderDetails!.length,
                   padding: EdgeInsets.zero,
                   itemBuilder: (context, index) {
-                    return OrderItemWidget(order: _order, orderDetails: orderController.orderDetails[index]);
+                    return OrderItemWidget(order: order, orderDetails: orderController.orderDetails![index]);
                   },
                 ),
-                SizedBox(height: _parcel ? Dimensions.PADDING_SIZE_LARGE : 0),
+                SizedBox(height: parcel ? Dimensions.paddingSizeLarge : 0),
 
-                (Get.find<SplashController>().getModuleConfig(_order.moduleType).orderAttachment && _order.orderAttachment != null
-                  && _order.orderAttachment.isNotEmpty) ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                (Get.find<SplashController>().getModuleConfig(order.moduleType).orderAttachment! && order.orderAttachment != null
+                  && order.orderAttachment!.isNotEmpty) ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text('prescription'.tr, style: robotoRegular),
-                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                    const SizedBox(height: Dimensions.paddingSizeSmall),
 
                     SizedBox(
                       child: GridView.builder(
@@ -316,17 +318,17 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             crossAxisSpacing: 5,
                           ),
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: _order.orderAttachment.length,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: order.orderAttachment!.length,
                           itemBuilder: (BuildContext context, index) {
                             return Padding(
                               padding: const EdgeInsets.only(right: 8),
                               child: InkWell(
-                                onTap: () => openDialog(context, '${Get.find<SplashController>().configModel.baseUrls.orderAttachmentUrl}/${_order.orderAttachment[index]}'),
+                                onTap: () => openDialog(context, '${Get.find<SplashController>().configModel!.baseUrls!.orderAttachmentUrl}/${order.orderAttachment![index]}'),
                                 child: Center(child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                  borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                   child: CustomImage(
-                                    image: '${Get.find<SplashController>().configModel.baseUrls.orderAttachmentUrl}/${_order.orderAttachment[index]}',
+                                    image: '${Get.find<SplashController>().configModel!.baseUrls!.orderAttachmentUrl}/${order.orderAttachment![index]}',
                                     width: 100, height: 100,
                                   ),
                                 )),
@@ -335,75 +337,75 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           }),
                     ),
 
-                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                  ]) : SizedBox(),
-                  SizedBox(width: (Get.find<SplashController>().getModuleConfig(_order.moduleType).orderAttachment
-                      && _order.orderAttachment != null && _order.orderAttachment.isNotEmpty) ? Dimensions.PADDING_SIZE_SMALL : 0),
+                    const SizedBox(height: Dimensions.paddingSizeLarge),
+                  ]) : const SizedBox(),
+                  SizedBox(width: (Get.find<SplashController>().getModuleConfig(order.moduleType).orderAttachment!
+                      && order.orderAttachment != null && order.orderAttachment!.isNotEmpty) ? Dimensions.paddingSizeSmall : 0),
 
-                  (_order.orderNote  != null && _order.orderNote.isNotEmpty) ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  (order.orderNote  != null && order.orderNote!.isNotEmpty) ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text('additional_note'.tr, style: robotoRegular),
-                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                    const SizedBox(height: Dimensions.paddingSizeSmall),
 
                     InkWell(
-                      onTap: () => Get.dialog(ReviewDialog(review: ReviewModel(comment: _order.orderNote), fromOrderDetails: true)),
+                      onTap: () => Get.dialog(ReviewDialog(review: ReviewModel(comment: order.orderNote), fromOrderDetails: true)),
                       child: Text(
-                        _order.orderNote, overflow: TextOverflow.ellipsis, maxLines: 3,
+                        order.orderNote!, overflow: TextOverflow.ellipsis, maxLines: 3,
                         style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                       ),
                     ),
-                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                  ]) : SizedBox(),
+                    const SizedBox(height: Dimensions.paddingSizeLarge),
+                  ]) : const SizedBox(),
 
-                CardWidget(showCard: _parcel, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(_parcel ? 'parcel_category'.tr : Get.find<SplashController>().getModuleConfig(_order.moduleType).showRestaurantText
+                CardWidget(showCard: parcel, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(parcel ? 'parcel_category'.tr : Get.find<SplashController>().getModuleConfig(order.moduleType).showRestaurantText!
                       ? 'restaurant_details'.tr : 'store_details'.tr, style: robotoRegular),
-                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  (_parcel && _order.parcelCategory == null) ? Text(
+                  const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+                  (parcel && order.parcelCategory == null) ? Text(
                     'no_parcel_category_data_found'.tr, style: robotoMedium
-                  ) : (!_parcel && _order.store == null) ? Center(child: Padding(padding: const EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
+                  ) : (!parcel && order.store == null) ? Center(child: Padding(padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
                     child: Text('no_restaurant_data_found'.tr, maxLines: 1, overflow: TextOverflow.ellipsis,
                         style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
                   )) : Row(children: [
 
                     ClipOval(child: CustomImage(
-                      image: _parcel ? '${Get.find<SplashController>().configModel.baseUrls.parcelCategoryImageUrl}/${_order.parcelCategory.image}'
-                          : '${Get.find<SplashController>().configModel.baseUrls.storeImageUrl}/${_order.store.logo}',
+                      image: parcel ? '${Get.find<SplashController>().configModel!.baseUrls!.parcelCategoryImageUrl}/${order.parcelCategory!.image}'
+                          : '${Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl}/${order.store!.logo}',
                       height: 35, width: 35, fit: BoxFit.cover,
                     )),
-                    SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                    const SizedBox(width: Dimensions.paddingSizeSmall),
 
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text(
-                        _parcel ? _order.parcelCategory.name : _order.store.name, maxLines: 1, overflow: TextOverflow.ellipsis,
+                        parcel ? order.parcelCategory!.name! : order.store!.name!, maxLines: 1, overflow: TextOverflow.ellipsis,
                         style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
                       ),
                       Text(
-                        _parcel ? _order.parcelCategory.description : _order.store.address, maxLines: 1, overflow: TextOverflow.ellipsis,
+                        parcel ? order.parcelCategory!.description! : order.store!.address!, maxLines: 1, overflow: TextOverflow.ellipsis,
                         style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                       ),
                     ])),
 
-                    (!_parcel && _order.orderType == 'take_away' && (_order.orderStatus == 'pending' || _order.orderStatus == 'accepted'
-                        || _order.orderStatus == 'confirmed' || _order.orderStatus == 'processing' || _order.orderStatus == 'handover'
-                        || _order.orderStatus == 'picked_up')) ? TextButton.icon(onPressed: () async {
-                          if(!_parcel) {
-                            String url ='https://www.google.com/maps/dir/?api=1&destination=${_order.store.latitude}'
-                                ',${_order.store.longitude}&mode=d';
+                    (!parcel && order.orderType == 'take_away' && (order.orderStatus == 'pending' || order.orderStatus == 'accepted'
+                        || order.orderStatus == 'confirmed' || order.orderStatus == 'processing' || order.orderStatus == 'handover'
+                        || order.orderStatus == 'picked_up')) ? TextButton.icon(onPressed: () async {
+                          if(!parcel) {
+                            String url ='https://www.google.com/maps/dir/?api=1&destination=${order.store!.latitude}'
+                                ',${order.store!.longitude}&mode=d';
                             if (await canLaunchUrlString(url)) {
                               await launchUrlString(url);
                             }else {
                               showCustomSnackBar('unable_to_launch_google_map'.tr);
                             }
                           }
-                          }, icon: Icon(Icons.directions), label: Text('direction'.tr),
+                          }, icon: const Icon(Icons.directions), label: Text('direction'.tr),
 
-                    ) : SizedBox(),
+                    ) : const SizedBox(),
 
-                    (!_parcel && _order.orderStatus != 'delivered' && _order.orderStatus != 'failed' && _order.orderStatus != 'canceled' && _order.orderStatus != 'refunded') ? TextButton.icon(
+                    (!parcel && order.orderStatus != 'delivered' && order.orderStatus != 'failed' && order.orderStatus != 'canceled' && order.orderStatus != 'refunded') ? TextButton.icon(
                       onPressed: () async {
                         await Get.toNamed(RouteHelper.getChatRoute(
-                          notificationBody: NotificationBody(orderId: _order.id, restaurantId: _order.store.vendorId),
-                          user: User(id: _order.store.vendorId, fName: _order.store.name, lName: '', image: _order.store.logo),
+                          notificationBody: NotificationBody(orderId: order.id, restaurantId: order.store!.vendorId),
+                          user: User(id: order.store!.vendorId, fName: order.store!.name, lName: '', image: order.store!.logo),
                         ));
                       },
                       icon: Icon(Icons.chat_bubble_outline, color: Theme.of(context).primaryColor, size: 20),
@@ -411,94 +413,94 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         'chat'.tr,
                         style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
                       ),
-                    ) : SizedBox(),
+                    ) : const SizedBox(),
 
-                    (Get.find<SplashController>().configModel.refundActiveStatus && _order.orderStatus == 'delivered' && !_parcel
-                    && (_parcel || (orderController.orderDetails.isNotEmpty && orderController.orderDetails[0].itemCampaignId == null))) ? InkWell(
-                      onTap: () => Get.toNamed(RouteHelper.getRefundRequestRoute(_order.id.toString())),
+                    (Get.find<SplashController>().configModel!.refundActiveStatus! && order.orderStatus == 'delivered' && !parcel
+                    && (parcel || (orderController.orderDetails!.isNotEmpty && orderController.orderDetails![0].itemCampaignId == null))) ? InkWell(
+                      onTap: () => Get.toNamed(RouteHelper.getRefundRequestRoute(order.id.toString())),
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: Theme.of(context).primaryColor, width: 1),
-                          borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL, vertical: Dimensions.PADDING_SIZE_SMALL),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall, vertical: Dimensions.paddingSizeSmall),
                         child: Text('refund_this_order'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
                       ),
-                    ) : SizedBox(),
+                    ) : const SizedBox(),
 
                   ]),
                 ])),
-                SizedBox(height: _parcel ? 0 : Dimensions.PADDING_SIZE_LARGE),
+                SizedBox(height: parcel ? 0 : Dimensions.paddingSizeLarge),
 
                 // Total
-                _parcel ? SizedBox() : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                parcel ? const SizedBox() : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text('item_price'.tr, style: robotoRegular),
-                    Text(PriceConverter.convertPrice(_itemsPrice), style: robotoRegular, textDirection: TextDirection.ltr),
+                    Text(PriceConverter.convertPrice(itemsPrice), style: robotoRegular, textDirection: TextDirection.ltr),
                   ]),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                  Get.find<SplashController>().getModuleConfig(_order.moduleType).addOn ? Row(
+                  Get.find<SplashController>().getModuleConfig(order.moduleType).addOn! ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('addons'.tr, style: robotoRegular),
-                      Text('(+) ${PriceConverter.convertPrice(_addOns)}', style: robotoRegular, textDirection: TextDirection.ltr),
+                      Text('(+) ${PriceConverter.convertPrice(addOns)}', style: robotoRegular, textDirection: TextDirection.ltr),
                     ],
-                  ) : SizedBox(),
+                  ) : const SizedBox(),
 
-                  Get.find<SplashController>().getModuleConfig(_order.moduleType).addOn ? Divider(
+                  Get.find<SplashController>().getModuleConfig(order.moduleType).addOn! ? Divider(
                     thickness: 1, color: Theme.of(context).hintColor.withOpacity(0.5),
-                  ) : SizedBox(),
+                  ) : const SizedBox(),
 
-                  Get.find<SplashController>().getModuleConfig(_order.moduleType).addOn ? Row(
+                  Get.find<SplashController>().getModuleConfig(order.moduleType).addOn! ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('subtotal'.tr+ ' ${_taxIncluded ? 'tax_included'.tr : ''}', style: robotoMedium),
-                      Text(PriceConverter.convertPrice(_subTotal), style: robotoMedium, textDirection: TextDirection.ltr),
+                      Text('${'subtotal'.tr} ${taxIncluded ? 'tax_included'.tr : ''}', style: robotoMedium),
+                      Text(PriceConverter.convertPrice(subTotal), style: robotoMedium, textDirection: TextDirection.ltr),
                     ],
-                  ) : SizedBox(),
-                  SizedBox(height: Get.find<SplashController>().getModuleConfig(_order.moduleType).addOn ? 10 : 0),
+                  ) : const SizedBox(),
+                  SizedBox(height: Get.find<SplashController>().getModuleConfig(order.moduleType).addOn! ? 10 : 0),
 
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text('discount'.tr, style: robotoRegular),
-                    Text('(-) ${PriceConverter.convertPrice(_discount)}', style: robotoRegular, textDirection: TextDirection.ltr),
+                    Text('(-) ${PriceConverter.convertPrice(discount)}', style: robotoRegular, textDirection: TextDirection.ltr),
                   ]),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                  _couponDiscount > 0 ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  couponDiscount > 0 ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text('coupon_discount'.tr, style: robotoRegular),
                     Text(
-                      '(-) ${PriceConverter.convertPrice(_couponDiscount)}',
+                      '(-) ${PriceConverter.convertPrice(couponDiscount)}',
                       style: robotoRegular, textDirection: TextDirection.ltr,
                     ),
-                  ]) : SizedBox(),
-                  SizedBox(height: _couponDiscount > 0 ? 10 : 0),
+                  ]) : const SizedBox(),
+                  SizedBox(height: couponDiscount > 0 ? 10 : 0),
 
-                  !_taxIncluded ?  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  !taxIncluded ?  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text('vat_tax'.tr, style: robotoRegular),
-                    Text('(+) ${PriceConverter.convertPrice(_tax)}', style: robotoRegular, textDirection: TextDirection.ltr),
-                  ]) : SizedBox(),
-                  SizedBox(height: _taxIncluded ? 0 : 10),
+                    Text('(+) ${PriceConverter.convertPrice(tax)}', style: robotoRegular, textDirection: TextDirection.ltr),
+                  ]) : const SizedBox(),
+                  SizedBox(height: taxIncluded ? 0 : 10),
 
-                  (_dmTips > 0) ? Row(
+                  (dmTips > 0) ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('delivery_man_tips'.tr, style: robotoRegular),
-                      Text('(+) ${PriceConverter.convertPrice(_dmTips)}', style: robotoRegular, textDirection: TextDirection.ltr),
+                      Text('(+) ${PriceConverter.convertPrice(dmTips)}', style: robotoRegular, textDirection: TextDirection.ltr),
                     ],
-                  ) : SizedBox(),
-                  SizedBox(height: _dmTips > 0 ? 10 : 0),
+                  ) : const SizedBox(),
+                  SizedBox(height: dmTips > 0 ? 10 : 0),
 
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text('delivery_fee'.tr, style: robotoRegular),
-                    _deliveryCharge > 0 ? Text(
-                      '(+) ${PriceConverter.convertPrice(_deliveryCharge)}', style: robotoRegular, textDirection: TextDirection.ltr,
+                    deliveryCharge > 0 ? Text(
+                      '(+) ${PriceConverter.convertPrice(deliveryCharge)}', style: robotoRegular, textDirection: TextDirection.ltr,
                     ) : Text('free'.tr, style: robotoRegular.copyWith(color: Theme.of(context).primaryColor)),
                   ]),
                 ]),
 
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
+                  padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
                   child: Divider(thickness: 1, color: Theme.of(context).hintColor.withOpacity(0.5)),
                 ),
 
@@ -507,20 +509,20 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).primaryColor,
                   )),
                   Text(
-                    PriceConverter.convertPrice(_total), textDirection: TextDirection.ltr,
+                    PriceConverter.convertPrice(total), textDirection: TextDirection.ltr,
                     style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).primaryColor),
                   ),
                 ]),
 
-                SizedBox(height: ResponsiveHelper.isDesktop(context) ? Dimensions.PADDING_SIZE_LARGE : 0),
-                ResponsiveHelper.isDesktop(context) ? _bottomView(orderController, _order, _parcel, _total) : SizedBox(),
+                SizedBox(height: ResponsiveHelper.isDesktop(context) ? Dimensions.paddingSizeLarge : 0),
+                ResponsiveHelper.isDesktop(context) ? _bottomView(orderController, order, parcel, total) : const SizedBox(),
 
               ]))),
             ))),
 
-            ResponsiveHelper.isDesktop(context) ? SizedBox() : _bottomView(orderController, _order, _parcel, _total),
+            ResponsiveHelper.isDesktop(context) ? const SizedBox() : _bottomView(orderController, order, parcel, total),
 
-          ]) : Center(child: CircularProgressIndicator());
+          ]) : const Center(child: CircularProgressIndicator());
         }),
       ),
     );
@@ -530,11 +532,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     context: context,
     builder: (BuildContext context) {
       return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_LARGE)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusLarge)),
         child: Stack(children: [
 
           ClipRRect(
-            borderRadius: BorderRadius.circular(Dimensions.RADIUS_LARGE),
+            borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
             child: PhotoView(
               tightMode: true,
               imageProvider: NetworkImage(imageUrl),
@@ -545,7 +547,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           Positioned(top: 0, right: 0, child: IconButton(
             splashRadius: 5,
             onPressed: () => Get.back(),
-            icon: Icon(Icons.cancel, color: Colors.red),
+            icon: const Icon(Icons.cancel, color: Colors.red),
           )),
 
         ]),
@@ -557,50 +559,50 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     return Column(children: [
       !orderController.showCancelled ? Center(
         child: SizedBox(
-          width: Dimensions.WEB_MAX_WIDTH,
+          width: Dimensions.webMaxWidth,
           child: Row(children: [
             ((order.orderStatus == 'pending' && order.paymentMethod != 'digital_payment') || order.orderStatus == 'accepted' || order.orderStatus == 'confirmed'
                 || order.orderStatus == 'processing' || order.orderStatus == 'handover'|| order.orderStatus == 'picked_up') ? Expanded(
               child: CustomButton(
                 buttonText: parcel ? 'track_delivery'.tr : 'track_order'.tr,
-                margin: ResponsiveHelper.isDesktop(context) ? null : EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                margin: ResponsiveHelper.isDesktop(context) ? null : const EdgeInsets.all(Dimensions.paddingSizeSmall),
                 onPressed: () async{
                   _timer?.cancel();
                   await Get.toNamed(RouteHelper.getOrderTrackingRoute(order.id));
                   _startApiCall();
                 },
               ),
-            ) : SizedBox(),
+            ) : const SizedBox(),
 
-            (order.orderStatus == 'pending' && order.paymentStatus == 'unpaid' && order.paymentMethod == 'digital_payment' && _isCashOnDeliveryActive) ?
+            (order.orderStatus == 'pending' && order.paymentStatus == 'unpaid' && order.paymentMethod == 'digital_payment' && _isCashOnDeliveryActive!) ?
             Expanded(
               child: CustomButton(
                 buttonText: 'switch_to_cod'.tr,
-                margin: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                margin: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                 onPressed: () {
                   Get.dialog(ConfirmationDialog(
                       icon: Images.warning, description: 'are_you_sure_to_switch'.tr,
                       onYesPressed: () {
 
-                        if((((_maxCodOrderAmount != null && totalPrice < _maxCodOrderAmount) || _maxCodOrderAmount == null || _maxCodOrderAmount == 0) && !parcel) || parcel){
+                        if((((_maxCodOrderAmount != null && totalPrice < _maxCodOrderAmount!) || _maxCodOrderAmount == null || _maxCodOrderAmount == 0) && !parcel) || parcel){
                           orderController.switchToCOD(order.id.toString());
                         }else{
-                          if(Get.isDialogOpen) {
+                          if(Get.isDialogOpen!) {
                             Get.back();
                           }
-                          showCustomSnackBar('you_cant_order_more_then'.tr + ' ${PriceConverter.convertPrice(_maxCodOrderAmount)} ' + 'in_cash_on_delivery'.tr);
+                          showCustomSnackBar('${'you_cant_order_more_then'.tr} ${PriceConverter.convertPrice(_maxCodOrderAmount)} ${'in_cash_on_delivery'.tr}');
                         }
                       }
                   ));
                 },
               ),
-            ): SizedBox(),
+            ): const SizedBox(),
 
             order.orderStatus == 'pending' ? Expanded(child: Padding(
-              padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+              padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : const EdgeInsets.all(Dimensions.paddingSizeSmall),
               child: TextButton(
-                style: TextButton.styleFrom(minimumSize: Size(1, 50), shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), side: BorderSide(width: 2, color: Theme.of(context).disabledColor),
+                style: TextButton.styleFrom(minimumSize: const Size(1, 50), shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(Dimensions.radiusSmall), side: BorderSide(width: 2, color: Theme.of(context).disabledColor),
                 )),
                 onPressed: () {
                   orderController.setOrderCancelReason('');
@@ -610,51 +612,51 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeLarge,
                 )),
               ),
-            )) : SizedBox(),
+            )) : const SizedBox(),
 
           ]),
         ),
       ) : Center(
         child: Container(
-          width: Dimensions.WEB_MAX_WIDTH,
+          width: Dimensions.webMaxWidth,
           height: 50,
-          margin: ResponsiveHelper.isDesktop(context) ? null : EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+          margin: ResponsiveHelper.isDesktop(context) ? null : const EdgeInsets.all(Dimensions.paddingSizeSmall),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             border: Border.all(width: 2, color: Theme.of(context).primaryColor),
-            borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
           ),
           child: Text('order_cancelled'.tr, style: robotoMedium.copyWith(color: Theme.of(context).primaryColor)),
         ),
       ),
 
-      (order.orderStatus == 'delivered' && (parcel ? order.deliveryMan != null : (orderController.orderDetails.isNotEmpty && orderController.orderDetails[0].itemCampaignId == null))) ? Center(
+      (order.orderStatus == 'delivered' && (parcel ? order.deliveryMan != null : (orderController.orderDetails!.isNotEmpty && orderController.orderDetails![0].itemCampaignId == null))) ? Center(
         child: Container(
-          width: Dimensions.WEB_MAX_WIDTH,
-          padding: ResponsiveHelper.isDesktop(context) ? null : EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+          width: Dimensions.webMaxWidth,
+          padding: ResponsiveHelper.isDesktop(context) ? null : const EdgeInsets.all(Dimensions.paddingSizeSmall),
           child: CustomButton(
             buttonText: 'review'.tr,
             onPressed: () {
-              List<OrderDetailsModel> _orderDetailsList = [];
-              List<int> _orderDetailsIdList = [];
-              orderController.orderDetails.forEach((orderDetail) {
-                if(!_orderDetailsIdList.contains(orderDetail.itemDetails.id)) {
-                  _orderDetailsList.add(orderDetail);
-                  _orderDetailsIdList.add(orderDetail.itemDetails.id);
+              List<OrderDetailsModel> orderDetailsList = [];
+              List<int?> orderDetailsIdList = [];
+              for (var orderDetail in orderController.orderDetails!) {
+                if(!orderDetailsIdList.contains(orderDetail.itemDetails!.id)) {
+                  orderDetailsList.add(orderDetail);
+                  orderDetailsIdList.add(orderDetail.itemDetails!.id);
                 }
-              });
+              }
               Get.toNamed(RouteHelper.getReviewRoute(), arguments: RateReviewScreen(
-                orderDetailsList: _orderDetailsList, deliveryMan: order.deliveryMan, orderID: order.id,
+                orderDetailsList: orderDetailsList, deliveryMan: order.deliveryMan, orderID: order.id,
               ));
             },
           ),
         ),
-      ) : SizedBox(),
+      ) : const SizedBox(),
 
-      (order.orderStatus == 'failed' && Get.find<SplashController>().configModel.cashOnDelivery) ? Center(
+      (order.orderStatus == 'failed' && Get.find<SplashController>().configModel!.cashOnDelivery!) ? Center(
         child: Container(
-          width: Dimensions.WEB_MAX_WIDTH,
-          padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+          width: Dimensions.webMaxWidth,
+          padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
           child: CustomButton(
             buttonText: 'switch_to_cash_on_delivery'.tr,
             onPressed: () {
@@ -672,7 +674,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             },
           ),
         ),
-      ) : SizedBox(),
+      ) : const SizedBox(),
     ]);
   }
 

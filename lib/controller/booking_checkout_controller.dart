@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:sixam_mart/data/api/api_checker.dart';
 import 'package:sixam_mart/data/model/body/user_information_body.dart';
@@ -8,28 +8,28 @@ import 'package:sixam_mart/view/base/custom_snackbar.dart';
 
 enum PageState {orderDetails, payment, complete}
 
-enum PaymentMethodName  {digitalPayment, COS}
+enum PaymentMethodName  {digitalPayment, cod}
 
 class BookingCheckoutController extends GetxController implements GetxService{
   final RiderRepo riderRepo;
-  BookingCheckoutController({@required this.riderRepo});
+  BookingCheckoutController({required this.riderRepo});
 
   PageState currentPage = PageState.orderDetails;
   bool _isLoading = false;
-  var selectedPaymentMethod = PaymentMethodName.COS;
+  var selectedPaymentMethod = PaymentMethodName.cod;
   bool showCoupon = false;
   bool cancelPayment = false;
 
   bool _showCouponSection = false;
-  double _couponDiscount = 0;
+  double? _couponDiscount = 0;
   int _paymentMethodIndex = 0;
-  int _tripId;
+  int? _tripId;
 
   bool get showCouponSection => _showCouponSection;
   bool get isLoading => _isLoading;
-  double get couponDiscount => _couponDiscount;
+  double? get couponDiscount => _couponDiscount;
   int get paymentMethodIndex => _paymentMethodIndex;
-  int get tripId => _tripId;
+  int? get tripId => _tripId;
 
   void setPaymentMethod(int index, {bool isUpdate = true}) {
     _paymentMethodIndex = index;
@@ -43,7 +43,7 @@ class BookingCheckoutController extends GetxController implements GetxService{
     update();
   }
 
-  void setCouponDiscount(double discount){
+  void setCouponDiscount(double? discount){
     _couponDiscount = discount;
     update();
   }
@@ -53,9 +53,11 @@ class BookingCheckoutController extends GetxController implements GetxService{
     update();
   }
 
-  void updateState(PageState _currentPage,{bool shouldUpdate = true}){
-    print('--------------$_currentPage');
-    currentPage=_currentPage;
+  void updateState(PageState currentPage,{bool shouldUpdate = true}){
+    if (kDebugMode) {
+      print('--------------$currentPage');
+    }
+    currentPage=currentPage;
     if(shouldUpdate){
       update();
     }
@@ -69,16 +71,16 @@ class BookingCheckoutController extends GetxController implements GetxService{
   }
 
 
-  Future<bool> placeTrip({@required UserInformationBody filterBody, @required Vehicles vehicle}) async {
+  Future<bool> placeTrip({required UserInformationBody filterBody, required Vehicles vehicle}) async {
     _tripId = null;
     bool success = false;
     _isLoading = true;
     update();
-    Map<String, String> body = {
-      'start_latitude': filterBody.from.latitude,
-      'start_longitude': filterBody.from.longitude,
-      'end_latitude': filterBody.to.latitude,
-      'end_longitude': filterBody.to.longitude,
+    Map<String, String?> body = {
+      'start_latitude': filterBody.from!.latitude,
+      'start_longitude': filterBody.from!.longitude,
+      'end_latitude': filterBody.to!.latitude,
+      'end_longitude': filterBody.to!.longitude,
       'fare_category': filterBody.fareCategory,
       'schedule_at': filterBody.rentTime,
       'distance': filterBody.distance.toString(),
@@ -93,7 +95,6 @@ class BookingCheckoutController extends GetxController implements GetxService{
     if (response.statusCode == 200) {
       success = true;
       showCustomSnackBar(response.body['message'], isError: false);
-      print('-------------${response.body}');
       _tripId = response.body['trip_id'];
     } else {
       ApiChecker.checkApi(response);

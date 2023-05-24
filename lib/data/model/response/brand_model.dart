@@ -1,12 +1,12 @@
 class BrandModel {
-  int id;
-  int moduleId;
-  String name;
-  String logo;
-  String description;
-  bool status;
-  String createdAt;
-  String updatedAt;
+  int? id;
+  int? moduleId;
+  String? name;
+  String? logo;
+  String? description;
+  bool? status;
+  String? createdAt;
+  String? updatedAt;
 
   BrandModel(
       {this.id,
@@ -30,15 +30,15 @@ class BrandModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['module_id'] = this.moduleId;
-    data['name'] = this.name;
-    data['logo'] = this.logo;
-    data['description'] = this.description;
-    data['status'] = this.status;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['module_id'] = moduleId;
+    data['name'] = name;
+    data['logo'] = logo;
+    data['description'] = description;
+    data['status'] = status;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

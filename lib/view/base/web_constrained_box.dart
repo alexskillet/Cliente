@@ -5,8 +5,8 @@ class WebConstrainedBox extends StatelessWidget {
   final int dataLength;
   final int minLength;
   final double minHeight;
-  final child ;
-  const WebConstrainedBox({Key key, @required this.dataLength, this.minLength = 5, this.minHeight = 0.6, @required this.child}) : super(key: key);
+  final Widget child ;
+  const WebConstrainedBox({Key? key, required this.dataLength, this.minLength = 5, this.minHeight = 0.6, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

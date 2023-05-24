@@ -9,7 +9,7 @@ class ServiceTypeCard extends StatelessWidget {
   final String rentPrice;
   final bool isSelected;
   final Function onTap;
-  const ServiceTypeCard({Key key,@required this.rentPrice, @required this.rentType,@required this.isSelected,@required this.onTap}) : super(key: key);
+  const ServiceTypeCard({Key? key,required this.rentPrice, required this.rentType,required this.isSelected,required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +17,13 @@ class ServiceTypeCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: isSelected ?  Theme.of(context).primaryColor.withOpacity(0.1) : Theme.of(context).colorScheme.background.withOpacity(.5),
-          borderRadius: BorderRadius.all(Radius.circular(Dimensions.PADDING_SIZE_EXTRA_SMALL)),
+          borderRadius: const BorderRadius.all(Radius.circular(Dimensions.paddingSizeExtraSmall)),
           border:isSelected ?  Border.all(color: Theme.of(context).primaryColor.withOpacity(.5)):null,
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
-            onTap: onTap,
+            onTap: onTap as void Function()?,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -31,7 +31,7 @@ class ServiceTypeCard extends StatelessWidget {
                   TextSpan(
                     children: [
                       TextSpan(
-                          text: 'rent'.tr + ' ',
+                          text: '${'rent'.tr} ',
                           style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
                       TextSpan(
                           text: rentType,
@@ -40,11 +40,11 @@ class ServiceTypeCard extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image.asset(Images.car_icon,width: 54,height: 38,),
+                      Image.asset(Images.carIcon,width: 54,height: 38,),
                       Column(
                         children: [
                           Text.rich(
@@ -59,12 +59,12 @@ class ServiceTypeCard extends StatelessWidget {
                                 TextSpan(
                                     text: '/hr',
                                     style: robotoBold.copyWith(
-                                        color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5),
+                                        color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5),
                                         fontSize: Dimensions.fontSizeSmall)),
                               ],
                             ),
                           ),
-                          SizedBox(height: 6,),
+                          const SizedBox(height: 6,),
                           Text('start_form'.tr),
                         ],
                       )

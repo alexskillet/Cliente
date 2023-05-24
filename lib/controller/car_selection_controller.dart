@@ -10,24 +10,24 @@ import 'package:sixam_mart/data/repository/car_selection_repo.dart';
 /*receive car list based on hourly and km , also filter car and select car function will be placed here*/
 class CarSelectionController extends GetxController implements GetxService {
   final CarSelectionRepo carSelectionRepo;
-  CarSelectionController({@required this.carSelectionRepo});
+  CarSelectionController({required this.carSelectionRepo});
 
   bool _isCarFilterActive = false;
-  RangeValues _selectedPriceRange = RangeValues(0.2, 2.0);
+  RangeValues _selectedPriceRange = const RangeValues(0.2, 2.0);
   double _startingPrice = 0.0;
   double _endingPrice = 2000.0;
 
-  VehicleModel _vehicleModel;
-  List<BrandModel> _brandModels;
+  VehicleModel? _vehicleModel;
+  List<BrandModel>? _brandModels;
   int _selectedBrand = 0;
   int _sortByIndex = 0;
 
   bool get isCarFilterActive => _isCarFilterActive;
-  VehicleModel get vehicleModel => _vehicleModel;
+  VehicleModel? get vehicleModel => _vehicleModel;
   RangeValues get selectedPriceRange => _selectedPriceRange;
   double get startingPrice => _startingPrice;
   double get endingPrice => _endingPrice;
-  List<BrandModel> get brandModels => _brandModels;
+  List<BrandModel>? get brandModels => _brandModels;
   int get selectedBrand => _selectedBrand;
   int get sortByIndex => _sortByIndex;
 
@@ -79,7 +79,7 @@ class CarSelectionController extends GetxController implements GetxService {
       if(response.body != null){
         _brandModels = [];
         response.body.forEach((body) {
-          _brandModels.add(BrandModel.fromJson(body));
+          _brandModels!.add(BrandModel.fromJson(body));
         });
       }
 

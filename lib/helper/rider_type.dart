@@ -15,8 +15,3 @@ enum CarType{
   luxury,
   standard,
 }
-
-enum PaymentType{
-  pay_with_cash,
-  digital_pay,
-}

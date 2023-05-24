@@ -5,39 +5,39 @@ import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/util/styles.dart';
 
 class CameraButtonSheet extends StatelessWidget {
-  const CameraButtonSheet({Key key}) : super(key: key);
+  const CameraButtonSheet({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 500,
-      padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_DEFAULT),
+      padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.RADIUS_EXTRA_LARGE)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(Dimensions.radiusExtraLarge)),
         color: Theme.of(context).cardColor,
       ),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Container(
           height: 4, width: 50,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_DEFAULT), color: Theme.of(context).disabledColor),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.radiusDefault), color: Theme.of(context).disabledColor),
         ),
-        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+        const SizedBox(height: Dimensions.paddingSizeLarge),
 
         Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           InkWell(
             onTap: (){
-              if(Get.isBottomSheetOpen){
+              if(Get.isBottomSheetOpen!){
                 Get.back();
               }
               Get.find<StoreController>().pickPrescriptionImage(isRemove: false, isCamera: true);
             },
             child: Column(children: [
               Container(
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                 decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).primaryColor.withOpacity(0.2)),
                 child: Icon(Icons.camera_alt_outlined, size: 45, color: Theme.of(context).primaryColor),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
               Text('from_camera'.tr, style: robotoMedium)
             ]),
@@ -45,18 +45,18 @@ class CameraButtonSheet extends StatelessWidget {
 
           InkWell(
             onTap: () {
-              if(Get.isBottomSheetOpen){
+              if(Get.isBottomSheetOpen!){
                 Get.back();
               }
               Get.find<StoreController>().pickPrescriptionImage(isRemove: false, isCamera: false);
             },
             child: Column(children: [
               Container(
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                 decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).primaryColor.withOpacity(0.2)),
                 child: Icon(Icons.photo_library_outlined, size: 45, color: Theme.of(context).primaryColor),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
               Text('from_gallery'.tr, style: robotoMedium),
             ]),

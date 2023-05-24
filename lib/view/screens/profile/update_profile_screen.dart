@@ -19,6 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
+  const UpdateProfileScreen({Key? key}) : super(key: key);
+
   @override
   State<UpdateProfileScreen> createState() => _UpdateProfileScreenState();
 }
@@ -32,7 +34,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  bool _isLoggedIn;
+  late bool _isLoggedIn;
 
   @override
   void initState() {
@@ -49,36 +51,36 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
-      appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
-      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+      appBar: ResponsiveHelper.isDesktop(context) ? const WebMenuBar() : null,
+      endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: GetBuilder<UserController>(builder: (userController) {
         if(userController.userInfoModel != null && _phoneController.text.isEmpty) {
-          _firstNameController.text = userController.userInfoModel.fName ?? '';
-          _lastNameController.text = userController.userInfoModel.lName ?? '';
-          _phoneController.text = userController.userInfoModel.phone ?? '';
-          _emailController.text = userController.userInfoModel.email ?? '';
+          _firstNameController.text = userController.userInfoModel!.fName ?? '';
+          _lastNameController.text = userController.userInfoModel!.lName ?? '';
+          _phoneController.text = userController.userInfoModel!.phone ?? '';
+          _emailController.text = userController.userInfoModel!.email ?? '';
         }
 
         return _isLoggedIn ? userController.userInfoModel != null ? ProfileBgWidget(
           backButton: true,
           circularImage: ImagePickerWidget(
-            image: '${Get.find<SplashController>().configModel.baseUrls.customerImageUrl}/${userController.userInfoModel.image}',
+            image: '${Get.find<SplashController>().configModel!.baseUrls!.customerImageUrl}/${userController.userInfoModel!.image}',
             onTap: () => userController.pickImage(), rawFile: userController.rawFile,
           ),
           mainWidget: Column(children: [
 
             Expanded(child: Scrollbar(child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+              physics: const BouncingScrollPhysics(),
+              padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : const EdgeInsets.all(Dimensions.paddingSizeSmall),
               child: Center(child: FooterView(
                 minHeight: 0.45,
-                child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                child: SizedBox(width: Dimensions.webMaxWidth, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
                   Text(
                     'first_name'.tr,
                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                   ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  const SizedBox(height: Dimensions.paddingSizeExtraSmall),
                   MyTextField(
                     hintText: 'first_name'.tr,
                     controller: _firstNameController,
@@ -87,13 +89,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     inputType: TextInputType.name,
                     capitalization: TextCapitalization.words,
                   ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                  const SizedBox(height: Dimensions.paddingSizeLarge),
 
                   Text(
                     'last_name'.tr,
                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                   ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  const SizedBox(height: Dimensions.paddingSizeExtraSmall),
                   MyTextField(
                     hintText: 'last_name'.tr,
                     controller: _lastNameController,
@@ -102,13 +104,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     inputType: TextInputType.name,
                     capitalization: TextCapitalization.words,
                   ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                  const SizedBox(height: Dimensions.paddingSizeLarge),
 
                   Text(
                     'email'.tr,
                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                   ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  const SizedBox(height: Dimensions.paddingSizeExtraSmall),
                   MyTextField(
                     hintText: 'email'.tr,
                     controller: _emailController,
@@ -116,19 +118,19 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     inputAction: TextInputAction.done,
                     inputType: TextInputType.emailAddress,
                   ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                  const SizedBox(height: Dimensions.paddingSizeLarge),
 
                   Row(children: [
                     Text(
                       'phone'.tr,
                       style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                     ),
-                    SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                     Text('(${'non_changeable'.tr})', style: robotoRegular.copyWith(
                       fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).colorScheme.error,
                     )),
                   ]),
-                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  const SizedBox(height: Dimensions.paddingSizeExtraSmall),
                   MyTextField(
                     hintText: 'phone'.tr,
                     controller: _phoneController,
@@ -139,52 +141,52 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
                   //
                   ResponsiveHelper.isDesktop(context) ? Padding(
-                    padding: const EdgeInsets.only(top: Dimensions.PADDING_SIZE_LARGE),
+                    padding: const EdgeInsets.only(top: Dimensions.paddingSizeLarge),
                     child: UpdateProfileButton(isLoading: userController.isLoading, onPressed: () {
                       return _updateProfile(userController);
                     }),
-                  ) : SizedBox.shrink() ,
+                  ) : const SizedBox.shrink() ,
 
                 ])),
               )),
             ))),
 
-            ResponsiveHelper.isDesktop(context) ? SizedBox.shrink() : UpdateProfileButton(isLoading: userController.isLoading, onPressed: () => _updateProfile(userController)),
+            ResponsiveHelper.isDesktop(context) ? const SizedBox.shrink() : UpdateProfileButton(isLoading: userController.isLoading, onPressed: () => _updateProfile(userController)),
 
           ]),
-        ) : Center(child: CircularProgressIndicator()) : NotLoggedInScreen();
+        ) : const Center(child: CircularProgressIndicator()) : const NotLoggedInScreen();
       }),
     );
   }
 
   void _updateProfile(UserController userController) async {
-    String _firstName = _firstNameController.text.trim();
-    String _lastName = _lastNameController.text.trim();
-    String _email = _emailController.text.trim();
-    String _phoneNumber = _phoneController.text.trim();
-    if (userController.userInfoModel.fName == _firstName &&
-        userController.userInfoModel.lName == _lastName && userController.userInfoModel.phone == _phoneNumber &&
-        userController.userInfoModel.email == _emailController.text && userController.pickedFile == null) {
+    String firstName = _firstNameController.text.trim();
+    String lastName = _lastNameController.text.trim();
+    String email = _emailController.text.trim();
+    String phoneNumber = _phoneController.text.trim();
+    if (userController.userInfoModel!.fName == firstName &&
+        userController.userInfoModel!.lName == lastName && userController.userInfoModel!.phone == phoneNumber &&
+        userController.userInfoModel!.email == _emailController.text && userController.pickedFile == null) {
       showCustomSnackBar('change_something_to_update'.tr);
-    }else if (_firstName.isEmpty) {
+    }else if (firstName.isEmpty) {
       showCustomSnackBar('enter_your_first_name'.tr);
-    }else if (_lastName.isEmpty) {
+    }else if (lastName.isEmpty) {
       showCustomSnackBar('enter_your_last_name'.tr);
-    }else if (_email.isEmpty) {
+    }else if (email.isEmpty) {
       showCustomSnackBar('enter_email_address'.tr);
-    }else if (!GetUtils.isEmail(_email)) {
+    }else if (!GetUtils.isEmail(email)) {
       showCustomSnackBar('enter_a_valid_email_address'.tr);
-    }else if (_phoneNumber.isEmpty) {
+    }else if (phoneNumber.isEmpty) {
       showCustomSnackBar('enter_phone_number'.tr);
-    }else if (_phoneNumber.length < 6) {
+    }else if (phoneNumber.length < 6) {
       showCustomSnackBar('enter_a_valid_phone_number'.tr);
     } else {
-      UserInfoModel _updatedUser = UserInfoModel(fName: _firstName, lName: _lastName, email: _email, phone: _phoneNumber);
-      ResponseModel _responseModel = await userController.updateUserInfo(_updatedUser, Get.find<AuthController>().getUserToken());
-      if(_responseModel.isSuccess) {
+      UserInfoModel updatedUser = UserInfoModel(fName: firstName, lName: lastName, email: email, phone: phoneNumber);
+      ResponseModel responseModel = await userController.updateUserInfo(updatedUser, Get.find<AuthController>().getUserToken());
+      if(responseModel.isSuccess) {
         showCustomSnackBar('profile_updated_successfully'.tr, isError: false);
       }else {
-        showCustomSnackBar(_responseModel.message);
+        showCustomSnackBar(responseModel.message);
       }
     }
   }
@@ -193,14 +195,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 class UpdateProfileButton extends StatelessWidget {
   final bool isLoading;
   final Function onPressed;
-  const UpdateProfileButton({Key key, @required this.isLoading, @required this.onPressed}) : super(key: key);
+  const UpdateProfileButton({Key? key, required this.isLoading, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return !isLoading ? CustomButton(
       onPressed: onPressed,
-      margin: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+      margin: const EdgeInsets.all(Dimensions.paddingSizeSmall),
       buttonText: 'update'.tr,
-    ) : Center(child: CircularProgressIndicator());
+    ) : const Center(child: CircularProgressIndicator());
   }
 }

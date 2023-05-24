@@ -10,22 +10,21 @@ import 'package:sixam_mart/view/screens/taxi_booking/booking_checkout_screen/wid
 
 class BookingCheckoutStepper extends StatelessWidget {
   final String pageState;
-  const BookingCheckoutStepper({Key key,@required this.pageState}) : super(key: key);
+  const BookingCheckoutStepper({Key? key,required this.pageState}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 426,
       child: GetBuilder<BookingCheckoutController>(
         builder: (controller){
-          print("current_page:${controller.currentPage}");
           return Column(
             children: [
               Padding(
-                padding:  EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_LARGE, vertical: Dimensions.PADDING_SIZE_SMALL),
+                padding:  const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraLarge, vertical: Dimensions.paddingSizeSmall),
                 child:  Stack(
                   children: [
-                    Container(
+                    SizedBox(
                       height: 55,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -34,8 +33,8 @@ class BookingCheckoutStepper extends StatelessWidget {
                             onTap: (){
                               controller.updateState(PageState.payment,shouldUpdate: true);
                             },
-                            child: CustomHeaderIcon(
-                              assetIconUnSelected: Images.booking_details_unselected,
+                            child: const CustomHeaderIcon(
+                              assetIconUnSelected: Images.bookingDetailsUnselected,
                             ),
                           ),
                           controller.currentPage == PageState.orderDetails ?
@@ -48,7 +47,7 @@ class BookingCheckoutStepper extends StatelessWidget {
                               gradientColor2: Theme.of(context).primaryColor),
 
                           CustomHeaderIcon(
-                            assetIconUnSelected:controller.currentPage == PageState.orderDetails ?  Images.payment_unselected_grey : Images.payment_unselected,
+                            assetIconUnSelected:controller.currentPage == PageState.orderDetails ?  Images.paymentUnselectedGrey : Images.paymentUnselected,
                           ),
                           controller.cancelPayment ?
                           const CustomHeaderLine(
@@ -67,7 +66,7 @@ class BookingCheckoutStepper extends StatelessWidget {
                               onTap: (){
                                 controller.updateState(PageState.complete,shouldUpdate: true);
                               },
-                              child: CustomHeaderIcon(assetIconUnSelected: Images.complete_unselected,)),
+                              child: const CustomHeaderIcon(assetIconUnSelected: Images.completeUnselected,)),
                         ],),),
 
                     if(controller.currentPage == PageState.orderDetails  && PageState.orderDetails.name == pageState)
@@ -86,9 +85,9 @@ class BookingCheckoutStepper extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
                                   borderRadius: BorderRadius.circular(50),
-                                  image: DecorationImage(
+                                  image: const DecorationImage(
                                       fit: BoxFit.fill,
-                                      image: AssetImage( Images.booking_details_selected,))),
+                                      image: AssetImage( Images.bookingDetailsSelected,))),
                             )),),
                     if(controller.currentPage == PageState.payment  || PageState.payment.name == pageState)
                       Positioned(
@@ -102,9 +101,9 @@ class BookingCheckoutStepper extends StatelessWidget {
                                 height: 55,
                                 width: 55,
                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(50),
-                                    image: DecorationImage(
+                                    image: const DecorationImage(
                                         fit: BoxFit.fill,
-                                        image: AssetImage( Images.payment_selected,))),
+                                        image: AssetImage( Images.paymentSelected,))),
                               )),
                         ),
                       ), if(controller.currentPage == PageState.complete || pageState == 'complete')
@@ -123,33 +122,31 @@ class BookingCheckoutStepper extends StatelessWidget {
                               decoration: BoxDecoration(
                                   color: Theme.of(context).cardColor,
                                   borderRadius: BorderRadius.circular(50),
-                                  image: DecorationImage(
+                                  image: const DecorationImage(
                                       fit: BoxFit.fill,
-                                      image: AssetImage( Images.complete_selected,))),)),),],
+                                      image: AssetImage( Images.completeSelected,))),)),),],
                 ),),
-              Container(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_DEFAULT,left: 20.0,right: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children:  [
-                      CustomText(
-                          text: "booking_details".tr,isActive :controller.currentPage == PageState.orderDetails
-                          && PageState.orderDetails.name == pageState),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          right:Get.find<LocalizationController>().isLtr ? 25:0,
-                          left:Get.find<LocalizationController>().isLtr ? 0: 35.0,
-                        ),
-                        child: CustomText(
-                            text: "payment".tr,
-                            isActive : controller.currentPage == PageState.payment
-                            || PageState.payment.name == pageState),
+              Padding(
+                padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeDefault,left: 20.0,right: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children:  [
+                    CustomText(
+                        text: "booking_details".tr,isActive :controller.currentPage == PageState.orderDetails
+                        && PageState.orderDetails.name == pageState),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        right:Get.find<LocalizationController>().isLtr ? 25:0,
+                        left:Get.find<LocalizationController>().isLtr ? 0: 35.0,
                       ),
-                      CustomText(text: "complete".tr,isActive : controller.currentPage == PageState.complete  || pageState == 'complete'),
-                    ],
-                  ),
+                      child: CustomText(
+                          text: "payment".tr,
+                          isActive : controller.currentPage == PageState.payment
+                          || PageState.payment.name == pageState),
+                    ),
+                    CustomText(text: "complete".tr,isActive : controller.currentPage == PageState.complete  || pageState == 'complete'),
+                  ],
                 ),
               ),
             ],

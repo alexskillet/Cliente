@@ -9,52 +9,52 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LocationRepo {
   final ApiClient apiClient;
   final SharedPreferences sharedPreferences;
-  LocationRepo({this.apiClient, this.sharedPreferences});
+  LocationRepo({required this.apiClient, required this.sharedPreferences});
 
   Future<Response> getAllAddress() async {
-    return await apiClient.getData(AppConstants.ADDRESS_LIST_URI);
+    return await apiClient.getData(AppConstants.addressListUri);
   }
 
-  Future<Response> getZone(String lat, String lng) async {
-    return await apiClient.getData('${AppConstants.ZONE_URI}?lat=$lat&lng=$lng');
+  Future<Response> getZone(String? lat, String? lng) async {
+    return await apiClient.getData('${AppConstants.zoneUri}?lat=$lat&lng=$lng');
   }
 
-  Future<Response> removeAddressByID(int id) async {
-    return await apiClient.postData('${AppConstants.REMOVE_ADDRESS_URI}$id', {"_method": "delete"});
+  Future<Response> removeAddressByID(int? id) async {
+    return await apiClient.postData('${AppConstants.removeAddressUri}$id', {"_method": "delete"});
   }
 
   Future<Response> addAddress(AddressModel addressModel) async {
-    return await apiClient.postData(AppConstants.ADD_ADDRESS_URI, addressModel.toJson());
+    return await apiClient.postData(AppConstants.addAddressUri, addressModel.toJson());
   }
 
-  Future<Response> updateAddress(AddressModel addressModel, int addressId) async {
-    return await apiClient.putData('${AppConstants.UPDATE_ADDRESS_URI}$addressId', addressModel.toJson());
+  Future<Response> updateAddress(AddressModel addressModel, int? addressId) async {
+    return await apiClient.putData('${AppConstants.updateAddressUri}$addressId', addressModel.toJson());
   }
 
-  Future<bool> saveUserAddress(String address, List<int> zoneIDs, List<int> areaIDs, String latitude, String longitude) async {
+  Future<bool> saveUserAddress(String address, List<int>? zoneIDs, List<int>? areaIDs, String? latitude, String? longitude) async {
     apiClient.updateHeader(
-      sharedPreferences.getString(AppConstants.TOKEN), zoneIDs, areaIDs,
-      sharedPreferences.getString(AppConstants.LANGUAGE_CODE),
-      Get.find<SplashController>().module != null ? Get.find<SplashController>().module.id : null,
+      sharedPreferences.getString(AppConstants.token), zoneIDs, areaIDs,
+      sharedPreferences.getString(AppConstants.languageCode),
+      Get.find<SplashController>().module != null ? Get.find<SplashController>().module!.id : null,
       latitude, longitude
     );
-    return await sharedPreferences.setString(AppConstants.USER_ADDRESS, address);
+    return await sharedPreferences.setString(AppConstants.userAddress, address);
   }
 
   Future<Response> getAddressFromGeocode(LatLng latLng) async {
-    return await apiClient.getData('${AppConstants.GEOCODE_URI}?lat=${latLng.latitude}&lng=${latLng.longitude}');
+    return await apiClient.getData('${AppConstants.geocodeUri}?lat=${latLng.latitude}&lng=${latLng.longitude}');
   }
 
-  String getUserAddress() {
-    return sharedPreferences.getString(AppConstants.USER_ADDRESS);
+  String? getUserAddress() {
+    return sharedPreferences.getString(AppConstants.userAddress);
   }
 
   Future<Response> searchLocation(String text) async {
-    return await apiClient.getData('${AppConstants.SEARCH_LOCATION_URI}?search_text=$text');
+    return await apiClient.getData('${AppConstants.searchLocationUri}?search_text=$text');
   }
 
-  Future<Response> getPlaceDetails(String placeID) async {
-    return await apiClient.getData('${AppConstants.PLACE_DETAILS_URI}?placeid=$placeID');
+  Future<Response> getPlaceDetails(String? placeID) async {
+    return await apiClient.getData('${AppConstants.placeDetailsUri}?placeid=$placeID');
   }
 
 }

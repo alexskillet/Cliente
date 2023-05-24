@@ -1,24 +1,24 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ZoneModel {
-  int id;
-  String name;
-  Coordinates coordinates;
-  int status;
-  String createdAt;
-  String updatedAt;
-  String restaurantWiseTopic;
-  String customerWiseTopic;
-  String deliverymanWiseTopic;
-  double minimumShippingCharge;
-  double perKmShippingCharge;
+  int? id;
+  String? name;
+  Coordinates? coordinates;
+  int? status;
+  String? createdAt;
+  String? updatedAt;
+  String? restaurantWiseTopic;
+  String? customerWiseTopic;
+  String? deliverymanWiseTopic;
+  double? minimumShippingCharge;
+  double? perKmShippingCharge;
 
   ZoneModel({this.id, this.name, this.coordinates, this.status, this.createdAt, this.updatedAt, this.restaurantWiseTopic, this.customerWiseTopic, this.deliverymanWiseTopic, this.minimumShippingCharge, this.perKmShippingCharge});
 
   ZoneModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    coordinates = json['coordinates'] != null ? new Coordinates.fromJson(json['coordinates']) : null;
+    coordinates = json['coordinates'] != null ? Coordinates.fromJson(json['coordinates']) : null;
     status = json['status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -30,27 +30,27 @@ class ZoneModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    if (this.coordinates != null) {
-      data['coordinates'] = this.coordinates.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    if (coordinates != null) {
+      data['coordinates'] = coordinates!.toJson();
     }
-    data['status'] = this.status;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['restaurant_wise_topic'] = this.restaurantWiseTopic;
-    data['customer_wise_topic'] = this.customerWiseTopic;
-    data['deliveryman_wise_topic'] = this.deliverymanWiseTopic;
-    data['minimum_shipping_charge'] = this.minimumShippingCharge;
-    data['per_km_shipping_charge'] = this.perKmShippingCharge;
+    data['status'] = status;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['restaurant_wise_topic'] = restaurantWiseTopic;
+    data['customer_wise_topic'] = customerWiseTopic;
+    data['deliveryman_wise_topic'] = deliverymanWiseTopic;
+    data['minimum_shipping_charge'] = minimumShippingCharge;
+    data['per_km_shipping_charge'] = perKmShippingCharge;
     return data;
   }
 }
 
 class Coordinates {
-  String type;
-  List<LatLng> coordinates;
+  String? type;
+  List<LatLng>? coordinates;
 
   Coordinates({this.type, this.coordinates});
 
@@ -59,16 +59,16 @@ class Coordinates {
     if (json['coordinates'] != null) {
       coordinates = <LatLng>[];
       json['coordinates'][0].forEach((v) {
-        coordinates.add(LatLng(double.parse(v[0].toString()), double.parse(v[1].toString())));
+        coordinates!.add(LatLng(double.parse(v[0].toString()), double.parse(v[1].toString())));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    if (this.coordinates != null) {
-      data['coordinates'] = this.coordinates.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['type'] = type;
+    if (coordinates != null) {
+      data['coordinates'] = coordinates!.map((v) => v.toJson()).toList();
     }
     return data;
   }

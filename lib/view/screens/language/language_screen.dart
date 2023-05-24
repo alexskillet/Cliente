@@ -16,7 +16,7 @@ import 'package:get/get.dart';
 
 class ChooseLanguageScreen extends StatefulWidget {
   final bool fromMenu;
-  ChooseLanguageScreen({this.fromMenu = false});
+  const ChooseLanguageScreen({Key? key, this.fromMenu = false}) : super(key: key);
 
   @override
   State<ChooseLanguageScreen> createState() => _ChooseLanguageScreenState();
@@ -27,7 +27,7 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: (widget.fromMenu || ResponsiveHelper.isDesktop(context)) ? CustomAppBar(title: 'language'.tr, backButton: true) : null,
-      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+      endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: SafeArea(
         child: GetBuilder<LocalizationController>(builder: (localizationController) {
           return Column(children: [
@@ -35,22 +35,22 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
             Expanded(child: Center(
               child: Scrollbar(
                 child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                  physics: const BouncingScrollPhysics(),
+                  padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : const EdgeInsets.all(Dimensions.paddingSizeSmall),
                   child: Center(child: FooterView(minHeight: 0.615,
                     child: SizedBox(
-                      width: Dimensions.WEB_MAX_WIDTH,
+                      width: Dimensions.webMaxWidth,
                       child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
 
                         Center(child: Image.asset(Images.logo, width: 200)),
                         // Center(child: Text(AppConstants.APP_NAME, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge))),
-                        SizedBox(height: 30),
+                        const SizedBox(height: 30),
 
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
                           child: Text('select_language'.tr, style: robotoMedium),
                         ),
-                        SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                        const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                         GridView.builder(
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -58,23 +58,23 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
                             childAspectRatio: (1/1),
                           ),
                           itemCount: localizationController.languages.length,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemBuilder: (context, index) => LanguageWidget(
                             languageModel: localizationController.languages[index],
                             localizationController: localizationController, index: index,
                           ),
                         ),
-                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                        const SizedBox(height: Dimensions.paddingSizeLarge),
 
                         Text('you_can_change_language'.tr, style: robotoRegular.copyWith(
                           fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor,
                         )),
 
                         ResponsiveHelper.isDesktop(context) ? Padding(
-                          padding: const EdgeInsets.only(top: Dimensions.PADDING_SIZE_LARGE),
+                          padding: const EdgeInsets.only(top: Dimensions.paddingSizeLarge),
                           child: LanguageSaveButton(localizationController: localizationController, fromMenu: widget.fromMenu),
-                        ) : SizedBox.shrink() ,
+                        ) : const SizedBox.shrink() ,
 
                       ]),
                     ),
@@ -83,7 +83,7 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
               ),
             )),
 
-            ResponsiveHelper.isDesktop(context) ? SizedBox.shrink() : LanguageSaveButton(localizationController: localizationController, fromMenu: widget.fromMenu),
+            ResponsiveHelper.isDesktop(context) ? const SizedBox.shrink() : LanguageSaveButton(localizationController: localizationController, fromMenu: widget.fromMenu),
           ]);
         }),
       ),
@@ -93,21 +93,21 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
 
 class LanguageSaveButton extends StatelessWidget {
   final LocalizationController localizationController;
-  final bool fromMenu;
-  const LanguageSaveButton({Key key, @required this.localizationController, this.fromMenu}) : super(key: key);
+  final bool? fromMenu;
+  const LanguageSaveButton({Key? key, required this.localizationController, this.fromMenu}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CustomButton(
       buttonText: 'save'.tr,
-      margin: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+      margin: const EdgeInsets.all(Dimensions.paddingSizeSmall),
       onPressed: () {
-        if(localizationController.languages.length > 0 && localizationController.selectedIndex != -1) {
+        if(localizationController.languages.isNotEmpty && localizationController.selectedIndex != -1) {
           localizationController.setLanguage(Locale(
-            AppConstants.languages[localizationController.selectedIndex].languageCode,
+            AppConstants.languages[localizationController.selectedIndex].languageCode!,
             AppConstants.languages[localizationController.selectedIndex].countryCode,
           ));
-          if (fromMenu) {
+          if (fromMenu!) {
             Navigator.pop(context);
           } else {
             Get.offNamed(RouteHelper.getOnBoardingRoute());

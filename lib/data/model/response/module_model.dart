@@ -1,15 +1,15 @@
 class ModuleModel {
-  int id;
-  String moduleName;
-  String moduleType;
-  String thumbnail;
-  String icon;
-  int themeId;
-  String description;
-  int storesCount;
-  String createdAt;
-  String updatedAt;
-  List<ModuleZoneData> zones;
+  int? id;
+  String? moduleName;
+  String? moduleType;
+  String? thumbnail;
+  String? icon;
+  int? themeId;
+  String? description;
+  int? storesCount;
+  String? createdAt;
+  String? updatedAt;
+  List<ModuleZoneData>? zones;
 
   ModuleModel(
       {this.id,
@@ -38,36 +38,36 @@ class ModuleModel {
     updatedAt = json['updated_at'];
     if (json['zones'] != null) {
       zones = <ModuleZoneData>[];
-      json['zones'].forEach((v) => zones.add(new ModuleZoneData.fromJson(v)));
+      json['zones'].forEach((v) => zones!.add(ModuleZoneData.fromJson(v)));
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['module_name'] = this.moduleName;
-    data['module_type'] = this.moduleType;
-    data['thumbnail'] = this.thumbnail;
-    data['icon'] = this.icon;
-    data['theme_id'] = this.themeId;
-    data['description'] = this.description;
-    data['stores_count'] = this.storesCount;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    if (this.zones != null) {
-      data['zones'] = this.zones.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['module_name'] = moduleName;
+    data['module_type'] = moduleType;
+    data['thumbnail'] = thumbnail;
+    data['icon'] = icon;
+    data['theme_id'] = themeId;
+    data['description'] = description;
+    data['stores_count'] = storesCount;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    if (zones != null) {
+      data['zones'] = zones!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 class ModuleZoneData {
-  int id;
-  String name;
-  int status;
-  String createdAt;
-  String updatedAt;
-  bool cashOnDelivery;
-  bool digitalPayment;
+  int? id;
+  String? name;
+  int? status;
+  String? createdAt;
+  String? updatedAt;
+  bool? cashOnDelivery;
+  bool? digitalPayment;
 
   ModuleZoneData({this.id, this.name, this.status, this.createdAt, this.updatedAt, this.cashOnDelivery, this.digitalPayment});
 
@@ -82,14 +82,14 @@ class ModuleZoneData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['status'] = this.status;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['cash_on_delivery'] = this.cashOnDelivery;
-    data['digital_payment'] = this.digitalPayment;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['status'] = status;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['cash_on_delivery'] = cashOnDelivery;
+    data['digital_payment'] = digitalPayment;
     return data;
   }
 }

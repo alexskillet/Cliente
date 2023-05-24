@@ -15,7 +15,7 @@ class OnBoardingRepo {
       Response response = Response(body: onBoardingList, statusCode: 200);
       return response;
     } catch (e) {
-      return Response(statusCode: 404, statusText: 'Onboarding data not found');
+      return const Response(statusCode: 404, statusText: 'Onboarding data not found');
     }
   }
 }

@@ -27,7 +27,7 @@
   "enter_your_email_address": "أدخل عنوان بريدك الالكتروني",
   "enter_a_valid_email_address": "أدخل عنوان بريد إلكتروني صالح",
   "enter_your_phone_number": "أدخل رقم هاتفك",
-  "invalid_phone_number": "رقم الهاتف غير صحيح. الرجاء إدخال رقم هاتفك بدون رمز الدولة",
+  "invalid_phone_number": " هاتفك بدون رمز الدولة",
   "enter_password": "أدخل كلمة المرور",
   "confirm_password_does_not_matched": "كلمة المرور غير متطابقة",
   "password_should_be": "يجب أن تكون كلمة المرور أكبر من 6 أحرف",
@@ -772,5 +772,6 @@
   "no_reasons_available": "لا توجد أسباب متاحة",
   "you_did_not_select_select_any_reason": "أنت لم تحدد أي سبب",
   "switch_to_cod": "قم بالتبديل إلى COD",
-  "cancellation_note": "ملاحظة الإلغاء"
+  "cancellation_note": "ملاحظة الإلغاء",
+  "enter_pickup": "Enter pickup"
 }

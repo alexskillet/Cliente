@@ -5,33 +5,35 @@ import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/util/styles.dart';
 
 class FilterView extends StatelessWidget {
+  const FilterView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<StoreController>(builder: (storeController) {
       return storeController.storeModel != null ? PopupMenuButton(
         itemBuilder: (context) {
           return [
-            PopupMenuItem(value: 'all', child: Text('all'.tr), textStyle: robotoMedium.copyWith(
+            PopupMenuItem(value: 'all', textStyle: robotoMedium.copyWith(
               color: storeController.storeType == 'all'
-                  ? Theme.of(context).textTheme.bodyLarge.color : Theme.of(context).disabledColor,
-            )),
-            PopupMenuItem(value: 'take_away', child: Text('take_away'.tr), textStyle: robotoMedium.copyWith(
+                  ? Theme.of(context).textTheme.bodyLarge!.color : Theme.of(context).disabledColor,
+            ), child: Text('all'.tr)),
+            PopupMenuItem(value: 'take_away', textStyle: robotoMedium.copyWith(
               color: storeController.storeType == 'take_away'
-                  ? Theme.of(context).textTheme.bodyLarge.color : Theme.of(context).disabledColor,
-            )),
-            PopupMenuItem(value: 'delivery', child: Text('delivery'.tr), textStyle: robotoMedium.copyWith(
+                  ? Theme.of(context).textTheme.bodyLarge!.color : Theme.of(context).disabledColor,
+            ), child: Text('take_away'.tr)),
+            PopupMenuItem(value: 'delivery', textStyle: robotoMedium.copyWith(
               color: storeController.storeType == 'delivery'
-                  ? Theme.of(context).textTheme.bodyLarge.color : Theme.of(context).disabledColor,
-            )),
+                  ? Theme.of(context).textTheme.bodyLarge!.color : Theme.of(context).disabledColor,
+            ), child: Text('delivery'.tr)),
           ];
         },
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
           child: Icon(Icons.filter_list),
         ),
-        onSelected: (value) => storeController.setStoreType(value),
-      ) : SizedBox();
+        onSelected: (dynamic value) => storeController.setStoreType(value),
+      ) : const SizedBox();
     });
   }
 }

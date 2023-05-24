@@ -18,19 +18,19 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 class BannerView1 extends StatelessWidget {
   final bool isFeatured;
-  BannerView1({@required this.isFeatured});
+  const BannerView1({Key? key, required this.isFeatured}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
     return GetBuilder<BannerController>(builder: (bannerController) {
-      List<String> bannerList = isFeatured ? bannerController.featuredBannerList : bannerController.bannerImageList;
-      List<dynamic> bannerDataList = isFeatured ? bannerController.featuredBannerDataList : bannerController.bannerDataList;
+      List<String?>? bannerList = isFeatured ? bannerController.featuredBannerList : bannerController.bannerImageList;
+      List<dynamic>? bannerDataList = isFeatured ? bannerController.featuredBannerDataList : bannerController.bannerDataList;
 
-      return (bannerList != null && bannerList.length == 0) ? SizedBox() : Container(
+      return (bannerList != null && bannerList.isEmpty) ? const SizedBox() : Container(
         width: MediaQuery.of(context).size.width,
         height: GetPlatform.isDesktop ? 500 : MediaQuery.of(context).size.width * 0.45,
-        padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_DEFAULT),
+        padding: const EdgeInsets.only(top: Dimensions.paddingSizeDefault),
         child: bannerList != null ? Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -41,37 +41,37 @@ class BannerView1 extends StatelessWidget {
                   enlargeCenterPage: true,
                   disableCenter: true,
                   viewportFraction: 0.95,
-                  autoPlayInterval: Duration(seconds: 7),
+                  autoPlayInterval: const Duration(seconds: 7),
                   onPageChanged: (index, reason) {
                     bannerController.setCurrentIndex(index, true);
                   },
                 ),
-                itemCount: bannerList.length == 0 ? 1 : bannerList.length,
+                itemCount: bannerList.isEmpty ? 1 : bannerList.length,
                 itemBuilder: (context, index, _) {
-                  String _baseUrl = bannerDataList[index] is BasicCampaignModel ? Get.find<SplashController>()
-                      .configModel.baseUrls.campaignImageUrl : Get.find<SplashController>().configModel.baseUrls.bannerImageUrl;
+                  String? baseUrl = bannerDataList![index] is BasicCampaignModel ? Get.find<SplashController>()
+                      .configModel!.baseUrls!.campaignImageUrl : Get.find<SplashController>().configModel!.baseUrls!.bannerImageUrl;
                   return InkWell(
                     onTap: () async {
                       if(bannerDataList[index] is Item) {
-                        Item _item = bannerDataList[index];
-                        Get.find<ItemController>().navigateToItemPage(_item, context);
+                        Item? item = bannerDataList[index];
+                        Get.find<ItemController>().navigateToItemPage(item, context);
                       }else if(bannerDataList[index] is Store) {
-                        Store _store = bannerDataList[index];
+                        Store? store = bannerDataList[index];
                         if(isFeatured && Get.find<SplashController>().moduleList != null) {
-                          for(ModuleModel module in Get.find<SplashController>().moduleList) {
-                            if(module.id == _store.moduleId) {
+                          for(ModuleModel module in Get.find<SplashController>().moduleList!) {
+                            if(module.id == store!.moduleId) {
                               Get.find<SplashController>().setModule(module);
                               break;
                             }
                           }
                         }
                         Get.toNamed(
-                          RouteHelper.getStoreRoute(_store.id, isFeatured ? 'module' : 'banner'),
-                          arguments: StoreScreen(store: _store, fromModule: isFeatured),
+                          RouteHelper.getStoreRoute(store!.id, isFeatured ? 'module' : 'banner'),
+                          arguments: StoreScreen(store: store, fromModule: isFeatured),
                         );
                       }else if(bannerDataList[index] is BasicCampaignModel) {
-                        BasicCampaignModel _campaign = bannerDataList[index];
-                        Get.toNamed(RouteHelper.getBasicCampaignRoute(_campaign));
+                        BasicCampaignModel campaign = bannerDataList[index];
+                        Get.toNamed(RouteHelper.getBasicCampaignRoute(campaign));
                       }else {
                         String url = bannerDataList[index];
                         if (await canLaunchUrlString(url)) {
@@ -84,14 +84,14 @@ class BannerView1 extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                        boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 1, blurRadius: 5)],
+                        borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                        boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, spreadRadius: 1, blurRadius: 5)],
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                        borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                         child: GetBuilder<SplashController>(builder: (splashController) {
                           return CustomImage(
-                            image: '$_baseUrl/${bannerList[index]}',
+                            image: '$baseUrl/${bannerList[index]}',
                             fit: BoxFit.cover,
                           );
                         }),
@@ -102,7 +102,7 @@ class BannerView1 extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            const SizedBox(height: Dimensions.paddingSizeExtraSmall),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: bannerList.map((bnr) {
@@ -118,10 +118,10 @@ class BannerView1 extends StatelessWidget {
 
           ],
         ) : Shimmer(
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
           enabled: bannerList == null,
-          child: Container(margin: EdgeInsets.symmetric(horizontal: 10), decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+          child: Container(margin: const EdgeInsets.symmetric(horizontal: 10), decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
             color: Colors.grey[300],
           )),
         ),

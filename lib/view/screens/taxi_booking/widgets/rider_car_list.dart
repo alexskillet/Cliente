@@ -6,9 +6,9 @@ import 'package:sixam_mart/util/dimensions.dart';
 import 'rider_car_card.dart';
 
 class RiderCarList extends StatelessWidget {
-  final VehicleModel vehicleModel;
+  final VehicleModel? vehicleModel;
   final UserInformationBody filterBody;
-  const RiderCarList({Key key, @required this.vehicleModel, @required this.filterBody}) : super(key: key);
+  const RiderCarList({Key? key, required this.vehicleModel, required this.filterBody}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,18 +16,18 @@ class RiderCarList extends StatelessWidget {
       key: UniqueKey(),
       padding: EdgeInsets.zero,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisSpacing: Dimensions.PADDING_SIZE_LARGE,
+        crossAxisSpacing: Dimensions.paddingSizeLarge,
         mainAxisSpacing: ResponsiveHelper.isDesktop(context) ?
-        Dimensions.PADDING_SIZE_LARGE : 3,
+        Dimensions.paddingSizeLarge : 3,
         childAspectRatio: ResponsiveHelper.isMobile(context) ?  1.6 : 6,
         crossAxisCount: ResponsiveHelper.isMobile(context) ? 1 :2,
         mainAxisExtent:ResponsiveHelper.isMobile(context) ? 245 : 125,
       ),
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: vehicleModel.vehicles.length,
+      itemCount: vehicleModel!.vehicles!.length,
       itemBuilder: (context,index){
-        return RiderCarCard(vehicle: vehicleModel.vehicles[index], filterBody: filterBody);
+        return RiderCarCard(vehicle: vehicleModel!.vehicles![index], filterBody: filterBody);
       },
     );
   }

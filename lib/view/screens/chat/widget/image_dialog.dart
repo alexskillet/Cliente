@@ -4,12 +4,12 @@ import 'package:sixam_mart/view/base/custom_image.dart';
 
 class ImageDialog extends StatelessWidget {
   final String imageUrl;
-  const ImageDialog({Key key, @required this.imageUrl}) : super(key: key);
+  const ImageDialog({Key? key, required this.imageUrl}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -18,13 +18,13 @@ class ImageDialog extends StatelessWidget {
             Align(
               alignment: Alignment.centerRight,
               child: IconButton(
-                icon: Icon(Icons.close),
+                icon: const Icon(Icons.close),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
 
             Container(
-              margin: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+              margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Theme.of(context).primaryColor.withOpacity(0.20)),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
@@ -33,7 +33,7 @@ class ImageDialog extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+            const SizedBox(height: Dimensions.paddingSizeLarge),
 
           ],
         ),

@@ -1,13 +1,13 @@
 class RiderModel {
-  RiderLatLng latLng;
-  String phone;
-  int id;
-  double ratings;
-  String updatedTime;
-  bool isAvailable;
-  double heading;
-  String name;
-  String image;
+  RiderLatLng? latLng;
+  String? phone;
+  int? id;
+  double? ratings;
+  String? updatedTime;
+  bool? isAvailable;
+  double? heading;
+  String? name;
+  String? image;
 
   RiderModel(
       {this.latLng,
@@ -21,39 +21,39 @@ class RiderModel {
         this.image,
       });
 
-  RiderModel.fromJson(Map<Object, Object> json) {
-    Map<String, dynamic> _json = Map.from(json);
-    latLng = _json['latLng'] != null ? new RiderLatLng.fromJson(_json['latLng']) : null;
-    phone = _json['phone'];
-    id = _json['id'];
-    ratings = _json['ratings'].toDouble();
-    updatedTime = _json['updated_time'];
-    isAvailable = _json['isAvailable'];
-    heading = _json['heading'].toDouble();
-    name = _json['name'];
-    image = _json['image'];
+  RiderModel.fromJson(Map<Object, Object> j) {
+    Map<String, dynamic> json = Map.from(j);
+    latLng = json['latLng'] != null ? RiderLatLng.fromJson(json['latLng']) : null;
+    phone = json['phone'];
+    id = json['id'];
+    ratings = json['ratings'].toDouble();
+    updatedTime = json['updated_time'];
+    isAvailable = json['isAvailable'];
+    heading = json['heading'].toDouble();
+    name = json['name'];
+    image = json['image'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.latLng != null) {
-      data['latLng'] = this.latLng.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (latLng != null) {
+      data['latLng'] = latLng!.toJson();
     }
-    data['phone'] = this.phone;
-    data['id'] = this.id;
-    data['ratings'] = this.ratings;
-    data['updated_time'] = this.updatedTime;
-    data['isAvailable'] = this.isAvailable;
-    data['heading'] = this.heading;
-    data['name'] = this.name;
-    data['image'] = this.image;
+    data['phone'] = phone;
+    data['id'] = id;
+    data['ratings'] = ratings;
+    data['updated_time'] = updatedTime;
+    data['isAvailable'] = isAvailable;
+    data['heading'] = heading;
+    data['name'] = name;
+    data['image'] = image;
     return data;
   }
 }
 
 class RiderLatLng {
-  double lat;
-  double lng;
+  double? lat;
+  double? lng;
 
   RiderLatLng({this.lat, this.lng});
 
@@ -63,9 +63,9 @@ class RiderLatLng {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['0'] = this.lat;
-    data['1'] = this.lng;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['0'] = lat;
+    data['1'] = lng;
     return data;
   }
 }

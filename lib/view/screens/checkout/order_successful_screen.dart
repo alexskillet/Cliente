@@ -19,8 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OrderSuccessfulScreen extends StatefulWidget {
-  final String orderID;
-  OrderSuccessfulScreen({@required this.orderID});
+  final String? orderID;
+  const OrderSuccessfulScreen({Key? key, required this.orderID}) : super(key: key);
 
   @override
   State<OrderSuccessfulScreen> createState() => _OrderSuccessfulScreenState();
@@ -28,7 +28,7 @@ class OrderSuccessfulScreen extends StatefulWidget {
 
 class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
 
-  bool _isCashOnDeliveryActive = false;
+  bool? _isCashOnDeliveryActive = false;
 
   @override
   void initState() {
@@ -46,53 +46,52 @@ class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).cardColor,
-        appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
-        endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+        appBar: ResponsiveHelper.isDesktop(context) ? const WebMenuBar() : null,
+        endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
         body: GetBuilder<OrderController>(builder: (orderController){
           double total = 0;
           bool success = true;
           bool parcel = false;
-          double _maximumCodOrderAmount;
+          double? maximumCodOrderAmount;
           if(orderController.trackModel != null) {
-            total = ((orderController.trackModel.orderAmount / 100) * Get.find<SplashController>().configModel.loyaltyPointItemPurchasePoint);
-            success = orderController.trackModel.paymentStatus == 'paid' || orderController.trackModel.paymentMethod == 'cash_on_delivery';
-            parcel = orderController.trackModel.paymentMethod == 'parcel';
-            for(ZoneData zData in Get.find<LocationController>().getUserAddress().zoneData) {
-              for(Modules m in zData.modules) {
-                if(m.id == Get.find<SplashController>().module.id) {
-                  _maximumCodOrderAmount = m.pivot.maximumCodOrderAmount;
+            total = ((orderController.trackModel!.orderAmount! / 100) * Get.find<SplashController>().configModel!.loyaltyPointItemPurchasePoint!);
+            success = orderController.trackModel!.paymentStatus == 'paid' || orderController.trackModel!.paymentMethod == 'cash_on_delivery';
+            parcel = orderController.trackModel!.paymentMethod == 'parcel';
+            for(ZoneData zData in Get.find<LocationController>().getUserAddress()!.zoneData!) {
+              for(Modules m in zData.modules!) {
+                if(m.id == Get.find<SplashController>().module!.id) {
+                  maximumCodOrderAmount = m.pivot!.maximumCodOrderAmount;
                   break;
                 }
               }
-              if(zData.id ==  Get.find<LocationController>().getUserAddress().zoneId){
+              if(zData.id ==  Get.find<LocationController>().getUserAddress()!.zoneId){
                 _isCashOnDeliveryActive = zData.cashOnDelivery;
               }
             }
 
-            print('----maximum : $_maximumCodOrderAmount / $success / ${orderController.trackModel.paymentStatus}');
-            if (!success && !Get.isDialogOpen) {
-              Future.delayed(Duration(seconds: 1), () {
-                Get.dialog(PaymentFailedDialog(orderID: widget.orderID, isCashOnDelivery: _isCashOnDeliveryActive, orderAmount: total, maxCodOrderAmount: _maximumCodOrderAmount, orderType: parcel ? 'parcel' : 'delivery'), barrierDismissible: false);
+            if (!success && !Get.isDialogOpen! && orderController.trackModel!.orderStatus != 'canceled') {
+              Future.delayed(const Duration(seconds: 1), () {
+                Get.dialog(PaymentFailedDialog(orderID: widget.orderID, isCashOnDelivery: _isCashOnDeliveryActive, orderAmount: total, maxCodOrderAmount: maximumCodOrderAmount, orderType: parcel ? 'parcel' : 'delivery'), barrierDismissible: false);
               });
             }
           }
 
           return orderController.trackModel != null ? Center(
             child: SingleChildScrollView(
-              child: FooterView(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              child: FooterView(child: SizedBox(width: Dimensions.webMaxWidth, child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
 
                 Image.asset(success ? Images.checked : Images.warning, width: 100, height: 100),
-                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                const SizedBox(height: Dimensions.paddingSizeLarge),
 
                 Text(
                   success ? parcel ? 'you_placed_the_parcel_request_successfully'.tr
                       : 'you_placed_the_order_successfully'.tr : 'your_order_is_failed_to_place'.tr,
                   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
                 ),
-                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                const SizedBox(height: Dimensions.paddingSizeSmall),
 
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE, vertical: Dimensions.PADDING_SIZE_SMALL),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeSmall),
                   child: Text(
                     success ? parcel ? 'your_parcel_request_is_placed_successfully'.tr
                         : 'your_order_is_placed_successfully'.tr : 'your_order_is_failed_to_place_because'.tr,
@@ -101,32 +100,32 @@ class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
                   ),
                 ),
 
-                (success && Get.find<SplashController>().configModel.loyaltyPointStatus == 1 && total.floor() > 0 )  ? Column(children: [
+                (success && Get.find<SplashController>().configModel!.loyaltyPointStatus == 1 && total.floor() > 0 )  ? Column(children: [
 
-                  Image.asset(Get.find<ThemeController>().darkTheme ? Images.gift_box1 : Images.gift_box, width: 150, height: 150),
+                  Image.asset(Get.find<ThemeController>().darkTheme ? Images.giftBox1 : Images.giftBox, width: 150, height: 150),
 
                   Text('congratulations'.tr , style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
-                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                  const SizedBox(height: Dimensions.paddingSizeSmall),
 
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
                     child: Text(
-                      'you_have_earned'.tr + ' ${total.floor().toString()} ' + 'points_it_will_add_to'.tr,
+                      '${'you_have_earned'.tr} ${total.floor().toString()} ${'points_it_will_add_to'.tr}',
                       style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge,color: Theme.of(context).disabledColor),
                       textAlign: TextAlign.center,
                     ),
                   ),
 
-                ]) : SizedBox.shrink() ,
-                SizedBox(height: 30),
+                ]) : const SizedBox.shrink() ,
+                const SizedBox(height: 30),
 
                 Padding(
-                  padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                   child: CustomButton(buttonText: 'back_to_home'.tr, onPressed: () => Get.offAllNamed(RouteHelper.getInitialRoute())),
                 ),
               ]))),
             ),
-          ) : Center(child: CircularProgressIndicator());
+          ) : const Center(child: CircularProgressIndicator());
         }),
       ),
     );

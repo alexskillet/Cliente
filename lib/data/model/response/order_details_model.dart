@@ -1,23 +1,23 @@
 import 'package:sixam_mart/data/model/response/item_model.dart';
 
 class OrderDetailsModel {
-  int id;
-  int itemId;
-  int orderId;
-  double price;
-  Item itemDetails;
-  List<Variation> variation;
-  List<FoodVariation> foodVariation;
-  List<AddOn> addOns;
-  double discountOnItem;
-  String discountType;
-  int quantity;
-  double taxAmount;
-  String variant;
-  String createdAt;
-  String updatedAt;
-  int itemCampaignId;
-  double totalAddOnPrice;
+  int? id;
+  int? itemId;
+  int? orderId;
+  double? price;
+  Item? itemDetails;
+  List<Variation>? variation;
+  List<FoodVariation>? foodVariation;
+  List<AddOn>? addOns;
+  double? discountOnItem;
+  String? discountType;
+  int? quantity;
+  double? taxAmount;
+  String? variant;
+  String? createdAt;
+  String? updatedAt;
+  int? itemCampaignId;
+  double? totalAddOnPrice;
 
   OrderDetailsModel(
       {this.id,
@@ -43,24 +43,24 @@ class OrderDetailsModel {
     itemId = json['item_id'];
     orderId = json['order_id'];
     price = json['price'].toDouble();
-    itemDetails = json['item_details'] != null ? new Item.fromJson(json['item_details']) : null;
+    itemDetails = json['item_details'] != null ? Item.fromJson(json['item_details']) : null;
     variation = [];
     foodVariation = [];
     if (json['variation'] != null && json['variation'].isNotEmpty) {
       if(json['variation'][0]['values'] != null) {
         json['variation'].forEach((v) {
-          foodVariation.add(FoodVariation.fromJson(v));
+          foodVariation!.add(FoodVariation.fromJson(v));
         });
       }else {
         json['variation'].forEach((v) {
-          variation.add(Variation.fromJson(v));
+          variation!.add(Variation.fromJson(v));
         });
       }
     }
     if (json['add_ons'] != null) {
       addOns = [];
       json['add_ons'].forEach((v) {
-        addOns.add(new AddOn.fromJson(v));
+        addOns!.add(AddOn.fromJson(v));
       });
     }
     discountOnItem = json['discount_on_item'].toDouble();
@@ -75,39 +75,39 @@ class OrderDetailsModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['item_id'] = this.itemId;
-    data['order_id'] = this.orderId;
-    data['price'] = this.price;
-    if (this.itemDetails != null) {
-      data['item_details'] = this.itemDetails.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['item_id'] = itemId;
+    data['order_id'] = orderId;
+    data['price'] = price;
+    if (itemDetails != null) {
+      data['item_details'] = itemDetails!.toJson();
     }
-    if (this.variation != null) {
-      data['variation'] = this.variation.map((v) => v.toJson()).toList();
-    }else if(this.foodVariation != null) {
-      data['variation'] = this.foodVariation.map((v) => v.toJson()).toList();
+    if (variation != null) {
+      data['variation'] = variation!.map((v) => v.toJson()).toList();
+    }else if(foodVariation != null) {
+      data['variation'] = foodVariation!.map((v) => v.toJson()).toList();
     }
-    if (this.addOns != null) {
-      data['add_ons'] = this.addOns.map((v) => v.toJson()).toList();
+    if (addOns != null) {
+      data['add_ons'] = addOns!.map((v) => v.toJson()).toList();
     }
-    data['discount_on_item'] = this.discountOnItem;
-    data['discount_type'] = this.discountType;
-    data['quantity'] = this.quantity;
-    data['tax_amount'] = this.taxAmount;
-    data['variant'] = this.variant;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['item_campaign_id'] = this.itemCampaignId;
-    data['total_add_on_price'] = this.totalAddOnPrice;
+    data['discount_on_item'] = discountOnItem;
+    data['discount_type'] = discountType;
+    data['quantity'] = quantity;
+    data['tax_amount'] = taxAmount;
+    data['variant'] = variant;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['item_campaign_id'] = itemCampaignId;
+    data['total_add_on_price'] = totalAddOnPrice;
     return data;
   }
 }
 
 class AddOn {
-  String name;
-  double price;
-  int quantity;
+  String? name;
+  double? price;
+  int? quantity;
 
   AddOn({this.name, this.price, this.quantity});
 
@@ -118,10 +118,10 @@ class AddOn {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['price'] = this.price;
-    data['quantity'] = this.quantity;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['price'] = price;
+    data['quantity'] = quantity;
     return data;
   }
 }

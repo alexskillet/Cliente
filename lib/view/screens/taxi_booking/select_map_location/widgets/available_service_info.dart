@@ -16,8 +16,8 @@ import 'dotted_line.dart';
 import 'pick_and_destination_address_info.dart';
 
 class AvailableServiceInfo extends StatefulWidget {
-  final Vehicles vehicle;
-  const AvailableServiceInfo({Key key, @required this.vehicle}) : super(key: key);
+  final Vehicles? vehicle;
+  const AvailableServiceInfo({Key? key, required this.vehicle}) : super(key: key);
 
   @override
   State<AvailableServiceInfo> createState() => _AvailableServiceInfoState();
@@ -35,36 +35,35 @@ class _AvailableServiceInfoState extends State<AvailableServiceInfo> {
     return GetBuilder<RiderController>(
       builder: (riderController){
         return Container(
-          height: 550,
           color: Theme.of(context).cardColor,
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+                padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
                 child: Column(
                   children: [
-                    SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+                    const SizedBox(height: Dimensions.paddingSizeDefault,),
                     Center(
                       child: Container(
                         height: 5, width: 50,
                         decoration: BoxDecoration(
                           color: Theme.of(context).highlightColor,
-                          borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                          borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
                         ),
                       ),
                     ),
-                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                    const SizedBox(height: Dimensions.paddingSizeLarge),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('trip_info'.tr,style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall),),
                         // Image.asset(Images.edit, width: 16.0, height: 16.0),
-                        SizedBox()
+                        const SizedBox()
                       ],
                     ),
-                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE,),
+                    const SizedBox(height: Dimensions.paddingSizeLarge,),
                     ///pick up and destination address
-                    Container(
+                    SizedBox(
                       height: 90,
                       child: Row(
                         children: [
@@ -81,7 +80,7 @@ class _AvailableServiceInfoState extends State<AvailableServiceInfo> {
                                       height: 18, width: 18,
                                       decoration: BoxDecoration(
                                         color: Theme.of(context).primaryColor,
-                                        borderRadius: BorderRadius.all(Radius.circular(2)),
+                                        borderRadius: const BorderRadius.all(Radius.circular(2)),
                                       ),
                                     ),
                                     Container(
@@ -89,7 +88,7 @@ class _AvailableServiceInfoState extends State<AvailableServiceInfo> {
                                       width: 4,
                                       decoration: BoxDecoration(
                                         color: Theme.of(context).cardColor,
-                                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                                        borderRadius: const BorderRadius.all(Radius.circular(20)),
                                       ),
                                     ),
                                   ],
@@ -110,7 +109,7 @@ class _AvailableServiceInfoState extends State<AvailableServiceInfo> {
                               ),
                             ],
                           ),
-                          SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT,),
+                          const SizedBox(width: Dimensions.paddingSizeDefault,),
                           Expanded(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,16 +118,18 @@ class _AvailableServiceInfoState extends State<AvailableServiceInfo> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: RideAddressInfo(
-                                    title: riderController.fromAddress.address,
-                                    subTitle: 'Road 9/a,house-666,Dhaka',
+                                    title: riderController.fromAddress!.address,
+                                    subTitle: '${riderController.fromAddress!.streetNumber != null ? '${riderController.fromAddress!.streetNumber!}, ' : '' }'
+                                        '${riderController.fromAddress!.house ?? ''}',
                                     isInsideCity:true,
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 5),
                                   child: RideAddressInfo(
-                                    title: riderController.toAddress.address,
-                                    subTitle: 'Road 9/a,house-666,Dhaka',
+                                    title: riderController.toAddress!.address,
+                                    subTitle: '${riderController.toAddress!.streetNumber != null ? '${riderController.toAddress!.streetNumber!}, ' : '' }'
+                                        '${riderController.toAddress!.house ?? ''}',
                                     isInsideCity:true,
                                   ),
                                 ),
@@ -138,19 +139,19 @@ class _AvailableServiceInfoState extends State<AvailableServiceInfo> {
                         ],
                       ),
                     ),
-                    SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                    const SizedBox(height: Dimensions.paddingSizeDefault),
 
                     Divider(color: Theme.of(context).primaryColor),
-                    SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                    const SizedBox(height: Dimensions.paddingSizeDefault),
 
                     Row(
                       children: [
                         Container(
                           height: 33, width: 33, alignment: Alignment.center,
                           decoration: riderContainerDecoration,
-                          child: Icon(Icons.calendar_month,color: Theme.of(context).primaryColor),
+                          child: Icon(Icons.calendar_month, color: Theme.of(context).primaryColor),
                         ),
-                        SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
+                        const SizedBox(width: Dimensions.paddingSizeDefault),
 
                         Expanded(
                           child: Row(
@@ -163,14 +164,12 @@ class _AvailableServiceInfoState extends State<AvailableServiceInfo> {
                                   Text(
                                     riderController.tripDate ?? 'not set yet',
                                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall,
-                                        color: riderController.tripDate != null ? Theme.of(context).textTheme.bodyMedium.color : Colors.red),
+                                        color: riderController.tripDate != null ? Theme.of(context).textTheme.bodyMedium!.color : Colors.red),
                                   ),
                                 ],
                               ),
                               InkWell(
-                                onTap: () {
-                                  riderController.setDate();
-                                },
+                                onTap: () => riderController.setDate(),
                                 child: Image.asset(Images.edit, width: 16.0, height: 16.0),
                               ),
                             ],
@@ -178,16 +177,16 @@ class _AvailableServiceInfoState extends State<AvailableServiceInfo> {
                         )
                       ],
                     ),
-                    SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                    const SizedBox(height: Dimensions.paddingSizeDefault),
 
                     Row(
                       children: [
                         Container(
                           height: 33, width: 33, alignment: Alignment.center,
                           decoration: riderContainerDecoration,
-                          child: Icon(Icons.calendar_month,color: Theme.of(context).primaryColor),
+                          child: Icon(Icons.access_time, color: Theme.of(context).primaryColor),
                         ),
-                        SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
+                        const SizedBox(width: Dimensions.paddingSizeDefault),
 
                         Expanded(
                           child: Row(
@@ -198,16 +197,14 @@ class _AvailableServiceInfoState extends State<AvailableServiceInfo> {
                                 children: [
                                   Text('time'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall)),
                                   Text(
-                                    riderController.tripTime != null ? DateConverter.convertTimeToTime(riderController.tripTime) : 'not set yet',
+                                    riderController.tripTime != null ? DateConverter.convertTimeToTime(riderController.tripTime!) : 'not set yet',
                                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall,
-                                        color: riderController.tripTime != null ? Theme.of(context).textTheme.bodyMedium.color : Colors.red),
+                                        color: riderController.tripTime != null ? Theme.of(context).textTheme.bodyMedium!.color : Colors.red),
                                   ),
                                 ],
                               ),
                               InkWell(
-                                onTap: () {
-                                  riderController.setTime(context);
-                                },
+                                onTap: () => riderController.setTime(context),
                                 child: Image.asset(Images.edit, width: 16.0, height: 16.0),
                               ),
                             ],
@@ -215,32 +212,31 @@ class _AvailableServiceInfoState extends State<AvailableServiceInfo> {
                         )
                       ],
                     ),
-                    SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                    const SizedBox(height: Dimensions.paddingSizeDefault),
 
                     ///service card
                     Row(
                       children: [
                         ServiceTypeCard(
-                          rentType: 'hourly'.tr + '(hr)',
+                          rentType: '${'hourly'.tr}(hr)',
                           rentPrice: "45",
                           isSelected: riderController.carType == 0,
                           onTap: () => riderController.setCarType(0),
                         ),
-                        SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                        const SizedBox(width: Dimensions.paddingSizeSmall),
                         ServiceTypeCard(
-                          rentType: 'distance_wise'.tr + '(km)',
+                          rentType: '${'distance_wise'.tr}(km)',
                           rentPrice: "35",
                           isSelected: riderController.carType == 1,
                           onTap: () => riderController.setCarType(1),
                         ),
                       ],
                     ),
-                    SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
-                  ],
-                ),
+                    const SizedBox(height: Dimensions.paddingSizeDefault),
+                  ]),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
                 child: CustomCheckBox(
                     title: 'return_same_location'.tr,
                     value: riderController.isReturnSameLocation,
@@ -248,32 +244,32 @@ class _AvailableServiceInfoState extends State<AvailableServiceInfo> {
                       riderController.toggleIsReturnSameLocation(!riderController.isReturnSameLocation);
                     }),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+              const SizedBox(height: Dimensions.paddingSizeDefault),
 
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+                padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
                 child: CustomButton(
                   buttonText: 'confirm_and_search_car'.tr,
                   onPressed: (){
                     if(riderController.tripDate == null || riderController.tripTime == null){
                       showCustomSnackBar('please_set_your_rent_date_and_time'.tr);
                     }else{
-                      UserInformationBody _taxiBody = UserInformationBody(
+                      UserInformationBody taxiBody = UserInformationBody(
                         from: riderController.fromAddress, to: riderController.toAddress,
                         fareCategory: riderController.carType == 0 ? 'hourly' : 'per_km',
                         distance: riderController.distance, filterType: 'top_rated',
-                        rentTime: riderController.tripDate + ' ' + riderController.tripTime, duration: riderController.duration,
+                        rentTime: '${riderController.tripDate!} ${riderController.tripTime!}', duration: riderController.duration,
                       );
                       if(widget.vehicle == null) {
-                        Get.toNamed(RouteHelper.getSelectCarScreenRoute(_taxiBody));
+                        Get.toNamed(RouteHelper.getSelectCarScreenRoute(taxiBody));
                       }else{
-                        Get.toNamed(RouteHelper.getCarDetailsScreen(widget.vehicle, _taxiBody));
+                        Get.toNamed(RouteHelper.getCarDetailsScreen(widget.vehicle!, taxiBody));
                       }
                     }
                   },
                 ),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE,),
+              const SizedBox(height: Dimensions.paddingSizeExtraLarge,),
             ],
           ),
 

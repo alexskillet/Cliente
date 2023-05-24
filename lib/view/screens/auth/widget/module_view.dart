@@ -4,16 +4,16 @@ import 'package:sixam_mart/controller/auth_controller.dart';
 import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/util/styles.dart';
 class ModuleViewWidget extends StatelessWidget {
-  const ModuleViewWidget({Key key}) : super(key: key);
+  const ModuleViewWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(builder: (authController) {
-      List<int> _moduleIndexList = [];
+      List<int> moduleIndexList = [];
       if(authController.moduleList != null) {
-        for(int index=0; index < authController.moduleList.length; index++) {
-          if(authController.moduleList[index].moduleType != 'parcel') {
-            _moduleIndexList.add(index);
+        for(int index=0; index < authController.moduleList!.length; index++) {
+          if(authController.moduleList![index].moduleType != 'parcel') {
+            moduleIndexList.add(index);
           }
         }
       }
@@ -23,27 +23,27 @@ class ModuleViewWidget extends StatelessWidget {
           'select_module'.tr,
           style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
         ),
-        SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+        const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
         authController.moduleList != null ? Container(
-          padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
           decoration: BoxDecoration(
-            color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-            boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 2, blurRadius: 5, offset: Offset(0, 5))],
+            color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+            boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, spreadRadius: 2, blurRadius: 5, offset: const Offset(0, 5))],
           ),
           child: DropdownButton<int>(
             value: authController.selectedModuleIndex,
-            items: _moduleIndexList.map((int value) {
+            items: moduleIndexList.map((int value) {
               return DropdownMenuItem<int>(
                 value: value,
-                child: Text(authController.moduleList[value].moduleName),
+                child: Text(authController.moduleList![value].moduleName!),
               );
             }).toList(),
             onChanged: (value) {
               authController.selectModuleIndex(value);
             },
             isExpanded: true,
-            underline: SizedBox(),
+            underline: const SizedBox(),
           ),
         ) : Center(child: Text('not_available_module'.tr)),
       ]);

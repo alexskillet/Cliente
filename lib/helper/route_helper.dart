@@ -144,344 +144,344 @@ class RouteHelper {
   static const String taxiCouponScreen = '/taxi-coupon-screen';
 
 
-  static String getInitialRoute() => '$initial';
-  static String getSplashRoute(NotificationBody body) {
-    String _data = 'null';
+  static String getInitialRoute() => initial;
+  static String getSplashRoute(NotificationBody? body) {
+    String data = 'null';
     if(body != null) {
-      List<int> _encoded = utf8.encode(jsonEncode(body.toJson()));
-      _data = base64Encode(_encoded);
+      List<int> encoded = utf8.encode(jsonEncode(body.toJson()));
+      data = base64Encode(encoded);
     }
-    return '$splash?data=$_data';
+    return '$splash?data=$data';
   }
   static String getLanguageRoute(String page) => '$language?page=$page';
-  static String getOnBoardingRoute() => '$onBoarding';
+  static String getOnBoardingRoute() => onBoarding;
   static String getSignInRoute(String page) => '$signIn?page=$page';
-  static String getSignUpRoute() => '$signUp';
-  static String getVerificationRoute(String number, String token, String page, String pass) {
+  static String getSignUpRoute() => signUp;
+  static String getVerificationRoute(String? number, String? token, String page, String pass) {
     return '$verification?page=$page&number=$number&token=$token&pass=$pass';
   }
   static String getAccessLocationRoute(String page) => '$accessLocation?page=$page';
-  static String getPickMapRoute(String page, bool canRoute) => '$pickMap?page=$page&route=${canRoute.toString()}';
-  static String getInterestRoute() => '$interest';
+  static String getPickMapRoute(String? page, bool canRoute) => '$pickMap?page=$page&route=${canRoute.toString()}';
+  static String getInterestRoute() => interest;
   static String getMainRoute(String page) => '$main?page=$page';
-  static String getForgotPassRoute(bool fromSocialLogin, SocialLogInBody socialLogInBody) {
-    String _data;
+  static String getForgotPassRoute(bool fromSocialLogin, SocialLogInBody? socialLogInBody) {
+    String? data;
     if(fromSocialLogin) {
-      _data = base64Encode(utf8.encode(jsonEncode(socialLogInBody.toJson())));
+      data = base64Encode(utf8.encode(jsonEncode(socialLogInBody!.toJson())));
     }
-    return '$forgotPassword?page=${fromSocialLogin ? 'social-login' : 'forgot-password'}&data=${fromSocialLogin ? _data : 'null'}';
+    return '$forgotPassword?page=${fromSocialLogin ? 'social-login' : 'forgot-password'}&data=${fromSocialLogin ? data : 'null'}';
   }
-  static String getResetPasswordRoute(String phone, String token, String page) => '$resetPassword?phone=$phone&token=$token&page=$page';
-  static String getSearchRoute({String queryText}) => '$search?query=${queryText ?? ''}';
-  static String getStoreRoute(int id, String page) => '$store?id=$id&page=$page';
-  static String getOrderDetailsRoute(int orderID, {bool fromNotification}) {
+  static String getResetPasswordRoute(String? phone, String token, String page) => '$resetPassword?phone=$phone&token=$token&page=$page';
+  static String getSearchRoute({String? queryText}) => '$search?query=${queryText ?? ''}';
+  static String getStoreRoute(int? id, String page) => '$store?id=$id&page=$page';
+  static String getOrderDetailsRoute(int? orderID, {bool? fromNotification}) {
     return '$orderDetails?id=$orderID&from=${fromNotification.toString()}';
   }
-  static String getProfileRoute() => '$profile';
-  static String getUpdateProfileRoute() => '$updateProfile';
+  static String getProfileRoute() => profile;
+  static String getUpdateProfileRoute() => updateProfile;
   static String getCouponRoute({bool fromCheckout = false}) => '$coupon?fromCheckout=${fromCheckout ? 'true' : 'false'}';
-  static String getNotificationRoute({bool fromNotification}) => '$notification?from=${fromNotification.toString()}';
+  static String getNotificationRoute({bool? fromNotification}) => '$notification?from=${fromNotification.toString()}';
   static String getMapRoute(AddressModel addressModel, String page) {
-    List<int> _encoded = utf8.encode(jsonEncode(addressModel.toJson()));
-    String _data = base64Encode(_encoded);
-    return '$map?address=$_data&page=$page';
+    List<int> encoded = utf8.encode(jsonEncode(addressModel.toJson()));
+    String data = base64Encode(encoded);
+    return '$map?address=$data&page=$page';
   }
-  static String getAddressRoute() => '$address';
+  static String getAddressRoute() => address;
   static String getOrderSuccessRoute(String orderID) {
     return '$orderSuccess?id=$orderID';
   }
-  static String getPaymentRoute(String id, int user, String type, double amount, bool codDelivery) => '$payment?id=$id&user=$user&type=$type&amount=$amount&cod-delivery=$codDelivery';
-  static String getCheckoutRoute(String page,{int storeId}) => '$checkout?page=$page&store-id=$storeId';
-  static String getOrderTrackingRoute(int id) => '$orderTracking?id=$id';
+  static String getPaymentRoute(String id, int? user, String? type, double amount, bool? codDelivery) => '$payment?id=$id&user=$user&type=$type&amount=$amount&cod-delivery=$codDelivery';
+  static String getCheckoutRoute(String page,{int? storeId}) => '$checkout?page=$page&store-id=$storeId';
+  static String getOrderTrackingRoute(int? id) => '$orderTracking?id=$id';
   static String getBasicCampaignRoute(BasicCampaignModel basicCampaignModel) {
-    String _data = base64Encode(utf8.encode(jsonEncode(basicCampaignModel.toJson())));
-    return '$basicCampaign?data=$_data';
+    String data = base64Encode(utf8.encode(jsonEncode(basicCampaignModel.toJson())));
+    return '$basicCampaign?data=$data';
   }
   static String getHtmlRoute(String page) => '$html?page=$page';
-  static String getCategoryRoute() => '$categories';
-  static String getCategoryItemRoute(int id, String name) {
-    List<int> _encoded = utf8.encode(name);
-    String _data = base64Encode(_encoded);
-    return '$categoryItem?id=$id&name=$_data';
+  static String getCategoryRoute() => categories;
+  static String getCategoryItemRoute(int? id, String name) {
+    List<int> encoded = utf8.encode(name);
+    String data = base64Encode(encoded);
+    return '$categoryItem?id=$id&name=$data';
   }
   static String getPopularItemRoute(bool isPopular) => '$popularItems?page=${isPopular ? 'popular' : 'reviewed'}';
-  static String getItemCampaignRoute() => '$itemCampaign';
-  static String getSupportRoute() => '$support';
-  static String getReviewRoute() => '$rateReview';
+  static String getItemCampaignRoute() => itemCampaign;
+  static String getSupportRoute() => support;
+  static String getReviewRoute() => rateReview;
   static String getUpdateRoute(bool isUpdate) => '$update?update=${isUpdate.toString()}';
-  static String getCartRoute() => '$cart';
-  static String getAddAddressRoute(bool fromCheckout, bool fromRide, int zoneId) => '$addAddress?page=${fromCheckout ? 'checkout' : 'address'}&ride=$fromRide&zone_id=$zoneId';
+  static String getCartRoute() => cart;
+  static String getAddAddressRoute(bool fromCheckout, bool fromRide, int? zoneId) => '$addAddress?page=${fromCheckout ? 'checkout' : 'address'}&ride=$fromRide&zone_id=$zoneId';
   static String getEditAddressRoute(AddressModel address) {
-    String _data = base64Url.encode(utf8.encode(jsonEncode(address.toJson())));
-    return '$editAddress?data=$_data';
+    String data = base64Url.encode(utf8.encode(jsonEncode(address.toJson())));
+    return '$editAddress?data=$data';
   }
-  static String getStoreReviewRoute(int storeID) => '$storeReview?id=$storeID';
+  static String getStoreReviewRoute(int? storeID) => '$storeReview?id=$storeID';
   static String getAllStoreRoute(String page) => '$allStores?page=$page';
   static String getItemImagesRoute(Item item) {
-    String _data = base64Url.encode(utf8.encode(jsonEncode(item.toJson())));
-    return '$itemImages?item=$_data';
+    String data = base64Url.encode(utf8.encode(jsonEncode(item.toJson())));
+    return '$itemImages?item=$data';
   }
-  static String getParcelCategoryRoute() => '$parcelCategory';
+  static String getParcelCategoryRoute() => parcelCategory;
   static String getParcelLocationRoute(ParcelCategoryModel category) {
-    String _data = base64Url.encode(utf8.encode(jsonEncode(category.toJson())));
-    return '$parcelLocation?data=$_data';
+    String data = base64Url.encode(utf8.encode(jsonEncode(category.toJson())));
+    return '$parcelLocation?data=$data';
   }
   static String getParcelRequestRoute(ParcelCategoryModel category, AddressModel pickupAddress, AddressModel destinationAddress) {
-    String _category = base64Url.encode(utf8.encode(jsonEncode(category.toJson())));
-    String _pickedUpAddress = base64Url.encode(utf8.encode(jsonEncode(pickupAddress.toJson())));
-    String _destinationAddress = base64Url.encode(utf8.encode(jsonEncode(destinationAddress.toJson())));
-    return '$parcelRequest?category=$_category&picked=$_pickedUpAddress&destination=$_destinationAddress';
+    String category0 = base64Url.encode(utf8.encode(jsonEncode(category.toJson())));
+    String pickedUpAddress = base64Url.encode(utf8.encode(jsonEncode(pickupAddress.toJson())));
+    String destinationAddress0 = base64Url.encode(utf8.encode(jsonEncode(destinationAddress.toJson())));
+    return '$parcelRequest?category=$category0&picked=$pickedUpAddress&destination=$destinationAddress0';
   }
-  static String getSearchStoreItemRoute(int storeID) => '$searchStoreItem?id=$storeID';
-  static String getOrderRoute() => '$order';
-  static String getItemDetailsRoute(int itemID, bool isRestaurant) => '$itemDetails?id=$itemID&page=${isRestaurant ? 'restaurant' : 'item'}';
+  static String getSearchStoreItemRoute(int? storeID) => '$searchStoreItem?id=$storeID';
+  static String getOrderRoute() => order;
+  static String getItemDetailsRoute(int? itemID, bool isRestaurant) => '$itemDetails?id=$itemID&page=${isRestaurant ? 'restaurant' : 'item'}';
   static String getWalletRoute(bool fromWallet) => '$wallet?page=${fromWallet ? 'wallet' : 'loyalty_points'}';
-  static String getReferAndEarnRoute() => '$referAndEarn';
-  static String getChatRoute({@required NotificationBody notificationBody, User user, int conversationID, int index, bool fromNotification}) {
-    String _notificationBody = 'null';
+  static String getReferAndEarnRoute() => referAndEarn;
+  static String getChatRoute({required NotificationBody? notificationBody, User? user, int? conversationID, int? index, bool? fromNotification}) {
+    String notificationBody0 = 'null';
     if(notificationBody != null) {
-      _notificationBody = base64Encode(utf8.encode(jsonEncode(notificationBody.toJson())));
+      notificationBody0 = base64Encode(utf8.encode(jsonEncode(notificationBody.toJson())));
     }
-    String _user = 'null';
+    String user0 = 'null';
     if(user != null) {
-      _user = base64Encode(utf8.encode(jsonEncode(user.toJson())));
+      user0 = base64Encode(utf8.encode(jsonEncode(user.toJson())));
     }
-    return '$messages?notification=$_notificationBody&user=$_user&conversation_id=$conversationID&index=$index&from=${fromNotification.toString()}';
+    return '$messages?notification=$notificationBody0&user=$user0&conversation_id=$conversationID&index=$index&from=${fromNotification.toString()}';
   }
-  static String getConversationRoute() => '$conversation';
-  static String getRestaurantRegistrationRoute() => '$restaurantRegistration';
-  static String getDeliverymanRegistrationRoute() => '$deliveryManRegistration';
+  static String getConversationRoute() => conversation;
+  static String getRestaurantRegistrationRoute() => restaurantRegistration;
+  static String getDeliverymanRegistrationRoute() => deliveryManRegistration;
   static String getRefundRequestRoute(String orderID) => '$refund?id=$orderID';
 
-  static String getSelectRideMapLocationRoute(String riderType, AddressModel addressModel, Vehicles vehicle) {
-    String _riderType = base64Url.encode(utf8.encode(jsonEncode(riderType)));
-    String _address = 'null';
-    String _vehicle = 'null';
+  static String getSelectRideMapLocationRoute(String riderType, AddressModel? addressModel, Vehicles? vehicle) {
+    String riderType0 = base64Url.encode(utf8.encode(jsonEncode(riderType)));
+    String address = 'null';
+    String vehicle0 = 'null';
     if(addressModel != null){
-      _address = base64Url.encode(utf8.encode(jsonEncode(addressModel)));
+      address = base64Url.encode(utf8.encode(jsonEncode(addressModel)));
     }
     if(vehicle != null){
-      _vehicle = base64Url.encode(utf8.encode(jsonEncode(vehicle)));
+      vehicle0 = base64Url.encode(utf8.encode(jsonEncode(vehicle)));
     }
-    return '$selectRideMapLocation?rider_type=$_riderType&address=$_address&vehicle=$_vehicle';
+    return '$selectRideMapLocation?rider_type=$riderType0&address=$address&vehicle=$vehicle0';
   }
   static String getSelectCarScreenRoute(UserInformationBody filterBody, ){
-    String _body = base64Url.encode(utf8.encode(jsonEncode(filterBody)));
-    return '$selectCarScreen?body=$_body';
+    String body = base64Url.encode(utf8.encode(jsonEncode(filterBody)));
+    return '$selectCarScreen?body=$body';
   }
   static String getCarDetailsScreen(Vehicles vehicle, UserInformationBody filterBody) {
-    String _vehicle = base64Url.encode(utf8.encode(jsonEncode(vehicle)));
-    String _body = base64Url.encode(utf8.encode(jsonEncode(filterBody)));
-    return '$carDetailsScreen?vehicle=$_vehicle&body=$_body';
+    String vehicle0 = base64Url.encode(utf8.encode(jsonEncode(vehicle.toJson())));
+    String body = base64Url.encode(utf8.encode(jsonEncode(filterBody.toJson())));
+    return '$carDetailsScreen?vehicle=$vehicle0&body=$body';
   }
   static String getBookingCheckoutScreen(Vehicles vehicle, UserInformationBody filterBody) {
-    String _vehicle = base64Url.encode(utf8.encode(jsonEncode(vehicle)));
-    String _body = base64Url.encode(utf8.encode(jsonEncode(filterBody)));
-    return '$bookingCheckoutScreen?vehicle=$_vehicle&body=$_body';
+    String vehicle0 = base64Url.encode(utf8.encode(jsonEncode(vehicle)));
+    String body = base64Url.encode(utf8.encode(jsonEncode(filterBody)));
+    return '$bookingCheckoutScreen?vehicle=$vehicle0&body=$body';
   }
-  static String getTripHistoryScreen() => '$tripHistoryScreen';
-  static String getOrderStatusScreen() => '$orderStatusScreen';
-  static String getTripCompletedConfirmationScreen() => '$tripCompletedConfirmationScreen';
-  static String getTaxiCouponScreen() => '$taxiCouponScreen';
+  static String getTripHistoryScreen() => tripHistoryScreen;
+  static String getOrderStatusScreen() => orderStatusScreen;
+  static String getTripCompletedConfirmationScreen() => tripCompletedConfirmationScreen;
+  static String getTaxiCouponScreen() => taxiCouponScreen;
 
   static List<GetPage> routes = [
-    GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0))),
+    GetPage(name: initial, page: () => getRoute(const DashboardScreen(pageIndex: 0))),
     GetPage(name: splash, page: () {
-      NotificationBody _data;
+      NotificationBody? data;
       if(Get.parameters['data'] != 'null') {
-        List<int> _decode = base64Decode(Get.parameters['data'].replaceAll(' ', '+'));
-        _data = NotificationBody.fromJson(jsonDecode(utf8.decode(_decode)));
+        List<int> decode = base64Decode(Get.parameters['data']!.replaceAll(' ', '+'));
+        data = NotificationBody.fromJson(jsonDecode(utf8.decode(decode)));
       }
-      return SplashScreen(body: _data);
+      return SplashScreen(body: data);
     }),
     GetPage(name: language, page: () => ChooseLanguageScreen(fromMenu: Get.parameters['page'] == 'menu')),
-    GetPage(name: onBoarding, page: () => OnBoardingScreen()),
+    GetPage(name: onBoarding, page: () => const OnBoardingScreen()),
     GetPage(name: signIn, page: () => SignInScreen(
       exitFromApp: Get.parameters['page'] == signUp || Get.parameters['page'] == splash || Get.parameters['page'] == onBoarding,
     )),
-    GetPage(name: signUp, page: () => SignUpScreen()),
+    GetPage(name: signUp, page: () => const SignUpScreen()),
     GetPage(name: verification, page: () {
-      List<int> _decode = base64Decode(Get.parameters['pass'].replaceAll(' ', '+'));
-      String _data = utf8.decode(_decode);
+      List<int> decode = base64Decode(Get.parameters['pass']!.replaceAll(' ', '+'));
+      String data = utf8.decode(decode);
       return VerificationScreen(
         number: Get.parameters['number'], fromSignUp: Get.parameters['page'] == signUp, token: Get.parameters['token'],
-        password: _data,
+        password: data,
       );
     }),
     GetPage(name: accessLocation, page: () => AccessLocationScreen(
       fromSignUp: Get.parameters['page'] == signUp, fromHome: Get.parameters['page'] == 'home', route: null,
     )),
     GetPage(name: pickMap, page: () {
-      PickMapScreen _pickMapScreen = Get.arguments;
-      bool _fromAddress = Get.parameters['page'] == 'add-address';
-      return ((Get.parameters['page'] == 'parcel' && _pickMapScreen == null) || (_fromAddress && _pickMapScreen == null))
-          ? NotFound() : _pickMapScreen != null ? _pickMapScreen : PickMapScreen(
-        fromSignUp: Get.parameters['page'] == signUp, fromAddAddress: _fromAddress, route: Get.parameters['page'],
+      PickMapScreen? pickMapScreen = Get.arguments;
+      bool fromAddress = Get.parameters['page'] == 'add-address';
+      return ((Get.parameters['page'] == 'parcel' && pickMapScreen == null) || (fromAddress && pickMapScreen == null))
+          ? const NotFound() : pickMapScreen ?? PickMapScreen(
+        fromSignUp: Get.parameters['page'] == signUp, fromAddAddress: fromAddress, route: Get.parameters['page'],
         canRoute: Get.parameters['route'] == 'true',
       );
     }),
-    GetPage(name: interest, page: () => InterestScreen()),
+    GetPage(name: interest, page: () => const InterestScreen()),
     GetPage(name: main, page: () => getRoute(DashboardScreen(
       pageIndex: Get.parameters['page'] == 'home' ? 0 : Get.parameters['page'] == 'favourite' ? 1
           : Get.parameters['page'] == 'cart' ? 2 : Get.parameters['page'] == 'order' ? 3 : Get.parameters['page'] == 'menu' ? 4 : 0,
     ))),
     GetPage(name: forgotPassword, page: () {
-      SocialLogInBody _data;
+      SocialLogInBody? data;
       if(Get.parameters['page'] == 'social-login') {
-        List<int> _decode = base64Decode(Get.parameters['data'].replaceAll(' ', '+'));
-        _data = SocialLogInBody.fromJson(jsonDecode(utf8.decode(_decode)));
+        List<int> decode = base64Decode(Get.parameters['data']!.replaceAll(' ', '+'));
+        data = SocialLogInBody.fromJson(jsonDecode(utf8.decode(decode)));
       }
-      return ForgetPassScreen(fromSocialLogin: Get.parameters['page'] == 'social-login', socialLogInBody: _data);
+      return ForgetPassScreen(fromSocialLogin: Get.parameters['page'] == 'social-login', socialLogInBody: data);
     }),
     GetPage(name: resetPassword, page: () => NewPassScreen(
       resetToken: Get.parameters['token'], number: Get.parameters['phone'], fromPasswordChange: Get.parameters['page'] == 'password-change',
     )),
     GetPage(name: search, page: () => getRoute(SearchScreen(queryText: Get.parameters['query']))),
     GetPage(name: store, page: () {
-      return getRoute(Get.arguments != null ? Get.arguments : StoreScreen(
-        store: Store(id: int.parse(Get.parameters['id'])),
+      return getRoute(Get.arguments ?? StoreScreen(
+        store: Store(id: int.parse(Get.parameters['id']!)),
         fromModule: Get.parameters['page'] == 'module',
       ));
     }),
     GetPage(name: orderDetails, page: () {
-      return getRoute(Get.arguments != null ? Get.arguments : OrderDetailsScreen(orderId: int.parse(Get.parameters['id'] ?? '0'), orderModel: null, fromNotification: Get.parameters['from'] == 'true'));
+      return getRoute(Get.arguments ?? OrderDetailsScreen(orderId: int.parse(Get.parameters['id'] ?? '0'), orderModel: null, fromNotification: Get.parameters['from'] == 'true'));
     }),
-    GetPage(name: profile, page: () => getRoute(ProfileScreen())),
-    GetPage(name: updateProfile, page: () => getRoute(UpdateProfileScreen())),
+    GetPage(name: profile, page: () => getRoute(const ProfileScreen())),
+    GetPage(name: updateProfile, page: () => getRoute(const UpdateProfileScreen())),
     GetPage(name: coupon, page: () => getRoute(CouponScreen(fromCheckout: Get.parameters['fromCheckout'] == 'true'))),
     GetPage(name: notification, page: () => getRoute(NotificationScreen(fromNotification: Get.parameters['from'] == 'true'))),
     GetPage(name: map, page: () {
-      List<int> _decode = base64Decode(Get.parameters['address'].replaceAll(' ', '+'));
-      AddressModel _data = AddressModel.fromJson(jsonDecode(utf8.decode(_decode)));
-      return getRoute(MapScreen(fromStore: Get.parameters['page'] == 'store', address: _data));
+      List<int> decode = base64Decode(Get.parameters['address']!.replaceAll(' ', '+'));
+      AddressModel data = AddressModel.fromJson(jsonDecode(utf8.decode(decode)));
+      return getRoute(MapScreen(fromStore: Get.parameters['page'] == 'store', address: data));
     }),
-    GetPage(name: address, page: () => getRoute(AddressScreen())),
+    GetPage(name: address, page: () => getRoute(const AddressScreen())),
     GetPage(name: orderSuccess, page: () => getRoute(OrderSuccessfulScreen(orderID: Get.parameters['id']),
     )),
     GetPage(name: payment, page: () => getRoute(PaymentScreen(orderModel: OrderModel(
-        id: int.parse(Get.parameters['id']), orderType: Get.parameters['type'], userId: int.parse(Get.parameters['user']),
-        orderAmount: double.parse(Get.parameters['amount'])),
+        id: int.parse(Get.parameters['id']!), orderType: Get.parameters['type'], userId: int.parse(Get.parameters['user']!),
+        orderAmount: double.parse(Get.parameters['amount']!)),
         isCashOnDelivery: Get.parameters['cod-delivery'] == 'true' ? true : false),
     )),
     GetPage(name: checkout, page: () {
-      CheckoutScreen _checkoutScreen = Get.arguments;
-      bool _fromCart = Get.parameters['page'] == 'cart';
-      return getRoute(_checkoutScreen != null ? _checkoutScreen : !_fromCart ? NotFound() : CheckoutScreen(
-        cartList: null, fromCart: Get.parameters['page'] == 'cart', storeId: Get.parameters['store-id'] != 'null' ? int.parse(Get.parameters['store-id']) : null,
-      ));
+      CheckoutScreen? checkoutScreen = Get.arguments;
+      bool fromCart = Get.parameters['page'] == 'cart';
+      return getRoute(checkoutScreen ?? (!fromCart ? const NotFound() : CheckoutScreen(
+        cartList: null, fromCart: Get.parameters['page'] == 'cart', storeId: Get.parameters['store-id'] != 'null' ? int.parse(Get.parameters['store-id']!) : null,
+      )));
     }),
     GetPage(name: orderTracking, page: () => getRoute(OrderTrackingScreen(orderID: Get.parameters['id']))),
     GetPage(name: basicCampaign, page: () {
-      BasicCampaignModel _data = BasicCampaignModel.fromJson(jsonDecode(utf8.decode(base64Decode(Get.parameters['data'].replaceAll(' ', '+')))));
-      return getRoute(CampaignScreen(campaign: _data));
+      BasicCampaignModel data = BasicCampaignModel.fromJson(jsonDecode(utf8.decode(base64Decode(Get.parameters['data']!.replaceAll(' ', '+')))));
+      return getRoute(CampaignScreen(campaign: data));
     }),
     GetPage(name: html, page: () => HtmlViewerScreen(
-      htmlType: Get.parameters['page'] == 'terms-and-condition' ? HtmlType.TERMS_AND_CONDITION
-          : Get.parameters['page'] == 'privacy-policy' ? HtmlType.PRIVACY_POLICY
-          : Get.parameters['page'] == 'shipping-policy' ? HtmlType.SHIPPING_POLICY
-          : Get.parameters['page'] == 'cancellation-policy' ? HtmlType.CANCELATION
-          : Get.parameters['page'] == 'refund-policy' ? HtmlType.REFUND : HtmlType.ABOUT_US,
+      htmlType: Get.parameters['page'] == 'terms-and-condition' ? HtmlType.termsAndCondition
+          : Get.parameters['page'] == 'privacy-policy' ? HtmlType.privacyPolicy
+          : Get.parameters['page'] == 'shipping-policy' ? HtmlType.shippingPolicy
+          : Get.parameters['page'] == 'cancellation-policy' ? HtmlType.cancellation
+          : Get.parameters['page'] == 'refund-policy' ? HtmlType.refund : HtmlType.aboutUs,
     )),
-    GetPage(name: categories, page: () => getRoute(CategoryScreen())),
+    GetPage(name: categories, page: () => getRoute(const CategoryScreen())),
     GetPage(name: categoryItem, page: () {
-      List<int> _decode = base64Decode(Get.parameters['name'].replaceAll(' ', '+'));
-      String _data = utf8.decode(_decode);
-      return getRoute(CategoryItemScreen(categoryID: Get.parameters['id'], categoryName: _data));
+      List<int> decode = base64Decode(Get.parameters['name']!.replaceAll(' ', '+'));
+      String data = utf8.decode(decode);
+      return getRoute(CategoryItemScreen(categoryID: Get.parameters['id'], categoryName: data));
     }),
     GetPage(name: popularItems, page: () => getRoute(PopularItemScreen(isPopular: Get.parameters['page'] == 'popular'))),
-    GetPage(name: itemCampaign, page: () => getRoute(ItemCampaignScreen())),
-    GetPage(name: support, page: () => getRoute(SupportScreen())),
+    GetPage(name: itemCampaign, page: () => getRoute(const ItemCampaignScreen())),
+    GetPage(name: support, page: () => getRoute(const SupportScreen())),
     GetPage(name: update, page: () => UpdateScreen(isUpdate: Get.parameters['update'] == 'true')),
-    GetPage(name: cart, page: () => getRoute(CartScreen(fromNav: false))),
+    GetPage(name: cart, page: () => getRoute(const CartScreen(fromNav: false))),
     GetPage(name: addAddress, page: () => getRoute(AddAddressScreen(
-      fromCheckout: Get.parameters['page'] == 'checkout', fromRide: Get.parameters['ride'] == 'true', zoneId: int.parse(Get.parameters['zone_id']),
+      fromCheckout: Get.parameters['page'] == 'checkout', fromRide: Get.parameters['ride'] == 'true', zoneId: int.parse(Get.parameters['zone_id']!),
     ))),
     GetPage(name: editAddress, page: () => getRoute(AddAddressScreen(
       fromCheckout: false, fromRide: false,
-      address: AddressModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['data'].replaceAll(' ', '+'))))),
+      address: AddressModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['data']!.replaceAll(' ', '+'))))),
     ))),
-    GetPage(name: rateReview, page: () => getRoute(Get.arguments != null ? Get.arguments : NotFound())),
+    GetPage(name: rateReview, page: () => getRoute(Get.arguments ?? const NotFound())),
     GetPage(name: storeReview, page: () => getRoute(ReviewScreen(storeID: Get.parameters['id']))),
     GetPage(name: allStores, page: () => getRoute(AllStoreScreen(
       isPopular: Get.parameters['page'] == 'popular', isFeatured: Get.parameters['page'] == 'featured',
     ))),
     GetPage(name: itemImages, page: () => getRoute(ImageViewerScreen(
-      item: Item.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['item'].replaceAll(' ', '+'))))),
+      item: Item.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['item']!.replaceAll(' ', '+'))))),
     ))),
-    GetPage(name: parcelCategory, page: () => getRoute(ParcelCategoryScreen())),
+    GetPage(name: parcelCategory, page: () => getRoute(const ParcelCategoryScreen())),
     GetPage(name: parcelLocation, page: () => getRoute(ParcelLocationScreen(
-      category: ParcelCategoryModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['data'].replaceAll(' ', '+'))))),
+      category: ParcelCategoryModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['data']!.replaceAll(' ', '+'))))),
     ))),
     GetPage(name: parcelRequest, page: () => getRoute(ParcelRequestScreen(
-      parcelCategory: ParcelCategoryModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['category'].replaceAll(' ', '+'))))),
-      pickedUpAddress: AddressModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['picked'].replaceAll(' ', '+'))))),
-      destinationAddress: AddressModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['destination'].replaceAll(' ', '+'))))),
+      parcelCategory: ParcelCategoryModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['category']!.replaceAll(' ', '+'))))),
+      pickedUpAddress: AddressModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['picked']!.replaceAll(' ', '+'))))),
+      destinationAddress: AddressModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['destination']!.replaceAll(' ', '+'))))),
     ))),
     GetPage(name: searchStoreItem, page: () => getRoute(StoreItemSearchScreen(storeID: Get.parameters['id']))),
-    GetPage(name: order, page: () => getRoute(OrderScreen())),
-    GetPage(name: itemDetails, page: () => getRoute(Get.arguments != null ? Get.arguments : ItemDetailsScreen(item: Item(id: int.parse(Get.parameters['id'])), inStorePage: Get.parameters['page'] == 'restaurant'))),
+    GetPage(name: order, page: () => getRoute(const OrderScreen())),
+    GetPage(name: itemDetails, page: () => getRoute(Get.arguments ?? ItemDetailsScreen(item: Item(id: int.parse(Get.parameters['id']!)), inStorePage: Get.parameters['page'] == 'restaurant'))),
     GetPage(name: wallet, page: () => getRoute(WalletScreen(fromWallet: Get.parameters['page'] == 'wallet'))),
-    GetPage(name: referAndEarn, page: () => getRoute(ReferAndEarnScreen())),
+    GetPage(name: referAndEarn, page: () => getRoute(const ReferAndEarnScreen())),
     GetPage(name: messages, page: () {
-      NotificationBody _notificationBody;
+      NotificationBody? notificationBody;
       if(Get.parameters['notification'] != 'null') {
-        _notificationBody = NotificationBody.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['notification'].replaceAll(' ', '+')))));
+        notificationBody = NotificationBody.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['notification']!.replaceAll(' ', '+')))));
       }
-      User _user;
+      User? user;
       if(Get.parameters['user'] != 'null') {
-        _user = User.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['user'].replaceAll(' ', '+')))));
+        user = User.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['user']!.replaceAll(' ', '+')))));
       }
       return getRoute(ChatScreen(
-        notificationBody: _notificationBody, user: _user, index: Get.parameters['index'] != 'null' ? int.parse(Get.parameters['index']) : null, fromNotification: Get.parameters['from'] == 'true',
-        conversationID: (Get.parameters['conversation_id'] != null && Get.parameters['conversation_id'] != 'null') ? int.parse(Get.parameters['conversation_id']) : null,
+        notificationBody: notificationBody, user: user, index: Get.parameters['index'] != 'null' ? int.parse(Get.parameters['index']!) : null, fromNotification: Get.parameters['from'] == 'true',
+        conversationID: (Get.parameters['conversation_id'] != null && Get.parameters['conversation_id'] != 'null') ? int.parse(Get.parameters['conversation_id']!) : null,
       ));
     }),
-    GetPage(name: conversation, page: () => ConversationScreen()),
-    GetPage(name: restaurantRegistration, page: () => StoreRegistrationScreen()),
-    GetPage(name: deliveryManRegistration, page: () => DeliveryManRegistrationScreen()),
+    GetPage(name: conversation, page: () => const ConversationScreen()),
+    GetPage(name: restaurantRegistration, page: () => const StoreRegistrationScreen()),
+    GetPage(name: deliveryManRegistration, page: () => const DeliveryManRegistrationScreen()),
     GetPage(name: refund, page: () => RefundRequestScreen(orderId: Get.parameters['id'])),
 
     GetPage(name: selectRideMapLocation, page: () {
-    AddressModel _addressModel;
-    Vehicles _vehicle;
+    AddressModel? addressModel;
+    Vehicles? vehicle;
     if(Get.parameters['address'] != 'null') {
-      _addressModel = AddressModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['address'].replaceAll(' ', '+')))));
+      addressModel = AddressModel.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['address']!.replaceAll(' ', '+')))));
     }
     if(Get.parameters['vehicle'] != 'null') {
-      _vehicle = Vehicles.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['vehicle'].replaceAll(' ', '+')))));
+      vehicle = Vehicles.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['vehicle']!.replaceAll(' ', '+')))));
     }
     return getRoute(SelectMapLocation(
-        riderType: jsonDecode(utf8.decode(base64Url.decode(Get.parameters['rider_type'].replaceAll(' ', '+')))),
-        address: _addressModel, vehicle: _vehicle,
+        riderType: jsonDecode(utf8.decode(base64Url.decode(Get.parameters['rider_type']!.replaceAll(' ', '+')))),
+        address: addressModel, vehicle: vehicle,
       ),
     );
     }),
     GetPage(name: selectCarScreen, page: () => SelectCarScreen(
-        filterBody: UserInformationBody.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['body'].replaceAll(' ', '+')))))),
+        filterBody: UserInformationBody.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['body']!.replaceAll(' ', '+')))))),
     ),
     GetPage(name: carDetailsScreen, page: () => CarDetailsScreen(
-      vehicle: Vehicles.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['vehicle'].replaceAll(' ', '+'))))),
-      filterBody: UserInformationBody.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['body'].replaceAll(' ', '+'))))),
+      vehicle: Vehicles.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['vehicle']!.replaceAll(' ', '+'))))),
+      filterBody: UserInformationBody.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['body']!.replaceAll(' ', '+'))))),
     )),
     GetPage(name: bookingCheckoutScreen, page: () => BookingCheckoutScreen(
-      vehicle: Vehicles.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['vehicle'].replaceAll(' ', '+'))))),
-      filterBody: UserInformationBody.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['body'].replaceAll(' ', '+'))))),
+      vehicle: Vehicles.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['vehicle']!.replaceAll(' ', '+'))))),
+      filterBody: UserInformationBody.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['body']!.replaceAll(' ', '+'))))),
     )),
-    GetPage(name: tripHistoryScreen, page: () => TripHistoryScreen()),
-    GetPage(name: orderStatusScreen, page: () => OrderStatusScreen()),
-    GetPage(name: tripCompletedConfirmationScreen, page: () => TripCompletedConfirmationScreen()),
-    GetPage(name: taxiCouponScreen, page: () => TaxiCouponScreen()),
+    GetPage(name: tripHistoryScreen, page: () => const TripHistoryScreen()),
+    GetPage(name: orderStatusScreen, page: () => const OrderStatusScreen()),
+    GetPage(name: tripCompletedConfirmationScreen, page: () => const TripCompletedConfirmationScreen()),
+    GetPage(name: taxiCouponScreen, page: () => const TaxiCouponScreen()),
   ];
 
-  static getRoute(Widget navigateTo) {
-    double _minimumVersion = 0;
+  static getRoute(Widget? navigateTo) {
+    double? minimumVersion = 0;
     if(GetPlatform.isAndroid) {
-      _minimumVersion = Get.find<SplashController>().configModel.appMinimumVersionAndroid;
+      minimumVersion = Get.find<SplashController>().configModel!.appMinimumVersionAndroid;
     }else if(GetPlatform.isIOS) {
-      _minimumVersion = Get.find<SplashController>().configModel.appMinimumVersionIos;
+      minimumVersion = Get.find<SplashController>().configModel!.appMinimumVersionIos;
     }
-    return AppConstants.APP_VERSION < _minimumVersion ? UpdateScreen(isUpdate: true)
-        : Get.find<SplashController>().configModel.maintenanceMode ? UpdateScreen(isUpdate: false)
+    return AppConstants.appVersion < minimumVersion! ? const UpdateScreen(isUpdate: true)
+        : Get.find<SplashController>().configModel!.maintenanceMode! ? const UpdateScreen(isUpdate: false)
         : Get.find<LocationController>().getUserAddress() == null
         ? AccessLocationScreen(fromSignUp: false, fromHome: false, route: Get.currentRoute) : navigateTo;
   }

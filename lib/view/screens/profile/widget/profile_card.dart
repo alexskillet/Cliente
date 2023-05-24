@@ -6,22 +6,22 @@ import 'package:get/get.dart';
 class ProfileCard extends StatelessWidget {
   final String title;
   final String data;
-  ProfileCard({@required this.data, @required this.title});
+  const ProfileCard({Key? key, required this.data, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(child: Container(
       height: 100,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+        borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
         color: Theme.of(context).cardColor,
-        boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
+        boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, blurRadius: 5, spreadRadius: 1)],
       ),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text(data, style: robotoMedium.copyWith(
           fontSize: Dimensions.fontSizeExtraLarge, color: Theme.of(context).primaryColor,
         )),
-        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+        const SizedBox(height: Dimensions.paddingSizeSmall),
         Text(title, style: robotoRegular.copyWith(
           fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor,
         )),

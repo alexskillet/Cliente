@@ -6,21 +6,21 @@ import 'package:get/get.dart';
 class SupportButton extends StatelessWidget {
   final IconData icon;
   final String title;
-  final String info;
+  final String? info;
   final Color color;
   final Function onTap;
-  SupportButton({@required this.icon, @required this.title, @required this.info, @required this.color, @required this.onTap});
+  const SupportButton({Key? key, required this.icon, required this.title, required this.info, required this.color, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Container(
-        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
           color: Theme.of(context).cardColor,
-          boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 1, blurRadius: 5)],
+          boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, spreadRadius: 1, blurRadius: 5)],
         ),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
 
@@ -32,12 +32,12 @@ class SupportButton extends StatelessWidget {
             ),
             child: Icon(icon, color: color, size: 20),
           ),
-          SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+          const SizedBox(width: Dimensions.paddingSizeSmall),
 
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(title, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: color)),
-            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-            Text(info, style: robotoRegular, maxLines: 1, overflow: TextOverflow.ellipsis),
+            const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+            Text(info!, style: robotoRegular, maxLines: 1, overflow: TextOverflow.ellipsis),
           ])),
 
         ]),

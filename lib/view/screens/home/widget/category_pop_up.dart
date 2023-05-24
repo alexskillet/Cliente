@@ -11,18 +11,18 @@ import 'package:get/get.dart';
 
 class CategoryPopUp extends StatelessWidget {
   final CategoryController categoryController;
-  CategoryPopUp({@required this.categoryController});
+  const CategoryPopUp({Key? key, required this.categoryController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
+      child: SizedBox(
         width: 500,
         height: 500,
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(10, 20, 0, 10),
+              padding: const EdgeInsets.fromLTRB(10, 20, 0, 10),
               child:
               TitleWidget(title: 'categories'.tr),
             ),
@@ -30,9 +30,9 @@ class CategoryPopUp extends StatelessWidget {
               child: SizedBox(
                 height: 80,
                 child: categoryController.categoryList != null ? GridView.builder(
-                  itemCount: categoryController.categoryList.length,
-                  padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
-                  physics: BouncingScrollPhysics(),
+                  itemCount: categoryController.categoryList!.length,
+                  padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
+                  physics: const BouncingScrollPhysics(),
                   gridDelegate:
                   SliverGridDelegateWithFixedCrossAxisCount(
                     childAspectRatio: 1.2,
@@ -40,10 +40,10 @@ class CategoryPopUp extends StatelessWidget {
                   ),
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+                      padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
                       child: InkWell(
                         onTap: () => Get.toNamed(RouteHelper.getCategoryItemRoute(
-                          categoryController.categoryList[index].id, categoryController.categoryList[index].name,
+                          categoryController.categoryList![index].id, categoryController.categoryList![index].name!,
                         )),
                         child: SizedBox(
                           width: 50,
@@ -53,19 +53,19 @@ class CategoryPopUp extends StatelessWidget {
                               children: [
                                 Container(
                                   height: 50, width: 50,
-                                  margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                  margin: const EdgeInsets.only(bottom: Dimensions.paddingSizeExtraSmall),
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).cardColor,
-                                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                                    boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
+                                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                                    boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, blurRadius: 5, spreadRadius: 1)],
                                   ),
                                   child: CustomImage(
-                                    image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}/${categoryController.categoryList[index].image}',
+                                    image: '${Get.find<SplashController>().configModel!.baseUrls!.categoryImageUrl}/${categoryController.categoryList![index].image}',
                                     height: 50, width: 50, fit: BoxFit.cover,
                                   ),
                                 ),
                                 Text(
-                                  categoryController.categoryList[index].name,
+                                  categoryController.categoryList![index].name!,
                                   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
                                 ),
@@ -86,7 +86,7 @@ class CategoryPopUp extends StatelessWidget {
 
 class CategoryShimmer extends StatelessWidget {
   final CategoryController categoryController;
-  CategoryShimmer({@required this.categoryController});
+  const CategoryShimmer({Key? key, required this.categoryController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -94,15 +94,15 @@ class CategoryShimmer extends StatelessWidget {
       height: 80,
       child: ListView.builder(
         itemCount: 10,
-        padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
-        physics: BouncingScrollPhysics(),
+        padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
+        physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return Padding(
-            padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+            padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
             child: Shimmer(
-              duration: Duration(seconds: 2),
+              duration: const Duration(seconds: 2),
               enabled: categoryController.categoryList == null,
               child: Column(children: [
                 Container(
@@ -113,7 +113,7 @@ class CategoryShimmer extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Container(
                     height: 10, width: 50, color: Colors.grey[300]),
               ]),

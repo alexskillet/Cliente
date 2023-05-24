@@ -6,17 +6,17 @@ import 'package:sixam_mart/util/images.dart';
 import 'package:sixam_mart/util/styles.dart';
 
 class UseCouponSection extends StatelessWidget {
-  const UseCouponSection({Key key}) : super(key: key);
+  const UseCouponSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-          boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 200], blurRadius: 5, spreadRadius: 1)]
+          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+          boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 200]!, blurRadius: 5, spreadRadius: 1)]
       ),
-      padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_DEFAULT),
+      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeDefault),
       child: InkWell(
         onTap: () => Get.toNamed(RouteHelper.getTaxiCouponScreen()),
         child: Row(
@@ -25,10 +25,10 @@ class UseCouponSection extends StatelessWidget {
             Container(
               height: 33, width: 33, alignment: Alignment.center,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL)),
+                  borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
                   color: Theme.of(context).primaryColor.withOpacity(0.1), shape: BoxShape.rectangle),
               child: Image.asset(
-                Images.rider_coupon,
+                Images.riderCoupon,
                 height: 30, width: 30,
               ),
             ),
@@ -39,7 +39,7 @@ class UseCouponSection extends StatelessWidget {
                 Text('collect_coupon_by_inviting_people'.tr,style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall),),
               ],
             ),
-            Image.asset(Images.rider_use_coupon),
+            Image.asset(Images.riderUseCoupon),
           ],
         ),
       ),

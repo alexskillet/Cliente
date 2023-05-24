@@ -11,12 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class FavouriteScreen extends StatefulWidget {
+  const FavouriteScreen({Key? key}) : super(key: key);
+
   @override
-  _FavouriteScreenState createState() => _FavouriteScreenState();
+  FavouriteScreenState createState() => FavouriteScreenState();
 }
 
-class _FavouriteScreenState extends State<FavouriteScreen> with SingleTickerProviderStateMixin {
-  TabController _tabController;
+class FavouriteScreenState extends State<FavouriteScreen> with SingleTickerProviderStateMixin {
+  TabController? _tabController;
 
   @override
   void initState() {
@@ -30,11 +32,11 @@ class _FavouriteScreenState extends State<FavouriteScreen> with SingleTickerProv
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'favourite'.tr, backButton: false),
-      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+      endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: Get.find<AuthController>().isLoggedIn() ? SafeArea(child: Column(children: [
 
         Container(
-          width: Dimensions.WEB_MAX_WIDTH,
+          width: Dimensions.webMaxWidth,
           color: Theme.of(context).cardColor,
           child: TabBar(
             controller: _tabController,
@@ -46,7 +48,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> with SingleTickerProv
             labelStyle: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
             tabs: [
               Tab(text: 'item'.tr),
-              Tab(text: Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+              Tab(text: Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText!
                   ? 'restaurants'.tr : 'stores'.tr),
             ],
           ),
@@ -54,13 +56,13 @@ class _FavouriteScreenState extends State<FavouriteScreen> with SingleTickerProv
 
         Expanded(child: TabBarView(
           controller: _tabController,
-          children: [
+          children: const [
             FavItemView(isStore: false),
             FavItemView(isStore: true),
           ],
         )),
 
-      ])) : NotLoggedInScreen(),
+      ])) : const NotLoggedInScreen(),
     );
   }
 }

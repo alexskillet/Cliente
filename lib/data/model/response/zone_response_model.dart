@@ -1,12 +1,12 @@
 class ZoneResponseModel {
-  bool _isSuccess;
-  List<int> _zoneIds;
-  String _message;
-  List<ZoneData> _zoneData;
-  List<int> _areaIds;
+  final bool _isSuccess;
+  final List<int> _zoneIds;
+  final String? _message;
+  final List<ZoneData> _zoneData;
+  final List<int> _areaIds;
   ZoneResponseModel(this._isSuccess, this._message, this._zoneIds, this._zoneData, this._areaIds);
 
-  String get message => _message;
+  String? get message => _message;
   List<int> get zoneIds => _zoneIds;
   bool get isSuccess => _isSuccess;
   List<ZoneData> get zoneData => _zoneData;
@@ -14,11 +14,11 @@ class ZoneResponseModel {
 }
 
 class ZoneData {
-  int id;
-  int status;
-  bool cashOnDelivery;
-  bool digitalPayment;
-  List<Modules> modules;
+  int? id;
+  int? status;
+  bool? cashOnDelivery;
+  bool? digitalPayment;
+  List<Modules>? modules;
 
   ZoneData(
       {this.id,
@@ -35,38 +35,38 @@ class ZoneData {
     if (json['modules'] != null) {
       modules = <Modules>[];
       json['modules'].forEach((v) {
-        modules.add(new Modules.fromJson(v));
+        modules!.add(Modules.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['status'] = this.status;
-    data['cash_on_delivery'] = this.cashOnDelivery;
-    data['digital_payment'] = this.digitalPayment;
-    if (this.modules != null) {
-      data['modules'] = this.modules.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['status'] = status;
+    data['cash_on_delivery'] = cashOnDelivery;
+    data['digital_payment'] = digitalPayment;
+    if (modules != null) {
+      data['modules'] = modules!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Modules {
-  int id;
-  String moduleName;
-  String moduleType;
-  String thumbnail;
-  String status;
-  int storesCount;
-  String createdAt;
-  String updatedAt;
-  String icon;
-  int themeId;
-  String description;
-  int allZoneService;
-  Pivot pivot;
+  int? id;
+  String? moduleName;
+  String? moduleType;
+  String? thumbnail;
+  String? status;
+  int? storesCount;
+  String? createdAt;
+  String? updatedAt;
+  String? icon;
+  int? themeId;
+  String? description;
+  int? allZoneService;
+  Pivot? pivot;
 
   Modules({this.id,
         this.moduleName,
@@ -96,37 +96,37 @@ class Modules {
     themeId = json['theme_id'];
     description = json['description'];
     allZoneService = json['all_zone_service'];
-    pivot = json['pivot'] != null ? new Pivot.fromJson(json['pivot']) : null;
+    pivot = json['pivot'] != null ? Pivot.fromJson(json['pivot']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['module_name'] = this.moduleName;
-    data['module_type'] = this.moduleType;
-    data['thumbnail'] = this.thumbnail;
-    data['status'] = this.status;
-    data['stores_count'] = this.storesCount;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['icon'] = this.icon;
-    data['theme_id'] = this.themeId;
-    data['description'] = this.description;
-    data['all_zone_service'] = this.allZoneService;
-    if (this.pivot != null) {
-      data['pivot'] = this.pivot.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['module_name'] = moduleName;
+    data['module_type'] = moduleType;
+    data['thumbnail'] = thumbnail;
+    data['status'] = status;
+    data['stores_count'] = storesCount;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['icon'] = icon;
+    data['theme_id'] = themeId;
+    data['description'] = description;
+    data['all_zone_service'] = allZoneService;
+    if (pivot != null) {
+      data['pivot'] = pivot!.toJson();
     }
     return data;
   }
 }
 
 class Pivot {
-  int zoneId;
-  int moduleId;
-  double perKmShippingCharge;
-  double minimumShippingCharge;
-  double maximumShippingCharge;
-  double maximumCodOrderAmount;
+  int? zoneId;
+  int? moduleId;
+  double? perKmShippingCharge;
+  double? minimumShippingCharge;
+  double? maximumShippingCharge;
+  double? maximumCodOrderAmount;
 
   Pivot({
     this.zoneId,
@@ -140,20 +140,20 @@ class Pivot {
   Pivot.fromJson(Map<String, dynamic> json) {
     zoneId = json['zone_id'];
     moduleId = json['module_id'];
-    perKmShippingCharge = json['per_km_shipping_charge'] != null ? json['per_km_shipping_charge'].toDouble() : null;
-    minimumShippingCharge = json['minimum_shipping_charge'] != null ? json['minimum_shipping_charge'].toDouble() : null;
-    maximumShippingCharge = json['maximum_shipping_charge'] != null ? json['maximum_shipping_charge'].toDouble() : null;
-    maximumCodOrderAmount = json['maximum_cod_order_amount'] != null ? json['maximum_cod_order_amount'].toDouble() : null;
+    perKmShippingCharge = json['per_km_shipping_charge']?.toDouble();
+    minimumShippingCharge = json['minimum_shipping_charge']?.toDouble();
+    maximumShippingCharge = json['maximum_shipping_charge']?.toDouble();
+    maximumCodOrderAmount = json['maximum_cod_order_amount']?.toDouble();
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['zone_id'] = this.zoneId;
-    data['module_id'] = this.moduleId;
-    data['per_km_shipping_charge'] = this.perKmShippingCharge;
-    data['minimum_shipping_charge'] = this.minimumShippingCharge;
-    data['maximum_shipping_charge'] = this.maximumShippingCharge;
-    data['maximum_cod_order_amount'] = this.maximumCodOrderAmount;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['zone_id'] = zoneId;
+    data['module_id'] = moduleId;
+    data['per_km_shipping_charge'] = perKmShippingCharge;
+    data['minimum_shipping_charge'] = minimumShippingCharge;
+    data['maximum_shipping_charge'] = maximumShippingCharge;
+    data['maximum_cod_order_amount'] = maximumCodOrderAmount;
     return data;
   }
 }

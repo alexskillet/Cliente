@@ -21,22 +21,22 @@ import 'widget/running_order_view_widget.dart';
 
 class DashboardScreen extends StatefulWidget {
   final int pageIndex;
-  DashboardScreen({@required this.pageIndex});
+  const DashboardScreen({Key? key, required this.pageIndex}) : super(key: key);
 
   @override
-  _DashboardScreenState createState() => _DashboardScreenState();
+  DashboardScreenState createState() => DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
-  PageController _pageController;
+class DashboardScreenState extends State<DashboardScreen> {
+  PageController? _pageController;
   int _pageIndex = 0;
-  List<Widget> _screens;
-  GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey();
+  late List<Widget> _screens;
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey();
   bool _canExit = GetPlatform.isWeb ? true : false;
 
-  GlobalKey<ExpandableBottomSheetState> key = new GlobalKey();
+  GlobalKey<ExpandableBottomSheetState> key = GlobalKey();
 
-  bool _isLogin;
+  late bool _isLogin;
 
   @override
   void initState() {
@@ -53,14 +53,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _pageController = PageController(initialPage: widget.pageIndex);
 
     _screens = [
-      HomeScreen(),
-      FavouriteScreen(),
-      CartScreen(fromNav: true),
-      OrderScreen(),
+      const HomeScreen(),
+      const FavouriteScreen(),
+      const CartScreen(fromNav: true),
+      const OrderScreen(),
       Container(),
     ];
 
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       setState(() {});
     });
 
@@ -77,7 +77,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _setPage(0);
           return false;
         } else {
-          if(!ResponsiveHelper.isDesktop(context) && Get.find<SplashController>().module != null && Get.find<SplashController>().configModel.module == null) {
+          if(!ResponsiveHelper.isDesktop(context) && Get.find<SplashController>().module != null && Get.find<SplashController>().configModel!.module == null) {
             Get.find<SplashController>().setModule(null);
             return false;
           }else {
@@ -85,14 +85,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               return true;
             }else {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('back_press_again_to_exit'.tr, style: TextStyle(color: Colors.white)),
+                content: Text('back_press_again_to_exit'.tr, style: const TextStyle(color: Colors.white)),
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.green,
-                duration: Duration(seconds: 2),
-                margin: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                duration: const Duration(seconds: 2),
+                margin: const EdgeInsets.all(Dimensions.paddingSizeSmall),
               ));
               _canExit = true;
-              Timer(Duration(seconds: 2), () {
+              Timer(const Duration(seconds: 2), () {
                 _canExit = false;
               });
               return false;
@@ -102,15 +102,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
       },
       child: GetBuilder<OrderController>(
         builder: (orderController) {
-          List<OrderModel> _runningOrder = orderController.runningOrderModel != null ? orderController.runningOrderModel.orders : [];
+          List<OrderModel> runningOrder = orderController.runningOrderModel != null ? orderController.runningOrderModel!.orders! : [];
 
-          List<OrderModel> _reversOrder =  List.from(_runningOrder.reversed);
+          List<OrderModel> reversOrder =  List.from(runningOrder.reversed);
 
           return Scaffold(
             key: _scaffoldKey,
 
             floatingActionButton: ResponsiveHelper.isDesktop(context) ? null :
-            (orderController.showBottomSheet && orderController.runningOrderModel != null && orderController.runningOrderModel.orders.isNotEmpty) ? SizedBox() : FloatingActionButton(
+            (orderController.showBottomSheet && orderController.runningOrderModel != null && orderController.runningOrderModel!.orders!.isNotEmpty) ? const SizedBox() : FloatingActionButton(
                   elevation: 5,
                   backgroundColor: _pageIndex == 2 ? Theme.of(context).primaryColor : Theme.of(context).cardColor,
                   onPressed: () {
@@ -124,22 +124,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
             floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-            bottomNavigationBar: ResponsiveHelper.isDesktop(context) ? SizedBox()
-                : (orderController.showBottomSheet && orderController.runningOrderModel != null && orderController.runningOrderModel.orders.isNotEmpty) ? SizedBox() :  BottomAppBar(
+            bottomNavigationBar: ResponsiveHelper.isDesktop(context) ? const SizedBox()
+                : (orderController.showBottomSheet && orderController.runningOrderModel != null && orderController.runningOrderModel!.orders!.isNotEmpty) ? const SizedBox() :  BottomAppBar(
                   elevation: 5,
                   notchMargin: 5,
                   clipBehavior: Clip.antiAlias,
-                  shape: CircularNotchedRectangle(),
+                  shape: const CircularNotchedRectangle(),
 
                   child: Padding(
-                    padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                     child: Row(children: [
                       BottomNavItem(iconData: Icons.home, isSelected: _pageIndex == 0, onTap: () => _setPage(0)),
                       BottomNavItem(iconData: Icons.favorite, isSelected: _pageIndex == 1, onTap: () => _setPage(1)),
-                      Expanded(child: SizedBox()),
+                      const Expanded(child: SizedBox()),
                       BottomNavItem(iconData: Icons.shopping_bag, isSelected: _pageIndex == 3, onTap: () => _setPage(3)),
                       BottomNavItem(iconData: Icons.menu, isSelected: _pageIndex == 4, onTap: () {
-                        Get.bottomSheet(MenuScreen(), backgroundColor: Colors.transparent, isScrollControlled: true);
+                        Get.bottomSheet(const MenuScreen(), backgroundColor: Colors.transparent, isScrollControlled: true);
                       }),
                     ]),
                   ),
@@ -148,7 +148,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               background: PageView.builder(
                   controller: _pageController,
                   itemCount: _screens.length,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return _screens[index];
                   },
@@ -170,7 +170,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               enableToggle: true,
 
               expandableContent: (ResponsiveHelper.isDesktop(context) || !_isLogin || orderController.runningOrderModel == null
-                  || orderController.runningOrderModel.orders.isEmpty || !orderController.showBottomSheet) ? null
+                  || orderController.runningOrderModel!.orders!.isEmpty || !orderController.showBottomSheet) ? const SizedBox()
                   : Dismissible(
                       key: UniqueKey(),
                       onDismissed: (direction) {
@@ -178,7 +178,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           orderController.showRunningOrders();
                         }
                       },
-                      child: RunningOrderViewWidget(reversOrder: _reversOrder),
+                      child: RunningOrderViewWidget(reversOrder: reversOrder),
                   ),
 
             ),
@@ -191,14 +191,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _setPage(int pageIndex) {
     setState(() {
-      _pageController.jumpToPage(pageIndex);
+      _pageController!.jumpToPage(pageIndex);
       _pageIndex = pageIndex;
     });
   }
 
-  Widget trackView(BuildContext context, {@required bool status}) {
+  Widget trackView(BuildContext context, {required bool status}) {
     return Container(height: 3, decoration: BoxDecoration(color: status ? Theme.of(context).primaryColor
-        : Theme.of(context).disabledColor.withOpacity(0.5), borderRadius: BorderRadius.circular(Dimensions.RADIUS_DEFAULT)));
+        : Theme.of(context).disabledColor.withOpacity(0.5), borderRadius: BorderRadius.circular(Dimensions.radiusDefault)));
   }
 }
 

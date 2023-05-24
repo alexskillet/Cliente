@@ -24,6 +24,10 @@ class DateConverter {
     return DateFormat('yyyy-MM-dd').format(dateTime);
   }
 
+  static String dateToReadableDate(DateTime dateTime) {
+    return DateFormat('dd MMM, yyy').format(dateTime);
+  }
+
   static String dateTimeStringToDateTime(String dateTime) {
     return DateFormat('dd MMM yyyy  ${_timeFormatter()}').format(DateFormat('yyyy-MM-dd HH:mm:ss').parse(dateTime));
   }
@@ -76,57 +80,57 @@ class DateConverter {
     return DateFormat('HH:mm').format(time);
   }
 
-  static bool isAvailable(String start, String end, {DateTime time}) {
-    DateTime _currentTime;
+  static bool isAvailable(String? start, String? end, {DateTime? time}) {
+    DateTime currentTime;
     if(time != null) {
-      _currentTime = time;
+      currentTime = time;
     }else {
-      _currentTime = Get.find<SplashController>().currentTime;
+      currentTime = Get.find<SplashController>().currentTime;
     }
-    DateTime _start = start != null ? DateFormat('HH:mm').parse(start) : DateTime(_currentTime.year);
-    DateTime _end = end != null ? DateFormat('HH:mm').parse(end) : DateTime(_currentTime.year, _currentTime.month, _currentTime.day, 23, 59, 59);
-    DateTime _startTime = DateTime(_currentTime.year, _currentTime.month, _currentTime.day, _start.hour, _start.minute, _start.second);
-    DateTime _endTime = DateTime(_currentTime.year, _currentTime.month, _currentTime.day, _end.hour, _end.minute, _end.second);
-    if(_endTime.isBefore(_startTime)) {
-      if(_currentTime.isBefore(_startTime) && _currentTime.isBefore(_endTime)){
-        _startTime = _startTime.add(Duration(days: -1));
+    DateTime start0 = start != null ? DateFormat('HH:mm').parse(start) : DateTime(currentTime.year);
+    DateTime end0 = end != null ? DateFormat('HH:mm').parse(end) : DateTime(currentTime.year, currentTime.month, currentTime.day, 23, 59, 59);
+    DateTime startTime = DateTime(currentTime.year, currentTime.month, currentTime.day, start0.hour, start0.minute, start0.second);
+    DateTime endTime = DateTime(currentTime.year, currentTime.month, currentTime.day, end0.hour, end0.minute, end0.second);
+    if(endTime.isBefore(startTime)) {
+      if(currentTime.isBefore(startTime) && currentTime.isBefore(endTime)){
+        startTime = startTime.add(const Duration(days: -1));
       }else {
-        _endTime = _endTime.add(Duration(days: 1));
+        endTime = endTime.add(const Duration(days: 1));
       }
     }
-    return _currentTime.isAfter(_startTime) && _currentTime.isBefore(_endTime);
+    return currentTime.isAfter(startTime) && currentTime.isBefore(endTime);
   }
 
   static String _timeFormatter() {
-    return Get.find<SplashController>().configModel.timeformat == '24' ? 'HH:mm' : 'hh:mm a';
+    return Get.find<SplashController>().configModel!.timeformat == '24' ? 'HH:mm' : 'hh:mm a';
   }
 
   static String convertFromMinute(int minMinute, int maxMinute) {
-    int _firstValue = minMinute;
-    int _secondValue = maxMinute;
-    String _type = 'min';
+    int firstValue = minMinute;
+    int secondValue = maxMinute;
+    String type = 'min';
     if(minMinute >= 525600) {
-      _firstValue = (minMinute / 525600).floor();
-      _secondValue = (maxMinute / 525600).floor();
-      _type = 'year';
+      firstValue = (minMinute / 525600).floor();
+      secondValue = (maxMinute / 525600).floor();
+      type = 'year';
     }else if(minMinute >= 43200) {
-      _firstValue = (minMinute / 43200).floor();
-      _secondValue = (maxMinute / 43200).floor();
-      _type = 'month';
+      firstValue = (minMinute / 43200).floor();
+      secondValue = (maxMinute / 43200).floor();
+      type = 'month';
     }else if(minMinute >= 10080) {
-      _firstValue = (minMinute / 10080).floor();
-      _secondValue = (maxMinute / 10080).floor();
-      _type = 'week';
+      firstValue = (minMinute / 10080).floor();
+      secondValue = (maxMinute / 10080).floor();
+      type = 'week';
     }else if(minMinute >= 1440) {
-      _firstValue = (minMinute / 1440).floor();
-      _secondValue = (maxMinute / 1440).floor();
-      _type = 'day';
+      firstValue = (minMinute / 1440).floor();
+      secondValue = (maxMinute / 1440).floor();
+      type = 'day';
     }else if(minMinute >= 60) {
-      _firstValue = (minMinute / 60).floor();
-      _secondValue = (maxMinute / 60).floor();
-      _type = 'hour';
+      firstValue = (minMinute / 60).floor();
+      secondValue = (maxMinute / 60).floor();
+      type = 'hour';
     }
-    return '$_firstValue-$_secondValue ${_type.tr}';
+    return '$firstValue-$secondValue ${type.tr}';
   }
 
   static String localDateToIsoStringAMPM(DateTime dateTime) {

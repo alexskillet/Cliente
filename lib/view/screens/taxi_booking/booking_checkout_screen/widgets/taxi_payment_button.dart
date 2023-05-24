@@ -10,20 +10,20 @@ class TaxiPaymentButton extends StatelessWidget {
   final String subtitle;
   final bool isSelected;
   final Function onTap;
-  TaxiPaymentButton({@required this.isSelected, @required this.icon, @required this.title, @required this.subtitle, @required this.onTap});
+  const TaxiPaymentButton({Key? key, required this.isSelected, required this.icon, required this.title, required this.subtitle, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OrderController>(builder: (orderController) {
       return Padding(
-        padding: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
+        padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
         child: InkWell(
-          onTap: onTap,
+          onTap: onTap as void Function()?,
           child: Container(
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-              boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
+              borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+              boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, blurRadius: 5, spreadRadius: 1)],
             ),
             child: ListTile(
               leading: Image.asset(

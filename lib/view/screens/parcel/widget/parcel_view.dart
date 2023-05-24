@@ -24,9 +24,9 @@ class ParcelView extends StatefulWidget {
   final TextEditingController houseController;
   final TextEditingController floorController;
 
-  ParcelView({
-    Key key, @required this.isSender, @required this.nameController, @required this.phoneController,
-    @required this.streetController, @required this.houseController, @required this.floorController, @required this.bottomButton
+  const ParcelView({
+    Key? key, required this.isSender, required this.nameController, required this.phoneController,
+    required this.streetController, required this.houseController, required this.floorController, required this.bottomButton
   }) : super(key: key);
 
   @override
@@ -45,28 +45,28 @@ class _ParcelViewState extends State<ParcelView> {
   void dispose() {
     super.dispose();
 
-    scrollController?.dispose();
+    scrollController.dispose();
   }
   @override
   Widget build(BuildContext context) {
-    return SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: GetBuilder<ParcelController>(builder: (parcelController) {
+    return SizedBox(width: Dimensions.webMaxWidth, child: GetBuilder<ParcelController>(builder: (parcelController) {
 
         return SingleChildScrollView(
           controller: ScrollController(),
           child: Center(child: FooterView(
-            child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Padding(
-              padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+            child: SizedBox(width: Dimensions.webMaxWidth, child: Padding(
+              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
               child: Column(children: [
-                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                const SizedBox(height: Dimensions.paddingSizeSmall),
 
                 SearchLocationWidget(
                   mapController: null,
-                  pickedAddress: parcelController.isSender ? parcelController.pickupAddress.address : parcelController.destinationAddress != null ? parcelController.destinationAddress.address : '',
-                  isEnabled: widget.isSender ? parcelController.isPickedUp : !parcelController.isPickedUp,
+                  pickedAddress: parcelController.isSender ? parcelController.pickupAddress!.address : parcelController.destinationAddress != null ? parcelController.destinationAddress!.address : '',
+                  isEnabled: widget.isSender ? parcelController.isPickedUp : !parcelController.isPickedUp!,
                   isPickedUp: parcelController.isSender,
                   hint: parcelController.isSender ? 'pick_up'.tr : 'destination'.tr,
                 ),
-                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                const SizedBox(height: Dimensions.paddingSizeSmall),
 
                 Row(children: [
                   Expanded(flex: 4,
@@ -74,7 +74,7 @@ class _ParcelViewState extends State<ParcelView> {
                       buttonText: 'set_from_map'.tr,
                       onPressed: () => Get.toNamed(RouteHelper.getPickMapRoute('parcel', false), arguments: PickMapScreen(
                         fromSignUp: false, fromAddAddress: false, canRoute: false, route: '', onPicked: (AddressModel address) {
-                        if(parcelController.isPickedUp) {
+                        if(parcelController.isPickedUp!) {
                           parcelController.setPickupAddress(address, true);
                         }else {
                           parcelController.setDestinationAddress(address);
@@ -83,7 +83,7 @@ class _ParcelViewState extends State<ParcelView> {
                       )),
                     ),
                   ),
-                  SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                  const SizedBox(width: Dimensions.paddingSizeSmall),
                   Expanded(flex: 6,
                       child: InkWell(
                         onTap: (){
@@ -99,19 +99,19 @@ class _ParcelViewState extends State<ParcelView> {
                         },
                         child: Container(
                           height: ResponsiveHelper.isDesktop(context) ? 44 : 50,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), border: Border.all(color: Theme.of(context).primaryColor, width: 1)),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.radiusSmall), border: Border.all(color: Theme.of(context).primaryColor, width: 1)),
                           child: Center(child: Text('set_from_saved_address'.tr, style: robotoBold.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeLarge))),
                         ),
                       )
                   ),
                 ]),
 
-                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                const SizedBox(height: Dimensions.paddingSizeLarge),
 
                 Column(children: [
 
                   Center(child: Text(parcelController.isSender ? 'sender_information'.tr : 'receiver_information'.tr, style: robotoMedium)),
-                  SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                  const SizedBox(height: Dimensions.paddingSizeDefault),
 
                   TextFieldShadow(
                     child: MyTextField(
@@ -123,7 +123,7 @@ class _ParcelViewState extends State<ParcelView> {
                       capitalization: TextCapitalization.words,
                     ),
                   ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                  const SizedBox(height: Dimensions.paddingSizeDefault),
 
                   TextFieldShadow(
                     child: MyTextField(
@@ -134,13 +134,13 @@ class _ParcelViewState extends State<ParcelView> {
                       controller: widget.phoneController,
                     ),
                   ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                  const SizedBox(height: Dimensions.paddingSizeDefault),
                 ]),
 
                 Column(children: [
 
                   Center(child: Text(parcelController.isSender ? 'pickup_information'.tr : 'destination_information'.tr, style: robotoMedium)),
-                  SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                  const SizedBox(height: Dimensions.paddingSizeDefault),
 
                   TextFieldShadow(
                     child: MyTextField(
@@ -151,7 +151,7 @@ class _ParcelViewState extends State<ParcelView> {
                       controller: widget.streetController,
                     ),
                   ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                  const SizedBox(height: Dimensions.paddingSizeDefault),
 
                   Row(children: [
                     Expanded(
@@ -165,7 +165,7 @@ class _ParcelViewState extends State<ParcelView> {
                         ),
                       ),
                     ),
-                    SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                    const SizedBox(width: Dimensions.paddingSizeSmall),
 
                     Expanded(
                       child: TextFieldShadow(
@@ -179,11 +179,11 @@ class _ParcelViewState extends State<ParcelView> {
                       ),
                     ),
                   ]),
-                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                  const SizedBox(height: Dimensions.paddingSizeLarge),
 
                 ]),
 
-                ResponsiveHelper.isDesktop(context) ? widget.bottomButton : SizedBox(),
+                ResponsiveHelper.isDesktop(context) ? widget.bottomButton : const SizedBox(),
 
               ]),
             )),

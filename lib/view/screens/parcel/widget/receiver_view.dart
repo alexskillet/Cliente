@@ -14,7 +14,7 @@ import 'package:sixam_mart/view/base/text_field_shadow.dart';
 import 'package:sixam_mart/view/screens/location/pick_map_screen.dart';
 import 'package:sixam_mart/view/screens/location/widget/serach_location_widget.dart';
 class ReceiverView extends StatefulWidget {
-  const ReceiverView({Key key}) : super(key: key);
+  const ReceiverView({Key? key}) : super(key: key);
 
   @override
   State<ReceiverView> createState() => _ReceiverViewState();
@@ -22,9 +22,9 @@ class ReceiverView extends StatefulWidget {
 
 class _ReceiverViewState extends State<ReceiverView> {
 
-  TextEditingController _streetNumberController = TextEditingController();
-  TextEditingController _houseController = TextEditingController();
-  TextEditingController _floorController = TextEditingController();
+  final TextEditingController _streetNumberController = TextEditingController();
+  final TextEditingController _houseController = TextEditingController();
+  final TextEditingController _floorController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final FocusNode _streetNode = FocusNode();
@@ -58,21 +58,21 @@ class _ReceiverViewState extends State<ReceiverView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: GetBuilder<ParcelController>(builder: (parcelController) {
+      body: SizedBox(width: Dimensions.webMaxWidth, child: GetBuilder<ParcelController>(builder: (parcelController) {
 
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_SMALL),
+          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeSmall),
           child: Column(children: [
-            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+            const SizedBox(height: Dimensions.paddingSizeSmall),
 
             SearchLocationWidget(
               mapController: null,
-              pickedAddress: parcelController.destinationAddress != null ? parcelController.destinationAddress.address : '',
-              isEnabled: !parcelController.isPickedUp,
+              pickedAddress: parcelController.destinationAddress != null ? parcelController.destinationAddress!.address : '',
+              isEnabled: !parcelController.isPickedUp!,
               isPickedUp: false,
               hint: 'destination'.tr,
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+            const SizedBox(height: Dimensions.paddingSizeSmall),
 
             Row(children: [
               Expanded(flex: 4,
@@ -80,7 +80,7 @@ class _ReceiverViewState extends State<ReceiverView> {
                   buttonText: 'set_from_map'.tr,
                   onPressed: () => Get.toNamed(RouteHelper.getPickMapRoute('parcel', false), arguments: PickMapScreen(
                     fromSignUp: false, fromAddAddress: false, canRoute: false, route: '', onPicked: (AddressModel address) {
-                    if(parcelController.isPickedUp) {
+                    if(parcelController.isPickedUp!) {
                       parcelController.setPickupAddress(address, true);
                       _streetNumberController.text = '';
                       _houseController.text = '';
@@ -92,25 +92,25 @@ class _ReceiverViewState extends State<ReceiverView> {
                   )),
                 ),
               ),
-              SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(width: Dimensions.paddingSizeSmall),
               Expanded(flex: 6,
                   child: InkWell(
                     onTap: (){},
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_DEFAULT),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), border: Border.all(color: Theme.of(context).primaryColor, width: 1)),
+                      padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.radiusSmall), border: Border.all(color: Theme.of(context).primaryColor, width: 1)),
                       child: Center(child: Text('set_from_saved_address'.tr, style: robotoBold.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeLarge))),
                     ),
                   )
               ),
             ]),
 
-            SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+            const SizedBox(height: Dimensions.paddingSizeLarge),
 
             Column(children: [
 
               Center(child: Text('receiver_information'.tr, style: robotoMedium)),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+              const SizedBox(height: Dimensions.paddingSizeDefault),
 
               TextFieldShadow(
                 child: MyTextField(
@@ -122,7 +122,7 @@ class _ReceiverViewState extends State<ReceiverView> {
                   capitalization: TextCapitalization.words,
                 ),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+              const SizedBox(height: Dimensions.paddingSizeDefault),
 
               TextFieldShadow(
                 child: MyTextField(
@@ -133,13 +133,13 @@ class _ReceiverViewState extends State<ReceiverView> {
                   controller: _phoneController,
                 ),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+              const SizedBox(height: Dimensions.paddingSizeDefault),
             ]),
 
             Column(children: [
 
               Center(child: Text('destination_information'.tr, style: robotoMedium)),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+              const SizedBox(height: Dimensions.paddingSizeDefault),
 
               TextFieldShadow(
                 child: MyTextField(
@@ -150,7 +150,7 @@ class _ReceiverViewState extends State<ReceiverView> {
                   controller: _streetNumberController,
                 ),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+              const SizedBox(height: Dimensions.paddingSizeDefault),
 
               Row(children: [
                 Expanded(
@@ -164,7 +164,7 @@ class _ReceiverViewState extends State<ReceiverView> {
                     ),
                   ),
                 ),
-                SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                const SizedBox(width: Dimensions.paddingSizeSmall),
 
                 Expanded(
                   child: TextFieldShadow(
@@ -178,7 +178,7 @@ class _ReceiverViewState extends State<ReceiverView> {
                   ),
                 ),
               ]),
-              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+              const SizedBox(height: Dimensions.paddingSizeLarge),
             ]),
 
 

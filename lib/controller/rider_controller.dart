@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -22,66 +23,79 @@ import 'package:sixam_mart/view/base/custom_snackbar.dart';
 
 class RiderController extends GetxController implements GetxService {
   final RiderRepo riderRepo;
-  RiderController({@required this.riderRepo});
+  RiderController({required this.riderRepo});
 
   LatLng _initialPosition = LatLng(
-    double.parse(Get.find<SplashController>().configModel.defaultLocation.lat ?? '0'),
-    double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
+    double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lat ?? '0'),
+    double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lng ?? '0'),
   );
 
-  GoogleMapController _mapController;
+  GoogleMapController? _mapController;
   Map<MarkerId, Marker> _markers = {};
   Map<PolylineId, Polyline> _polyLines = {};
-  RiderType _rideStatus;
-  AddressModel _fromAddress;
-  AddressModel _toAddress;
+  RiderType? _rideStatus;
+  AddressModel? _fromAddress;
+  AddressModel? _toAddress;
   bool _isLoading = false;
-  double _carDistance;
-  RiderModel _assignedRider;
-  double _carTime;
+  double? _carDistance;
+  RiderModel? _assignedRider;
+  double? _carTime;
   int _riderRating = 0;
   bool _isReturnSameLocation = false;
-  String _tripDate;
-  String _tripTime;
+  String? _tripDate;
+  String? _tripTime;
   int _carType = 0;
-  double _distance = -1;
-  double _duration = -1;
+  double? _distance = -1;
+  double? _duration = -1;
 
   List<String> banners = [Images.banner1, Images.banner2];
   int _activeBanner = 0;
-  VehicleModel _topRatedVehicleModel;
-  TripModel _runningTrip;
+  VehicleModel? _topRatedVehicleModel;
+  TripModel? _runningTrip;
 
-  MarkerId _myMarkerId = MarkerId('my_marker');
-  MarkerId _fromMarkerId = MarkerId('from_marker');
-  MarkerId _toMarkerId = MarkerId('to_marker');
+  final MarkerId _myMarkerId = const MarkerId('my_marker');
+  final MarkerId _fromMarkerId = const MarkerId('from_marker');
+  final MarkerId _toMarkerId = const MarkerId('to_marker');
+  final TextEditingController _formTextEditingController = TextEditingController();
+  final TextEditingController _toTextEditingController = TextEditingController();
 
 
   LatLng get initialPosition => _initialPosition;
-  GoogleMapController get mapController => _mapController;
+  GoogleMapController? get mapController => _mapController;
   Map<MarkerId, Marker> get markers => _markers;
   Map<PolylineId, Polyline> get polyLines => _polyLines;
-  RiderType get rideStatus => _rideStatus;
-  AddressModel get fromAddress => _fromAddress;
-  AddressModel get toAddress => _toAddress;
+  RiderType? get rideStatus => _rideStatus;
+  AddressModel? get fromAddress => _fromAddress;
+  AddressModel? get toAddress => _toAddress;
   bool get isLoading => _isLoading;
-  double get carDistance => _carDistance;
-  RiderModel get assignedRider => _assignedRider;
-  double get carTime => _carTime;
+  double? get carDistance => _carDistance;
+  RiderModel? get assignedRider => _assignedRider;
+  double? get carTime => _carTime;
   int get riderRating => _riderRating;
   bool get isReturnSameLocation => _isReturnSameLocation;
   int get activeBanner => _activeBanner;
-  String get tripDate => _tripDate;
-  String get tripTime => _tripTime;
+  String? get tripDate => _tripDate;
+  String? get tripTime => _tripTime;
   int get carType => _carType;
-  double get distance => _distance;
-  double get duration => _duration;
-  VehicleModel get topRatedVehicleModel => _topRatedVehicleModel;
-  TripModel get runningTrip => _runningTrip;
+  double? get distance => _distance;
+  double? get duration => _duration;
+  VehicleModel? get topRatedVehicleModel => _topRatedVehicleModel;
+  TripModel? get runningTrip => _runningTrip;
+  TextEditingController get formTextEditingController => _formTextEditingController;
+  TextEditingController get toTextEditingController => _toTextEditingController;
+
+  void clearAddress(bool isFrom){
+    if(isFrom){
+      _formTextEditingController.text = '';
+    }else{
+      _toTextEditingController.text = '';
+    }
+    update();
+  }
 
   void initSetup(){
-    _tripDate = null;
-    _tripTime = null;
+    _tripDate = DateConverter.dateToReadableDate(DateTime.now());
+    _tripTime = DateConverter.convertTimeToTimeDate(DateTime.now());
   }
 
   void setCarType(int index) {
@@ -90,36 +104,35 @@ class RiderController extends GetxController implements GetxService {
   }
 
   Future<void> setDate() async {
-    DateTime pickedDate = await showDatePicker(
-        context: Get.context,
+    DateTime? pickedDate = await showDatePicker(
+        context: Get.context!,
         initialDate: DateTime.now(),
         firstDate: DateTime.now(),
         lastDate: DateTime(2101)
     );
 
     if(pickedDate != null ){
-      print(pickedDate);
-      _tripDate = DateConverter.dateToDate(pickedDate);
+      _tripDate = DateConverter.dateToReadableDate(pickedDate);
     }else{
-      print("Date is not selected");
+      debugPrint("Date is not selected");
     }
     update();
   }
 
   Future<void> setTime(BuildContext context) async {
-    TimeOfDay _time = await showTimePicker(
+    TimeOfDay? time = await showTimePicker(
       context: context, initialTime: TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute),
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(
-            alwaysUse24HourFormat: Get.find<SplashController>().configModel.timeformat == '24',
+            alwaysUse24HourFormat: Get.find<SplashController>().configModel!.timeformat == '24',
           ),
-          child: child,
+          child: child!,
         );
       },
     );
-    if(_time != null) {
-      _tripTime = DateConverter.convertTimeToTimeDate(DateTime(DateTime.now().year, 1, 1, _time.hour, _time.minute));
+    if(time != null) {
+      _tripTime = DateConverter.convertTimeToTimeDate(DateTime(DateTime.now().year, 1, 1, time.hour, time.minute));
     }
     update();
   }
@@ -129,10 +142,14 @@ class RiderController extends GetxController implements GetxService {
     update();
   }
 
-  void initializeData(String riderType, AddressModel address) {
-    print("riderType_initializeData:$riderType");
+  void initializeData(String? riderType, AddressModel? address) {
+    if (kDebugMode) {
+      print("riderType_initializeData:$riderType");
+    }
     _fromAddress = address ?? Get.find<LocationController>().getUserAddress();
+    _formTextEditingController.text = _fromAddress!.address!;
     _toAddress = null;
+    _toTextEditingController.text = '';
     _markers = {};
     _polyLines = {};
     _rideStatus = RiderType.values.where((element) => element.name == riderType).first;
@@ -187,33 +204,36 @@ class RiderController extends GetxController implements GetxService {
     }
   }
 
-  Future<Position> getInitialLocation(AddressModel address) async {
-    Position _position;
+  Future<Position?> getInitialLocation(AddressModel? address) async {
+    Position? position;
     try {
       if(address == null){
         await Geolocator.requestPermission();
-        _position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        _initialPosition = LatLng(_position.latitude, _position.longitude);
+        position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        _initialPosition = LatLng(position.latitude, position.longitude);
       }else{
-        _initialPosition = LatLng(double.parse(address.latitude), double.parse(address.longitude));
+        _initialPosition = LatLng(double.parse(address.latitude!), double.parse(address.longitude!));
       }
       _mapController?.animateCamera(CameraUpdate.newLatLngZoom(_initialPosition, 16));
       // _markers[_fromMarkerId] = Marker(markerId: _fromMarkerId, visible: false, position: _initialPosition);
-      final Uint8List _liveMarkerIcon = await Get.find<RiderController>().getBytesFromAsset(Images.live_marker, 70);
-      Marker _marker = Marker(
+      final Uint8List liveMarkerIcon = await Get.find<RiderController>().getBytesFromAsset(Images.liveMarker, 70);
+      Marker marker = Marker(
         markerId: _myMarkerId,
         position: _initialPosition,
-        icon: BitmapDescriptor.fromBytes(_liveMarkerIcon),
+        icon: BitmapDescriptor.fromBytes(liveMarkerIcon),
       );
-      _markers[_myMarkerId] = _marker;
+      _markers[_myMarkerId] = marker;
       update();
-    }catch(e){}
-    return _position;
+    }catch(_){}
+    return position;
   }
 
   void clearRideData() {
     _markers.clear();
     _polyLines.clear();
+    Future.delayed(const Duration(seconds: 2),(){
+
+    });
   }
 
   void setRideStatus(RiderType rideStatus,{bool shouldUpdate = true}) {
@@ -227,7 +247,7 @@ class RiderController extends GetxController implements GetxService {
     ByteData data = await rootBundle.load(path);
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
     ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
   }
 
   void toggleIsReturnSameLocation(bool value){
@@ -235,35 +255,37 @@ class RiderController extends GetxController implements GetxService {
     update();
   }
 
-  void setLocationFromPlace(String placeID, String address, bool isFrom) async {
+  void setLocationFromPlace(String? placeID, String? address, bool isFrom) async {
     Response response = await riderRepo.getPlaceDetails(placeID);
     if(response.statusCode == 200) {
-      PlaceDetailsModel _placeDetails = PlaceDetailsModel.fromJson(response.body);
-      if(_placeDetails.status == 'OK') {
-        AddressModel _address = AddressModel(
-          address: address, addressType: 'others', latitude: _placeDetails.result.geometry.location.lat.toString(),
-          longitude: _placeDetails.result.geometry.location.lng.toString(),
-          contactPersonName: Get.find<LocationController>().getUserAddress().contactPersonName,
-          contactPersonNumber: Get.find<LocationController>().getUserAddress().contactPersonNumber,
+      PlaceDetailsModel placeDetails = PlaceDetailsModel.fromJson(response.body);
+      if(placeDetails.status == 'OK') {
+        AddressModel address0 = AddressModel(
+          address: address, addressType: 'others', latitude: placeDetails.result!.geometry!.location!.lat.toString(),
+          longitude: placeDetails.result!.geometry!.location!.lng.toString(),
+          contactPersonName: Get.find<LocationController>().getUserAddress()!.contactPersonName,
+          contactPersonNumber: Get.find<LocationController>().getUserAddress()!.contactPersonNumber,
         );
-        ZoneResponseModel _response = await Get.find<LocationController>().getZone(_address.latitude, _address.longitude, false);
-        if (_response.isSuccess) {
-          if(Get.find<LocationController>().getUserAddress().zoneIds.contains(_response.zoneIds[0])) {
-            _address.zoneId =  _response.zoneIds[0];
-            _address.zoneIds = [];
-            _address.zoneIds.addAll(_response.zoneIds);
-            _address.zoneData = [];
-            _address.zoneData.addAll(_response.zoneData);
+        ZoneResponseModel response0 = await Get.find<LocationController>().getZone(address0.latitude, address0.longitude, false);
+        if (response0.isSuccess) {
+          if(Get.find<LocationController>().getUserAddress()!.zoneIds!.contains(response0.zoneIds[0])) {
+            address0.zoneId =  response0.zoneIds[0];
+            address0.zoneIds = [];
+            address0.zoneIds!.addAll(response0.zoneIds);
+            address0.zoneData = [];
+            address0.zoneData!.addAll(response0.zoneData);
             if(isFrom) {
-              setFromAddress(_address);
+              _formTextEditingController.text = address0.address!;
+              setFromAddress(address0);
             }else {
-              setToAddress(_address);
+              _toTextEditingController.text = address0.address!;
+              setToAddress(address0);
             }
           }else {
             showCustomSnackBar('your_selected_location_is_from_different_zone_store'.tr);
           }
         } else {
-          showCustomSnackBar(_response.message);
+          showCustomSnackBar(response0.message);
         }
       }
     }
@@ -272,79 +294,81 @@ class RiderController extends GetxController implements GetxService {
 
   Future<void> setFromAddress(AddressModel addressModel) async {
     _fromAddress = addressModel;
-    LatLng _from = LatLng(double.parse(_fromAddress.latitude), double.parse(_fromAddress.longitude));
-    _markers[_myMarkerId] = Marker(markerId: _myMarkerId, visible: false, position: _from);
+    LatLng from = LatLng(double.parse(_fromAddress!.latitude!), double.parse(_fromAddress!.longitude!));
+    _markers[_myMarkerId] = Marker(markerId: _myMarkerId, visible: false, position: from);
 
-    final Uint8List _fromMarkerIcon = await getBytesFromAsset(Images.live_marker, 70);
-    Marker _fromMarker = Marker(
-      markerId: _fromMarkerId, position: _from, visible: true,
-      icon: BitmapDescriptor.fromBytes(_fromMarkerIcon),
+    final Uint8List fromMarkerIcon = await getBytesFromAsset(Images.liveMarker, 70);
+    Marker fromMarker = Marker(
+      markerId: _fromMarkerId, position: from, visible: true,
+      icon: BitmapDescriptor.fromBytes(fromMarkerIcon),
     );
-    _markers[_fromMarkerId] = _fromMarker;
+    _markers[_fromMarkerId] = fromMarker;
     update();
   }
 
   Future<void> setToAddress(AddressModel addressModel) async {
     _toAddress = addressModel;
     setFromToMarker(
-      from: LatLng(double.parse(_fromAddress.latitude), double.parse(_fromAddress.longitude)),
-      to: LatLng(double.parse(_toAddress.latitude), double.parse(_toAddress.longitude)),
+      from: LatLng(double.parse(_fromAddress!.latitude!), double.parse(_fromAddress!.longitude!)),
+      to: LatLng(double.parse(_toAddress!.latitude!), double.parse(_toAddress!.longitude!)),
     );
     update();
   }
 
-  void setFromToMarker({@required LatLng from, @required LatLng to}) async {
+  void setFromToMarker({required LatLng from, required LatLng to}) async {
     _markers[_myMarkerId] = Marker(markerId: _myMarkerId, visible: false, position: from);
-    final Uint8List _fromMarkerIcon = await getBytesFromAsset(Images.live_marker, 70);
-    final Uint8List _toMarkerIcon = await getBytesFromAsset(Images.to_marker, 70);
+    final Uint8List fromMarkerIcon = await getBytesFromAsset(Images.liveMarker, 70);
+    final Uint8List toMarkerIcon = await getBytesFromAsset(Images.toMarker, 70);
 
-    Marker _fromMarker = Marker(
+    Marker fromMarker = Marker(
       markerId: _fromMarkerId, position: from, visible: true,
-      icon: BitmapDescriptor.fromBytes(_fromMarkerIcon),
+      icon: BitmapDescriptor.fromBytes(fromMarkerIcon),
     );
-    _markers[_fromMarkerId] = _fromMarker;
-    Marker _toMarker = Marker(
+    _markers[_fromMarkerId] = fromMarker;
+    Marker toMarker = Marker(
       markerId: _toMarkerId, position: to,
-      icon: BitmapDescriptor.fromBytes(_toMarkerIcon),
+      icon: BitmapDescriptor.fromBytes(toMarkerIcon),
     );
-    _markers[_toMarkerId] = _toMarker;
+    _markers[_toMarkerId] = toMarker;
     _mapController?.animateCamera(CameraUpdate.newLatLngBounds(boundsFromLatLngList([from, to]), 100));
 
     generatePolyLines(from: from, to: to);
     _distance = await Get.find<OrderController>().getDistanceInKM(from, to);
     _duration = await Get.find<OrderController>().getDistanceInKM(from, to, isDuration: true);
-    print('--------------distance------ : $_distance');
-    print('--------------duration------ : $_duration');
+    if (kDebugMode) {
+      print('--------------distance------ : $_distance');
+      print('--------------duration------ : $_duration');
+    }
     update();
   }
 
-  Future<List<LatLng>> generatePolyLines({@required LatLng from, @required LatLng to}) async {
-    List<LatLng> _polylineCoordinates = [];
-    List<LatLng> _results = await getRouteBetweenCoordinates(from, to);
-    if (_results.isNotEmpty) {
-      _polylineCoordinates.addAll(_results);
+  Future<List<LatLng>> generatePolyLines({required LatLng from, required LatLng to}) async {
+    List<LatLng> polylineCoordinates = [];
+    List<LatLng> results = await getRouteBetweenCoordinates(from, to);
+    if (results.isNotEmpty) {
+      polylineCoordinates.addAll(results);
     } else {
       showCustomSnackBar('route_not_found'.tr);
     }
-    PolylineId _polyId = PolylineId('my_polyline');
-    Polyline _polyline = Polyline(
-      polylineId: _polyId,
-      points: _polylineCoordinates,
+    PolylineId polyId = const PolylineId('my_polyline');
+    Polyline polyline = Polyline(
+      polylineId: polyId,
+      points: polylineCoordinates,
       width: 5,
-      color: Theme.of(Get.context).primaryColor,
+      color: Theme.of(Get.context!).primaryColor,
     );
-    _polyLines[_polyId] = _polyline;
+    _polyLines[polyId] = polyline;
     update();
-    return _polylineCoordinates;
+    return polylineCoordinates;
   }
 
   Future<List<LatLng>> getRouteBetweenCoordinates(LatLng origin, LatLng destination) async {
-    List<LatLng> _coordinates = [];
+    List<LatLng> coordinates = [];
     Response response = await riderRepo.getRouteBetweenCoordinates(origin, destination);
     if (response.body["status"]?.toLowerCase() == 'ok' && response.body["routes"] != null && response.body["routes"].isNotEmpty) {
-      _coordinates.addAll(decodeEncodedPolyline(response.body["routes"][0]["overview_polyline"]["points"]));
+      coordinates.addAll(decodeEncodedPolyline(response.body["routes"][0]["overview_polyline"]["points"]));
     }
-    return _coordinates;
+    return coordinates;
   }
 
   List<LatLng> decodeEncodedPolyline(String encoded) {
@@ -371,14 +395,14 @@ class RiderController extends GetxController implements GetxService {
       } while (b >= 0x20);
       int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
       lng += dlng;
-      LatLng p = new LatLng((lat / 1E5).toDouble(), (lng / 1E5).toDouble());
+      LatLng p = LatLng((lat / 1E5).toDouble(), (lng / 1E5).toDouble());
       poly.add(p);
     }
     return poly;
   }
 
   LatLngBounds boundsFromLatLngList(List<LatLng> list) {
-    double x0, x1, y0, y1;
+    double? x0, x1, y0, y1;
     for (LatLng latLng in list) {
       if (x0 == null) {
         x0 = x1 = latLng.latitude;
@@ -390,6 +414,6 @@ class RiderController extends GetxController implements GetxService {
         if (latLng.longitude < (y0 ?? 0)) y0 = latLng.longitude;
       }
     }
-    return LatLngBounds(northeast: LatLng(x1, y1), southwest: LatLng(x0, y0));
+    return LatLngBounds(northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
   }
 }

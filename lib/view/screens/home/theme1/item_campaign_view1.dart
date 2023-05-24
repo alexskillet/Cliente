@@ -10,13 +10,15 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:get/get.dart';
 
 class ItemCampaignView1 extends StatelessWidget {
+  const ItemCampaignView1({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CampaignController>(builder: (campaignController) {
-      return (campaignController.itemCampaignList != null && campaignController.itemCampaignList.length == 0) ? SizedBox() : Column(
+      return (campaignController.itemCampaignList != null && campaignController.itemCampaignList!.isEmpty) ? const SizedBox() : Column(
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
+            padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
             child: TitleWidget(title: 'campaigns'.tr, onTap: () => Get.toNamed(RouteHelper.getItemCampaignRoute())),
           ),
 
@@ -24,22 +26,22 @@ class ItemCampaignView1 extends StatelessWidget {
             height: 150,
             child: campaignController.itemCampaignList != null ? ListView.builder(
               controller: ScrollController(),
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
-              itemCount: campaignController.itemCampaignList.length > 10 ? 10 : campaignController.itemCampaignList.length,
+              padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
+              itemCount: campaignController.itemCampaignList!.length > 10 ? 10 : campaignController.itemCampaignList!.length,
               itemBuilder: (context, index){
                 return Padding(
-                  padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL, bottom: 5),
+                  padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall, bottom: 5),
                   child: InkWell(
                     onTap: () {
-                      Get.find<ItemController>().navigateToItemPage(campaignController.itemCampaignList[index], context, isCampaign: true);
+                      Get.find<ItemController>().navigateToItemPage(campaignController.itemCampaignList![index], context, isCampaign: true);
                     },
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                      borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                       child: CustomImage(
-                        image: '${Get.find<SplashController>().configModel.baseUrls.campaignImageUrl}'
-                            '/${campaignController.itemCampaignList[index].image}',
+                        image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}'
+                            '/${campaignController.itemCampaignList![index].image}',
                         height: 150, width: 150, fit: BoxFit.cover,
                       ),
                     ),
@@ -56,26 +58,26 @@ class ItemCampaignView1 extends StatelessWidget {
 
 class ItemCampaignShimmer extends StatelessWidget {
   final CampaignController campaignController;
-  ItemCampaignShimmer({@required this.campaignController});
+  const ItemCampaignShimmer({Key? key, required this.campaignController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
+      padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
       itemCount: 10,
       itemBuilder: (context, index){
         return Padding(
-          padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL, bottom: 5),
+          padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall, bottom: 5),
           child: Shimmer(
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
             enabled: campaignController.itemCampaignList == null,
             child: Container(
               height: 150, width: 150,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                 color: Colors.grey[300],
               ),
             ),

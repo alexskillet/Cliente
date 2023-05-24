@@ -14,44 +14,44 @@ import 'package:sixam_mart/view/base/ripple_button.dart';
 class RiderCarCard extends StatelessWidget {
   final Vehicles vehicle;
   final UserInformationBody filterBody;
-  const RiderCarCard({Key key, @required this.vehicle, @required this.filterBody}) : super(key: key);
+  const RiderCarCard({Key? key, required this.vehicle, required this.filterBody}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+      padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
       child: Stack(
         children: [
           Container(
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-              boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300], blurRadius: 5, spreadRadius: 1,)],
+              borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+              boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300]!, blurRadius: 5, spreadRadius: 1,)],
             ),
-            margin: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
-            padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+            margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
+            padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL)),
+                    borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
                     child: CustomImage(
-                        image: '${Get.find<SplashController>().configModel.baseUrls.vehicleImageUrl}/${vehicle.carImages.isNotEmpty ? vehicle.carImages[0] : ''}',
+                        image: '${Get.find<SplashController>().configModel!.baseUrls!.vehicleImageUrl}/${vehicle.carImages!.isNotEmpty ? vehicle.carImages![0] : ''}',
                       height: 130,width: Get.width),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:Dimensions.PADDING_SIZE_SMALL),
+                  padding: const EdgeInsets.symmetric(horizontal:Dimensions.paddingSizeSmall),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                      const SizedBox(height: Dimensions.paddingSizeDefault),
                       Text("${vehicle.name}",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault),),
-                      SizedBox(height: 8,),
+                      const SizedBox(height: 8,),
                       Row(
                         children: [
-                          Image.asset(Images.star_fill,height: 10,width: 10,),
-                          SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL,),
+                          Image.asset(Images.starFill,height: 10,width: 10,),
+                          const SizedBox(width: Dimensions.paddingSizeExtraSmall,),
                           Text('${vehicle.avgRating},',style: robotoRegular.copyWith(
                             fontSize: Dimensions.fontSizeSmall,
                           ),),
@@ -59,40 +59,40 @@ class RiderCarCard extends StatelessWidget {
                             "(${vehicle.ratingCount} ${'review'.tr})",
                             style: robotoRegular.copyWith(
                               fontSize: Dimensions.fontSizeSmall,
-                              color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5),
+                              color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5),
                             ),
                           )
                         ]),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             child: Row(
                               children: [
-                                carFeatureItem(Images.rider_seat, '${vehicle.seatingCapacity} ${'seat'.tr}'),
-                                SizedBox(width: Dimensions.PADDING_SIZE_LARGE),
-                                carFeatureItem(Images.ac_icon, '${vehicle.airCondition == 'yes' ? 'ac'.tr : 'non_ac'.tr}'),
-                                SizedBox(width: Dimensions.PADDING_SIZE_LARGE,),
-                                carFeatureItem(Images.rider_km, '${vehicle.engineCapacity}km/h'),
+                                carFeatureItem(Images.riderSeat, '${vehicle.seatingCapacity} ${'seat'.tr}'),
+                                const SizedBox(width: Dimensions.paddingSizeLarge),
+                                carFeatureItem(Images.acIcon, vehicle.airCondition == 'yes' ? 'ac'.tr : 'non_ac'.tr),
+                                const SizedBox(width: Dimensions.paddingSizeLarge,),
+                                carFeatureItem(Images.riderKm, '${vehicle.engineCapacity}km/h'),
                               ],
                             ),
                           ),
-                          SizedBox(height: 8,),
+                          const SizedBox(height: 8,),
 
                           Text.rich(
                             TextSpan(
                               children: [
                                 TextSpan(
-                                    text: '${Get.find<SplashController>().configModel.currencySymbol}',
+                                    text: '${Get.find<SplashController>().configModel!.currencySymbol}',
                                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
                                 TextSpan(
-                                    text: '${double.parse(vehicle.minFare.toString()).toStringAsFixed(Get.find<SplashController>().configModel.digitAfterDecimalPoint)}',
+                                    text: double.parse(vehicle.minFare.toString()).toStringAsFixed(Get.find<SplashController>().configModel!.digitAfterDecimalPoint!),
                                     style: robotoBold.copyWith(fontSize: Dimensions.fontSizeExtraLarge)),
                                 TextSpan(
                                     text: '/hr',
                                     style: robotoBold.copyWith(
-                                        color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5),
+                                        color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5),
                                         fontSize: Dimensions.fontSizeSmall)),
                               ],
                             ),
@@ -110,10 +110,10 @@ class RiderCarCard extends StatelessWidget {
           ),
 
           Positioned.fill(child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
             child: RippleButton(
               onTap: () => Get.toNamed(RouteHelper.getCarDetailsScreen(vehicle, filterBody)),
-              radius: Dimensions.RADIUS_SMALL,
+              radius: Dimensions.radiusSmall,
             ),
           )),
 
@@ -126,7 +126,7 @@ class RiderCarCard extends StatelessWidget {
     return Row(
       children: [
         Image.asset(imagePath,height: 13,),
-        SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL,),
+        const SizedBox(width: Dimensions.paddingSizeExtraSmall,),
         Text(title),
       ],
     );

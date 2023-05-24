@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomHeaderIcon extends StatelessWidget {
   final String assetIconUnSelected;
 
-  const CustomHeaderIcon({Key key, @required this.assetIconUnSelected}) : super(key: key);
+  const CustomHeaderIcon({Key? key, required this.assetIconUnSelected}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

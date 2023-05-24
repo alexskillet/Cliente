@@ -6,13 +6,13 @@ enum NotificationType{
 }
 
 class NotificationBody {
-  NotificationType notificationType;
-  int orderId;
-  int adminId;
-  int deliverymanId;
-  int restaurantId;
-  String type;
-  int conversationId;
+  NotificationType? notificationType;
+  int? orderId;
+  int? adminId;
+  int? deliverymanId;
+  int? restaurantId;
+  String? type;
+  int? conversationId;
 
   NotificationBody({
     this.notificationType,
@@ -35,18 +35,18 @@ class NotificationBody {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['order_notification'] = this.notificationType.toString();
-    data['order_id'] = this.orderId;
-    data['admin_id'] = this.adminId;
-    data['deliveryman_id'] = this.deliverymanId;
-    data['restaurant_id'] = this.restaurantId;
-    data['type'] = this.type;
-    data['conversation_id'] = this.conversationId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['order_notification'] = notificationType.toString();
+    data['order_id'] = orderId;
+    data['admin_id'] = adminId;
+    data['deliveryman_id'] = deliverymanId;
+    data['restaurant_id'] = restaurantId;
+    data['type'] = type;
+    data['conversation_id'] = conversationId;
     return data;
   }
 
-  NotificationType convertToEnum(String enumString) {
+  NotificationType convertToEnum(String? enumString) {
     if(enumString == NotificationType.general.toString()) {
       return NotificationType.general;
     }else if(enumString == NotificationType.order.toString()) {

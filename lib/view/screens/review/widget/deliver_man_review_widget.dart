@@ -12,9 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DeliveryManReviewWidget extends StatefulWidget {
-  final DeliveryMan deliveryMan;
+  final DeliveryMan? deliveryMan;
   final String orderID;
-  DeliveryManReviewWidget({@required this.deliveryMan, @required this.orderID});
+  const DeliveryManReviewWidget({Key? key, required this.deliveryMan, required this.orderID}) : super(key: key);
 
   @override
   State<DeliveryManReviewWidget> createState() => _DeliveryManReviewWidgetState();
@@ -27,20 +27,20 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
   Widget build(BuildContext context) {
     return GetBuilder<ItemController>(builder: (itemController) {
       return Scrollbar(child: SingleChildScrollView(
-        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-        physics: BouncingScrollPhysics(),
-        child: FooterView(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+        physics: const BouncingScrollPhysics(),
+        child: FooterView(child: SizedBox(width: Dimensions.webMaxWidth, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
-          widget.deliveryMan != null ? DeliveryManWidget(deliveryMan: widget.deliveryMan) : SizedBox(),
-          SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+          widget.deliveryMan != null ? DeliveryManWidget(deliveryMan: widget.deliveryMan) : const SizedBox(),
+          const SizedBox(height: Dimensions.paddingSizeLarge),
 
           Container(
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+            padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+              borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
               boxShadow: [BoxShadow(
-                color: Colors.grey[Get.isDarkMode ? 700 : 300],
+                color: Colors.grey[Get.isDarkMode ? 700 : 300]!,
                 blurRadius: 5, spreadRadius: 1,
               )],
             ),
@@ -49,7 +49,7 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                 'rate_his_service'.tr,
                 style: robotoMedium.copyWith(color: Theme.of(context).disabledColor), overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
               SizedBox(
                 height: 30,
                 child: ListView.builder(
@@ -71,13 +71,13 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                   },
                 ),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+              const SizedBox(height: Dimensions.paddingSizeLarge),
 
               Text(
                 'share_your_opinion'.tr,
                 style: robotoMedium.copyWith(color: Theme.of(context).disabledColor), overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+              const SizedBox(height: Dimensions.paddingSizeLarge),
               MyTextField(
                 maxLines: 5,
                 capitalization: TextCapitalization.sentences,
@@ -85,11 +85,11 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                 hintText: 'write_your_review_here'.tr,
                 fillColor: Theme.of(context).disabledColor.withOpacity(0.05),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
 
               // Submit button
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+                padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
                 child: Column(
                   children: [
                     !itemController.isLoading ? CustomButton(
@@ -105,7 +105,7 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                             currentFocus.unfocus();
                           }
                           ReviewBody reviewBody = ReviewBody(
-                            deliveryManId: widget.deliveryMan.id.toString(),
+                            deliveryManId: widget.deliveryMan!.id.toString(),
                             rating: itemController.deliveryManRating.toString(),
                             comment: _controller.text,
                             orderId: widget.orderID,
@@ -120,7 +120,7 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                           });
                         }
                       },
-                    ) : Center(child: CircularProgressIndicator()),
+                    ) : const Center(child: CircularProgressIndicator()),
                   ],
                 ),
               ),

@@ -12,7 +12,7 @@ import 'package:sixam_mart/view/screens/store/widget/review_dialog.dart';
 class ReviewWidget extends StatelessWidget {
   final ReviewModel review;
   final bool hasDivider;
-  ReviewWidget({@required this.review, @required this.hasDivider});
+  const ReviewWidget({Key? key, required this.review, required this.hasDivider}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,20 +24,20 @@ class ReviewWidget extends StatelessWidget {
 
           ClipOval(
             child: CustomImage(
-              image: '${Get.find<SplashController>().configModel.baseUrls.itemImageUrl}/${review.itemImage ?? ''}',
+              image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}/${review.itemImage ?? ''}',
               height: 60, width: 60, fit: BoxFit.cover,
             ),
           ),
-          SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+          const SizedBox(width: Dimensions.paddingSizeSmall),
 
           Expanded(child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
 
             Text(
-              review.itemName, maxLines: 1, overflow: TextOverflow.ellipsis,
+              review.itemName!, maxLines: 1, overflow: TextOverflow.ellipsis,
               style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall),
             ),
 
-            RatingBar(rating: review.rating.toDouble(), ratingCount: null, size: 15),
+            RatingBar(rating: review.rating!.toDouble(), ratingCount: null, size: 15),
 
             Text(
               review.customerName ?? '',
@@ -46,7 +46,7 @@ class ReviewWidget extends StatelessWidget {
             ),
 
             Text(
-              review.comment, maxLines: 2, overflow: TextOverflow.ellipsis,
+              review.comment!, maxLines: 2, overflow: TextOverflow.ellipsis,
               style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor),
             ),
 
@@ -55,9 +55,9 @@ class ReviewWidget extends StatelessWidget {
         ]),
 
         (hasDivider && ResponsiveHelper.isMobile(context)) ? Padding(
-          padding: EdgeInsets.only(left: 70),
+          padding: const EdgeInsets.only(left: 70),
           child: Divider(color: Theme.of(context).disabledColor),
-        ) : SizedBox(),
+        ) : const SizedBox(),
 
       ]),
     );

@@ -15,11 +15,11 @@ class LocalizationController extends GetxController implements GetxService {
   final SharedPreferences sharedPreferences;
   final ApiClient apiClient;
 
-  LocalizationController({@required this.sharedPreferences, @required this.apiClient}) {
+  LocalizationController({required this.sharedPreferences, required this.apiClient}) {
     loadCurrentLanguage();
   }
 
-  Locale _locale = Locale(AppConstants.languages[0].languageCode, AppConstants.languages[0].countryCode);
+  Locale _locale = Locale(AppConstants.languages[0].languageCode!, AppConstants.languages[0].countryCode);
   bool _isLtr = true;
   List<LanguageModel> _languages = [];
 
@@ -35,15 +35,15 @@ class LocalizationController extends GetxController implements GetxService {
     }else {
       _isLtr = true;
     }
-    AddressModel _addressModel;
+    AddressModel? addressModel;
     try {
-      _addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.USER_ADDRESS)));
-    }catch(e) {}
+      addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.userAddress)!));
+    }catch(_) {}
     apiClient.updateHeader(
-      sharedPreferences.getString(AppConstants.TOKEN), _addressModel == null ? null : _addressModel.zoneIds,
-      _addressModel == null ? null : _addressModel.areaIds,
-      locale.languageCode, Get.find<SplashController>().module != null ? Get.find<SplashController>().module.id : null,
-      _addressModel == null ? null : _addressModel.latitude, _addressModel == null ? null : _addressModel.longitude,
+      sharedPreferences.getString(AppConstants.token), addressModel?.zoneIds,
+      addressModel?.areaIds,
+      locale.languageCode, Get.find<SplashController>().module != null ? Get.find<SplashController>().module!.id : null,
+      addressModel?.latitude, addressModel?.longitude,
     );
     saveLanguage(_locale);
     if(Get.find<LocationController>().getUserAddress() != null) {
@@ -54,8 +54,8 @@ class LocalizationController extends GetxController implements GetxService {
   }
 
   void loadCurrentLanguage() async {
-    _locale = Locale(sharedPreferences.getString(AppConstants.LANGUAGE_CODE) ?? AppConstants.languages[0].languageCode,
-        sharedPreferences.getString(AppConstants.COUNTRY_CODE) ?? AppConstants.languages[0].countryCode);
+    _locale = Locale(sharedPreferences.getString(AppConstants.languageCode) ?? AppConstants.languages[0].languageCode!,
+        sharedPreferences.getString(AppConstants.countryCode) ?? AppConstants.languages[0].countryCode);
     _isLtr = _locale.languageCode != 'ar';
     for(int index = 0; index<AppConstants.languages.length; index++) {
       if(AppConstants.languages[index].languageCode == _locale.languageCode) {
@@ -69,8 +69,8 @@ class LocalizationController extends GetxController implements GetxService {
   }
 
   void saveLanguage(Locale locale) async {
-    sharedPreferences.setString(AppConstants.LANGUAGE_CODE, locale.languageCode);
-    sharedPreferences.setString(AppConstants.COUNTRY_CODE, locale.countryCode);
+    sharedPreferences.setString(AppConstants.languageCode, locale.languageCode);
+    sharedPreferences.setString(AppConstants.countryCode, locale.countryCode!);
   }
 
   int _selectedIndex = 0;
@@ -89,11 +89,11 @@ class LocalizationController extends GetxController implements GetxService {
     } else {
       _selectedIndex = -1;
       _languages = [];
-      AppConstants.languages.forEach((language) async {
-        if (language.languageName.toLowerCase().contains(query.toLowerCase())) {
+      for (var language in AppConstants.languages) {
+        if (language.languageName!.toLowerCase().contains(query.toLowerCase())) {
           _languages.add(language);
         }
-      });
+      }
     }
     update();
   }

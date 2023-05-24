@@ -21,13 +21,15 @@ import 'widgets/top_rated_cars_widget.dart';
 import 'widgets/use_coupon_section.dart';
 
 class RiderHomeScreen extends StatefulWidget {
+  const RiderHomeScreen({Key? key}) : super(key: key);
+
   @override
   State<RiderHomeScreen> createState() => _RiderHomeScreenState();
 }
 
 class _RiderHomeScreenState extends State<RiderHomeScreen> {
 
-  bool _isLoggedIn;
+  late bool _isLoggedIn;
 
   @override
   void initState() {
@@ -46,7 +48,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: RiderAppBar(),
+      appBar: const RiderAppBar(),
       body: GetBuilder<LocationController>(builder: (locationController) {
         return Stack(clipBehavior: Clip.none, children: [
 
@@ -56,27 +58,27 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
               await Get.find<RiderController>().getTopRatedVehiclesList(1, isUpdate: true);
             },
             child: SingleChildScrollView(
-              padding: ResponsiveHelper.isDesktop(context) ? null : EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-              child: FooterView(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              padding: ResponsiveHelper.isDesktop(context) ? null : const EdgeInsets.all(Dimensions.paddingSizeSmall),
+              child: FooterView(child: SizedBox(width: Dimensions.webMaxWidth, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
-                TaxiBannerView(),
-                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                const TaxiBannerView(),
+                const SizedBox(height: Dimensions.paddingSizeSmall),
 
                 Container(
-                  height: 50, width: Dimensions.WEB_MAX_WIDTH,
+                  height: 50, width: Dimensions.webMaxWidth,
                   color: Theme.of(context).colorScheme.background,
                   child: InkWell(
                     onTap: () => Get.toNamed(RouteHelper.getSelectRideMapLocationRoute("initial", null, null)),
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
                       decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
                         border: Border.all(color: Theme.of(context).primaryColor.withOpacity(.5)),
-                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                        borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                       ),
                       child: Row(children: [
-                        Image.asset(Images.rider_search,scale: 3,),
-                        SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                        Image.asset(Images.riderSearch,scale: 3,),
+                        const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                         Expanded(child: Text(
                           'where_to_go'.tr,
                           style: robotoRegular.copyWith(
@@ -87,62 +89,62 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                const SizedBox(height: Dimensions.paddingSizeDefault),
 
-                _isLoggedIn ? AddAddressWidget(isLogin: _isLoggedIn) : SizedBox(),
+                _isLoggedIn && locationController.addressList!.isEmpty ? const AddAddressWidget() : const SizedBox(),
 
                 _isLoggedIn ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('saved_address'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault)),
-                  SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                  const SizedBox(height: Dimensions.paddingSizeDefault),
 
-                  locationController.addressList != null && locationController.addressList.length > 0 ? GridView.builder(
+                  locationController.addressList != null && locationController.addressList!.isNotEmpty ? GridView.builder(
                     controller: ScrollController(),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: ResponsiveHelper.isDesktop(context) ? 3 : ResponsiveHelper.isTab(context) ? 2 : 1,
                       childAspectRatio: ResponsiveHelper.isDesktop(context) ? (1/0.25) : (1/0.205),
-                      crossAxisSpacing: Dimensions.PADDING_SIZE_SMALL, mainAxisSpacing: Dimensions.PADDING_SIZE_SMALL,
+                      crossAxisSpacing: Dimensions.paddingSizeSmall, mainAxisSpacing: Dimensions.paddingSizeSmall,
                     ),
-                    itemCount: locationController.addressList.length > 3 ? 3 : locationController.addressList.length,
+                    itemCount: locationController.addressList!.length > 3 ? 3 : locationController.addressList!.length,
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: (){
-                          Get.toNamed(RouteHelper.getSelectRideMapLocationRoute("initial", locationController.addressList[index], null));
+                          Get.toNamed(RouteHelper.getSelectRideMapLocationRoute("initial", locationController.addressList![index], null));
                         },
                         child: Container(
-                          padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                          padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                           decoration: BoxDecoration(
                             color: Theme.of(context).cardColor,
-                            borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                           ),
                           child: Row(children: [
 
                             Container(
                               height: 33, width: 32, alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL)),
+                                  borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
                                   color: Theme.of(context).primaryColor.withOpacity(0.1), shape: BoxShape.rectangle),
                               child: Image.asset(
-                                locationController.addressList[index].addressType == 'others' ? Images.address_journey :
-                                locationController.addressList[index].addressType == 'home' ? Images.address_home:
-                                Images.address_office,
+                                locationController.addressList![index].addressType == 'others' ? Images.addressJourney :
+                                locationController.addressList![index].addressType == 'home' ? Images.addressHome:
+                                Images.addressOffice,
                                 height: 13,
                               ),
                             ),
-                            SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                            const SizedBox(width: Dimensions.paddingSizeSmall),
 
                             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-                              Text(locationController.addressList[index].addressType, style: robotoMedium),
-                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                              Text(locationController.addressList![index].addressType!, style: robotoMedium),
+                              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
                               Text(
-                                locationController.addressList[index].address, maxLines: 2, overflow: TextOverflow.ellipsis,
+                                locationController.addressList![index].address!, maxLines: 2, overflow: TextOverflow.ellipsis,
                                 style: robotoRegular.copyWith(
-                                    color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5),
+                                    color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5),
                                     fontSize: Dimensions.fontSizeSmall),
                               ),
                             ])),
-                            SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                            const SizedBox(width: Dimensions.paddingSizeSmall),
 
                             Icon(
                               Icons.arrow_forward,
@@ -154,8 +156,8 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
                         ),
                       );
                     },
-                  ) : SizedBox(),
-                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                  ) : const SizedBox(),
+                  const SizedBox(height: Dimensions.paddingSizeLarge),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -170,7 +172,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                  const SizedBox(height: Dimensions.paddingSizeDefault),
 
                   ///Trip history..
                   GridView.builder(
@@ -178,45 +180,45 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: ResponsiveHelper.isDesktop(context) ? 3 : ResponsiveHelper.isTab(context) ? 2 : 1,
                       childAspectRatio: ResponsiveHelper.isDesktop(context) ? (1/0.25) : (1/0.205),
-                      crossAxisSpacing: Dimensions.PADDING_SIZE_SMALL, mainAxisSpacing: Dimensions.PADDING_SIZE_SMALL,
+                      crossAxisSpacing: Dimensions.paddingSizeSmall, mainAxisSpacing: Dimensions.paddingSizeSmall,
                     ),
                     itemCount: 3,
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: (){},
                         child: Container(
-                          padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                          padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                           decoration: BoxDecoration(
                             color: Theme.of(context).cardColor,
-                            borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                           ),
                           child: Row(children: [
 
                             Container(
                               height: 55, width: 55, alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL)),
+                                  borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
                                   color: Theme.of(context).primaryColor.withOpacity(0.1), shape: BoxShape.rectangle),
-                              child: CustomImage(
+                              child: const CustomImage(
                                 image:  '',
                                 height: 30, width: 30,
                               ),
                             ),
-                            SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                            const SizedBox(width: Dimensions.paddingSizeSmall),
 
                             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
                               Text('Dhanmondi to Mirpur DOHS ', style: robotoMedium),
-                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
                               Text(
                                 '\$144', maxLines: 2, overflow: TextOverflow.ellipsis,
                                 style: robotoRegular.copyWith(
-                                    color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5),
+                                    color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5),
                                     fontSize: Dimensions.fontSizeSmall),
                               ),
                             ])),
-                            SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                            const SizedBox(width: Dimensions.paddingSizeSmall),
 
                             Text('16th \n August',style: robotoRegular,),
 
@@ -226,20 +228,20 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
                     },
                   ),
 
-                ]) : SizedBox(),
+                ]) : const SizedBox(),
 
 
-                TopRatedCars(),
-                SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                const TopRatedCars(),
+                const SizedBox(height: Dimensions.paddingSizeDefault),
 
-                UseCouponSection(),
-                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+                const UseCouponSection(),
+                const SizedBox(height: Dimensions.paddingSizeExtraLarge),
 
               ]))),
             ),
           ),
 
-          ResponsiveHelper.isDesktop(context) ? Positioned(top: 150, right: 0, child: ModuleWidget()) : SizedBox(),
+          ResponsiveHelper.isDesktop(context) ? const Positioned(top: 150, right: 0, child: ModuleWidget()) : const SizedBox(),
 
         ]);
       }),
@@ -249,7 +251,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
 
 class ParcelShimmer extends StatelessWidget {
   final bool isEnabled;
-  ParcelShimmer({@required this.isEnabled});
+  const ParcelShimmer({Key? key, required this.isEnabled}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -257,38 +259,38 @@ class ParcelShimmer extends StatelessWidget {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: ResponsiveHelper.isDesktop(context) ? 3 : ResponsiveHelper.isTab(context) ? 2 : 1,
         childAspectRatio: (1/(ResponsiveHelper.isMobile(context) ? 0.20 : 0.20)),
-        crossAxisSpacing: Dimensions.PADDING_SIZE_SMALL, mainAxisSpacing: Dimensions.PADDING_SIZE_SMALL,
+        crossAxisSpacing: Dimensions.paddingSizeSmall, mainAxisSpacing: Dimensions.paddingSizeSmall,
       ),
       itemCount: 10,
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return Container(
-          padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+          padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
           ),
           child: Shimmer(
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
             enabled: isEnabled,
             child: Row(children: [
 
               Container(
                 height: 50, width: 50, alignment: Alignment.center,
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                 decoration: BoxDecoration(color: Colors.grey[300], shape: BoxShape.circle),
               ),
-              SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(width: Dimensions.paddingSizeSmall),
 
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
                 Container(height: 15, width: 200, color: Colors.grey[300]),
-                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                const SizedBox(height: Dimensions.paddingSizeExtraSmall),
                 Container(height: 15, width: 100, color: Colors.grey[300]),
               ])),
-              SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(width: Dimensions.paddingSizeSmall),
 
-              Icon(Icons.keyboard_arrow_right),
+              const Icon(Icons.keyboard_arrow_right),
 
             ]),
           ),

@@ -15,30 +15,30 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class StoreDescriptionView extends StatelessWidget {
-  final Store store;
-  StoreDescriptionView({@required this.store});
+  final Store? store;
+  const StoreDescriptionView({Key? key, required this.store}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    bool _isAvailable = Get.find<StoreController>().isStoreOpenNow(store.active, store.schedules);
-    Color _textColor = ResponsiveHelper.isDesktop(context) ? Colors.white : null;
+    bool isAvailable = Get.find<StoreController>().isStoreOpenNow(store!.active!, store!.schedules);
+    Color? textColor = ResponsiveHelper.isDesktop(context) ? Colors.white : null;
     return Column(children: [
       Row(children: [
 
         ClipRRect(
-          borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
           child: Stack(children: [
             CustomImage(
-              image: '${Get.find<SplashController>().configModel.baseUrls.storeImageUrl}/${store.logo}',
+              image: '${Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl}/${store!.logo}',
               height: ResponsiveHelper.isDesktop(context) ? 80 : 60, width: ResponsiveHelper.isDesktop(context) ? 100 : 70, fit: BoxFit.cover,
             ),
-            _isAvailable ? SizedBox() : Positioned(
+            isAvailable ? const SizedBox() : Positioned(
               bottom: 0, left: 0, right: 0,
               child: Container(
                 height: 30,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(Dimensions.RADIUS_SMALL)),
+                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(Dimensions.radiusSmall)),
                   color: Colors.black.withOpacity(0.6),
                 ),
                 child: Text(
@@ -49,121 +49,121 @@ class StoreDescriptionView extends StatelessWidget {
             ),
           ]),
         ),
-        SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+        const SizedBox(width: Dimensions.paddingSizeSmall),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
             Expanded(child: Text(
-              store.name, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: _textColor),
+              store!.name!, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: textColor),
               maxLines: 1, overflow: TextOverflow.ellipsis,
             )),
-            SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+            const SizedBox(width: Dimensions.paddingSizeSmall),
 
             ResponsiveHelper.isDesktop(context) ? InkWell(
-              onTap: () => Get.toNamed(RouteHelper.getSearchStoreItemRoute(store.id)),
+              onTap: () => Get.toNamed(RouteHelper.getSearchStoreItemRoute(store!.id)),
               child: ResponsiveHelper.isDesktop(context) ? Container(
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_DEFAULT), color: Theme.of(context).primaryColor),
-                child: Center(child: Icon(Icons.search, color: Colors.white)),
+                padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.radiusDefault), color: Theme.of(context).primaryColor),
+                child: const Center(child: Icon(Icons.search, color: Colors.white)),
               ) : Icon(Icons.search, color: Theme.of(context).primaryColor),
-            ) : SizedBox(),
-            SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+            ) : const SizedBox(),
+            const SizedBox(width: Dimensions.paddingSizeSmall),
             GetBuilder<WishListController>(builder: (wishController) {
-              bool _isWished = wishController.wishStoreIdList.contains(store.id);
+              bool isWished = wishController.wishStoreIdList.contains(store!.id);
               return InkWell(
                 onTap: () {
                   if(Get.find<AuthController>().isLoggedIn()) {
-                    _isWished ? wishController.removeFromWishList(store.id, true)
+                    isWished ? wishController.removeFromWishList(store!.id, true)
                         : wishController.addToWishList(null, store, true);
                   }else {
                     showCustomSnackBar('you_are_not_logged_in'.tr);
                   }
                 },
                 child: ResponsiveHelper.isDesktop(context) ? Container(
-                  padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_DEFAULT), color: Theme.of(context).primaryColor),
-                  child: Center(child: Icon(_isWished ? Icons.favorite : Icons.favorite_border, color: Colors.white)),
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.radiusDefault), color: Theme.of(context).primaryColor),
+                  child: Center(child: Icon(isWished ? Icons.favorite : Icons.favorite_border, color: Colors.white)),
                 ) : Icon(
-                  _isWished ? Icons.favorite : Icons.favorite_border,
-                  color: _isWished ? Theme.of(context).primaryColor : Theme.of(context).disabledColor,
+                  isWished ? Icons.favorite : Icons.favorite_border,
+                  color: isWished ? Theme.of(context).primaryColor : Theme.of(context).disabledColor,
                 ),
               );
             }),
           ]),
-          SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+          const SizedBox(height: Dimensions.paddingSizeExtraSmall),
           Text(
-            store.address ?? '', maxLines: 1, overflow: TextOverflow.ellipsis,
+            store!.address ?? '', maxLines: 1, overflow: TextOverflow.ellipsis,
             style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
           ),
-          SizedBox(height: ResponsiveHelper.isDesktop(context) ? Dimensions.PADDING_SIZE_EXTRA_SMALL : 0),
+          SizedBox(height: ResponsiveHelper.isDesktop(context) ? Dimensions.paddingSizeExtraSmall : 0),
           Row(children: [
             Text('minimum_order'.tr, style: robotoRegular.copyWith(
               fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor,
             )),
-            SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            const SizedBox(width: Dimensions.paddingSizeExtraSmall),
             Text(
-              PriceConverter.convertPrice(store.minimumOrder), textDirection: TextDirection.ltr,
+              PriceConverter.convertPrice(store!.minimumOrder), textDirection: TextDirection.ltr,
               style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).primaryColor),
             ),
           ]),
         ])),
 
       ]),
-      SizedBox(height: ResponsiveHelper.isDesktop(context) ? 30 : Dimensions.PADDING_SIZE_SMALL),
+      SizedBox(height: ResponsiveHelper.isDesktop(context) ? 30 : Dimensions.paddingSizeSmall),
 
       Row(children: [
-        Expanded(child: SizedBox()),
+        const Expanded(child: SizedBox()),
         InkWell(
-          onTap: () => Get.toNamed(RouteHelper.getStoreReviewRoute(store.id)),
+          onTap: () => Get.toNamed(RouteHelper.getStoreReviewRoute(store!.id)),
           child: Column(children: [
             Row(children: [
               Icon(Icons.star, color: Theme.of(context).primaryColor, size: 20),
-              SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+              const SizedBox(width: Dimensions.paddingSizeExtraSmall),
               Text(
-                store.avgRating.toStringAsFixed(1),
-                style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: _textColor),
+                store!.avgRating!.toStringAsFixed(1),
+                style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: textColor),
               ),
             ]),
-            SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            const SizedBox(width: Dimensions.paddingSizeExtraSmall),
             Text(
-              '${store.ratingCount} ${'ratings'.tr}',
-              style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: _textColor),
+              '${store!.ratingCount} ${'ratings'.tr}',
+              style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: textColor),
             ),
           ]),
         ),
-        Expanded(child: SizedBox()),
+        const Expanded(child: SizedBox()),
         InkWell(
           onTap: () => Get.toNamed(RouteHelper.getMapRoute(
             AddressModel(
-              id: store.id, address: store.address, latitude: store.latitude,
-              longitude: store.longitude, contactPersonNumber: '', contactPersonName: '', addressType: '',
+              id: store!.id, address: store!.address, latitude: store!.latitude,
+              longitude: store!.longitude, contactPersonNumber: '', contactPersonName: '', addressType: '',
             ), 'store',
           )),
           child: Column(children: [
             Icon(Icons.location_on, color: Theme.of(context).primaryColor, size: 20),
-            SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-            Text('location'.tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: _textColor)),
+            const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+            Text('location'.tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: textColor)),
           ]),
         ),
-        Expanded(child: SizedBox()),
+        const Expanded(child: SizedBox()),
         Column(children: [
           Row(children: [
             Icon(Icons.timer, color: Theme.of(context).primaryColor, size: 20),
-            SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            const SizedBox(width: Dimensions.paddingSizeExtraSmall),
             Text(
-              store.deliveryTime,
-              style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: _textColor),
+              store!.deliveryTime!,
+              style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: textColor),
             ),
           ]),
-          SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-          Text('delivery_time'.tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: _textColor)),
+          const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+          Text('delivery_time'.tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: textColor)),
         ]),
-        (store.delivery && store.freeDelivery) ? Expanded(child: SizedBox()) : SizedBox(),
-        (store.delivery && store.freeDelivery) ? Column(children: [
+        (store!.delivery! && store!.freeDelivery!) ? const Expanded(child: SizedBox()) : const SizedBox(),
+        (store!.delivery! && store!.freeDelivery!) ? Column(children: [
           Icon(Icons.money_off, color: Theme.of(context).primaryColor, size: 20),
-          SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-          Text('free_delivery'.tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: _textColor)),
-        ]) : SizedBox(),
-        Expanded(child: SizedBox()),
+          const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+          Text('free_delivery'.tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: textColor)),
+        ]) : const SizedBox(),
+        const Expanded(child: SizedBox()),
       ]),
     ]);
   }

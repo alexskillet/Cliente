@@ -3,23 +3,23 @@ import 'package:sixam_mart/util/styles.dart';
 import 'package:flutter/material.dart';
 
 class RatingBar extends StatelessWidget {
-  final double rating;
+  final double? rating;
   final double size;
-  final int ratingCount;
-  RatingBar({@required this.rating, @required this.ratingCount, this.size = 18});
+  final int? ratingCount;
+  const RatingBar({Key? key, required this.rating, required this.ratingCount, this.size = 18}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> _starList = [];
+    List<Widget> starList = [];
 
-    int realNumber = rating.floor();
-    int partNumber = ((rating - realNumber) * 10).ceil();
+    int realNumber = rating!.floor();
+    int partNumber = ((rating! - realNumber) * 10).ceil();
 
     for (int i = 0; i < 5; i++) {
       if (i < realNumber) {
-        _starList.add(Icon(Icons.star, color: Theme.of(context).primaryColor, size: size));
+        starList.add(Icon(Icons.star, color: Theme.of(context).primaryColor, size: size));
       } else if (i == realNumber) {
-        _starList.add(SizedBox(
+        starList.add(SizedBox(
           height: size,
           width: size,
           child: Stack(
@@ -34,17 +34,17 @@ class RatingBar extends StatelessWidget {
           ),
         ));
       } else {
-        _starList.add(Icon(Icons.star, color: Colors.grey, size: size));
+        starList.add(Icon(Icons.star, color: Colors.grey, size: size));
       }
     }
-    ratingCount != null ? _starList.add(Padding(
-      padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-      child: Text('($ratingCount)', style: robotoRegular.copyWith(fontSize: size*0.8, color: Theme.of(context).disabledColor)),
-    )) : SizedBox();
+    ratingCount != null ? starList.add(Padding(
+      padding: const EdgeInsets.only(left: Dimensions.paddingSizeExtraSmall),
+      child: Text('($ratingCount)', style: robotoRegular.copyWith(fontSize: size*0.8, color: Theme.of(context).disabledColor), textDirection: TextDirection.ltr),
+    )) : const SizedBox();
 
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: _starList,
+      children: starList,
     );
   }
 }
@@ -52,7 +52,7 @@ class RatingBar extends StatelessWidget {
 class _Clipper extends CustomClipper<Rect> {
   final int part;
 
-  _Clipper({@required this.part});
+  _Clipper({required this.part});
 
   @override
   Rect getClip(Size size) {

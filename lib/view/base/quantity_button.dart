@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 class QuantityButton extends StatelessWidget {
   final bool isIncrement;
   final Function onTap;
-  QuantityButton({@required this.isIncrement, @required this.onTap});
+  const QuantityButton({Key? key, required this.isIncrement, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Container(
         height: 22, width: 22,
-        margin: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+        margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(width: 1, color: isIncrement ? Theme.of(context).primaryColor : Theme.of(context).disabledColor),

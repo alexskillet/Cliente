@@ -17,7 +17,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 
 class WebCampaignView extends StatelessWidget {
   final CampaignController campaignController;
-  WebCampaignView({@required this.campaignController});
+  const WebCampaignView({Key? key, required this.campaignController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +26,19 @@ class WebCampaignView extends StatelessWidget {
       children: [
 
         Padding(
-          padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
+          padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
           child: Text('campaigns'.tr, style: robotoMedium.copyWith(fontSize: 24)),
         ),
 
         campaignController.itemCampaignList != null ? GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4, childAspectRatio: (1/1.1),
-            mainAxisSpacing: Dimensions.PADDING_SIZE_LARGE, crossAxisSpacing: Dimensions.PADDING_SIZE_LARGE,
+            mainAxisSpacing: Dimensions.paddingSizeLarge, crossAxisSpacing: Dimensions.paddingSizeLarge,
           ),
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-          itemCount: campaignController.itemCampaignList.length > 3 ? 4 : campaignController.itemCampaignList.length,
+          padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+          itemCount: campaignController.itemCampaignList!.length > 3 ? 4 : campaignController.itemCampaignList!.length,
           itemBuilder: (context, index){
             if(index == 3) {
               return InkWell(
@@ -46,15 +46,15 @@ class WebCampaignView extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                     boxShadow: [BoxShadow(
-                      color: Colors.grey[Get.find<ThemeController>().darkTheme ? 700 : 300],
+                      color: Colors.grey[Get.find<ThemeController>().darkTheme ? 700 : 300]!,
                       blurRadius: 5, spreadRadius: 1,
                     )],
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    '+${campaignController.itemCampaignList.length-3}\n${'more'.tr}', textAlign: TextAlign.center,
+                    '+${campaignController.itemCampaignList!.length-3}\n${'more'.tr}', textAlign: TextAlign.center,
                     style: robotoBold.copyWith(fontSize: 24, color: Theme.of(context).cardColor),
                   ),
                 ),
@@ -63,14 +63,14 @@ class WebCampaignView extends StatelessWidget {
 
             return InkWell(
               onTap: () {
-                Get.find<ItemController>().navigateToItemPage(campaignController.itemCampaignList[index], context, isCampaign: true);
+                Get.find<ItemController>().navigateToItemPage(campaignController.itemCampaignList![index], context, isCampaign: true);
               },
               child: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                  borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                   boxShadow: [BoxShadow(
-                    color: Colors.grey[Get.find<ThemeController>().darkTheme ? 700 : 300],
+                    color: Colors.grey[Get.find<ThemeController>().darkTheme ? 700 : 300]!,
                     blurRadius: 5, spreadRadius: 1,
                   )],
                 ),
@@ -78,55 +78,55 @@ class WebCampaignView extends StatelessWidget {
 
                   Stack(children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.RADIUS_SMALL)),
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(Dimensions.radiusSmall)),
                       child: CustomImage(
-                        image: '${Get.find<SplashController>().configModel.baseUrls.campaignImageUrl}'
-                            '/${campaignController.itemCampaignList[index].image}',
+                        image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}'
+                            '/${campaignController.itemCampaignList![index].image}',
                         height: 135, fit: BoxFit.cover, width: context.width/4,
                       ),
                     ),
                     DiscountTag(
-                      discount: campaignController.itemCampaignList[index].storeDiscount > 0
-                          ? campaignController.itemCampaignList[index].storeDiscount
-                          : campaignController.itemCampaignList[index].discount,
-                      discountType: campaignController.itemCampaignList[index].storeDiscount > 0 ? 'percent'
-                          : campaignController.itemCampaignList[index].discountType,
-                      fromTop: Dimensions.PADDING_SIZE_LARGE, fontSize: Dimensions.fontSizeExtraSmall,
+                      discount: campaignController.itemCampaignList![index].storeDiscount! > 0
+                          ? campaignController.itemCampaignList![index].storeDiscount
+                          : campaignController.itemCampaignList![index].discount,
+                      discountType: campaignController.itemCampaignList![index].storeDiscount! > 0 ? 'percent'
+                          : campaignController.itemCampaignList![index].discountType,
+                      fromTop: Dimensions.paddingSizeLarge, fontSize: Dimensions.fontSizeExtraSmall,
                     ),
-                    Get.find<ItemController>().isAvailable(campaignController.itemCampaignList[index])
-                        ? SizedBox() : NotAvailableWidget(),
+                    Get.find<ItemController>().isAvailable(campaignController.itemCampaignList![index])
+                        ? const SizedBox() : const NotAvailableWidget(),
                   ]),
 
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
                         Text(
-                          campaignController.itemCampaignList[index].name,
+                          campaignController.itemCampaignList![index].name!,
                           style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
                           maxLines: 2, overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                        const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                         Text(
-                          campaignController.itemCampaignList[index].storeName,
+                          campaignController.itemCampaignList![index].storeName!,
                           style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor),
                           maxLines: 1, overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                        const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                         Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               child: Text(
-                                PriceConverter.convertPrice(campaignController.itemCampaignList[index].price),
+                                PriceConverter.convertPrice(campaignController.itemCampaignList![index].price),
                                 style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall), textDirection: TextDirection.ltr,
                                 textAlign: Get.find<LocalizationController>().isLtr ? TextAlign.left : TextAlign.right,
                               ),
                             ),
                             Icon(Icons.star, color: Theme.of(context).primaryColor, size: 12),
                             Text(
-                              campaignController.itemCampaignList[index].avgRating.toStringAsFixed(1),
+                              campaignController.itemCampaignList![index].avgRating!.toStringAsFixed(1),
                               style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
                             ),
                           ],
@@ -147,52 +147,52 @@ class WebCampaignView extends StatelessWidget {
 
 class WebPopularItemShimmer extends StatelessWidget {
   final CampaignController campaignController;
-  WebPopularItemShimmer({@required this.campaignController});
+  const WebPopularItemShimmer({Key? key, required this.campaignController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4, childAspectRatio: (1/1.1),
-        mainAxisSpacing: Dimensions.PADDING_SIZE_LARGE, crossAxisSpacing: Dimensions.PADDING_SIZE_LARGE,
+        mainAxisSpacing: Dimensions.paddingSizeLarge, crossAxisSpacing: Dimensions.paddingSizeLarge,
       ),
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+      padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
       itemCount: 8,
       itemBuilder: (context, index){
         return Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-            boxShadow: [BoxShadow(color: Colors.grey[300], blurRadius: 10, spreadRadius: 1)],
+            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+            boxShadow: [BoxShadow(color: Colors.grey[300]!, blurRadius: 10, spreadRadius: 1)],
           ),
           child: Shimmer(
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
             enabled: campaignController.itemCampaignList == null,
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
               Container(
                 height: 135,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.RADIUS_SMALL)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(Dimensions.radiusSmall)),
                   color: Colors.grey[300],
                 ),
               ),
 
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
                     Container(height: 15, width: 100, color: Colors.grey[300]),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
 
                     Container(height: 10, width: 130, color: Colors.grey[300]),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
 
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                       Container(height: 10, width: 30, color: Colors.grey[300]),
-                      RatingBar(rating: 0.0, size: 12, ratingCount: 0),
+                      const RatingBar(rating: 0.0, size: 12, ratingCount: 0),
                     ]),
                   ]),
                 ),

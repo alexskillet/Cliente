@@ -2,10 +2,10 @@
 import 'package:sixam_mart/data/model/response/item_model.dart';
 
 class RecommendedItemModel {
-  int totalSize;
-  String limit;
-  String offset;
-  List<Item> items;
+  int? totalSize;
+  String? limit;
+  String? offset;
+  List<Item>? items;
 
   RecommendedItemModel({this.totalSize, this.limit, this.offset, this.items});
 
@@ -16,18 +16,18 @@ class RecommendedItemModel {
     if (json['items'] != null) {
       items = <Item>[];
       json['items'].forEach((v) {
-        items.add(new Item.fromJson(v));
+        items!.add(Item.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['total_size'] = this.totalSize;
-    data['limit'] = this.limit;
-    data['offset'] = this.offset;
-    if (this.items != null) {
-      data['products'] = this.items.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['total_size'] = totalSize;
+    data['limit'] = limit;
+    data['offset'] = offset;
+    if (items != null) {
+      data['products'] = items!.map((v) => v.toJson()).toList();
     }
     return data;
   }

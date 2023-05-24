@@ -5,7 +5,7 @@ import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/util/styles.dart';
 
 class FilterCarSortingWidget extends StatelessWidget {
-   FilterCarSortingWidget({Key key}) : super(key: key);
+   const FilterCarSortingWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +35,11 @@ class FilterCarSortingWidget extends StatelessWidget {
     );
   }
 
-  Widget _myRadioButton({String title, int value, Function onChanged, CarSelectionController carSelectionController}) {
+  Widget _myRadioButton({required String title, int? value, Function? onChanged, required CarSelectionController carSelectionController}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE, vertical: Dimensions.PADDING_SIZE_SMALL),
+      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeSmall),
       child: InkWell(
-        onTap: onChanged,
+        onTap: onChanged as void Function()?,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -47,15 +47,15 @@ class FilterCarSortingWidget extends StatelessWidget {
 
             Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Theme.of(Get.context).primaryColor, width: 2),
-                color: Theme.of(Get.context).cardColor, shape: BoxShape.circle,
+                border: Border.all(color: Theme.of(Get.context!).primaryColor, width: 2),
+                color: Theme.of(Get.context!).cardColor, shape: BoxShape.circle,
               ),
-              padding: EdgeInsets.all(2),
+              padding: const EdgeInsets.all(2),
               child: Container(
                 height: 10, width: 10,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: carSelectionController.sortByIndex == value ? Theme.of(Get.context).primaryColor : Theme.of(Get.context).cardColor,
+                  color: carSelectionController.sortByIndex == value ? Theme.of(Get.context!).primaryColor : Theme.of(Get.context!).cardColor,
                 ),
               ),
             )

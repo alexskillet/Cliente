@@ -1,12 +1,12 @@
 class ReviewModel {
-  int id;
-  String comment;
-  int rating;
-  String itemName;
-  String itemImage;
-  String customerName;
-  String createdAt;
-  String updatedAt;
+  int? id;
+  String? comment;
+  int? rating;
+  String? itemName;
+  String? itemImage;
+  String? customerName;
+  String? createdAt;
+  String? updatedAt;
 
   ReviewModel(
       {this.id,
@@ -30,15 +30,15 @@ class ReviewModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['comment'] = this.comment;
-    data['rating'] = this.rating;
-    data['item_name'] = this.itemName;
-    data['item_image'] = this.itemImage;
-    data['customer_name'] = this.customerName;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['comment'] = comment;
+    data['rating'] = rating;
+    data['item_name'] = itemName;
+    data['item_image'] = itemImage;
+    data['customer_name'] = customerName;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

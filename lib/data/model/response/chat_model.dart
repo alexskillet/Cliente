@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:sixam_mart/data/model/response/conversation_model.dart';
 
 class ChatModel {
-  int totalSize;
-  int limit;
-  int offset;
-  bool status;
-  Conversation conversation;
-  List<Message> messages;
+  int? totalSize;
+  int? limit;
+  int? offset;
+  bool? status;
+  Conversation? conversation;
+  List<Message>? messages;
 
   ChatModel({this.totalSize, this.limit, this.offset, this.status, this.conversation, this.messages});
 
@@ -20,36 +20,36 @@ class ChatModel {
     if (json['messages'] != null) {
       messages = <Message>[];
       json['messages'].forEach((v) {
-        messages.add(new Message.fromJson(v));
+        messages!.add(Message.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['total_size'] = this.totalSize;
-    data['limit'] = this.limit;
-    data['offset'] = this.offset;
-    data['status'] = this.status;
-    if (this.conversation != null) {
-      data['conversation'] = this.conversation.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['total_size'] = totalSize;
+    data['limit'] = limit;
+    data['offset'] = offset;
+    data['status'] = status;
+    if (conversation != null) {
+      data['conversation'] = conversation!.toJson();
     }
-    if (this.messages != null) {
-      data['messages'] = this.messages.map((v) => v.toJson()).toList();
+    if (messages != null) {
+      data['messages'] = messages!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Message {
-  int id;
-  int conversationId;
-  int senderId;
-  String message;
-  List<String> files;
-  int isSeen;
-  String createdAt;
-  String updatedAt;
+  int? id;
+  int? conversationId;
+  int? senderId;
+  String? message;
+  List<String>? files;
+  int? isSeen;
+  String? createdAt;
+  String? updatedAt;
 
   Message(
       {this.id,
@@ -73,15 +73,15 @@ class Message {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['conversation_id'] = this.conversationId;
-    data['sender_id'] = this.senderId;
-    data['message'] = this.message;
-    data['file'] = this.files;
-    data['is_seen'] = this.isSeen;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['conversation_id'] = conversationId;
+    data['sender_id'] = senderId;
+    data['message'] = message;
+    data['file'] = files;
+    data['is_seen'] = isSeen;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

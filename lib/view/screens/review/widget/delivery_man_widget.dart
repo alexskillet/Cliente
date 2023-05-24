@@ -8,18 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DeliveryManWidget extends StatelessWidget {
-  final DeliveryMan deliveryMan;
-  DeliveryManWidget({@required this.deliveryMan});
+  final DeliveryMan? deliveryMan;
+  const DeliveryManWidget({Key? key, required this.deliveryMan}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+        borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
         boxShadow: [BoxShadow(
-          color: Colors.grey[Get.isDarkMode ? 700 : 300],
+          color: Colors.grey[Get.isDarkMode ? 700 : 300]!,
           blurRadius: 5, spreadRadius: 1,
         )],
       ),
@@ -28,15 +28,15 @@ class DeliveryManWidget extends StatelessWidget {
         ListTile(
           leading: ClipOval(
             child: CustomImage(
-              image: '${Get.find<SplashController>().configModel.baseUrls.deliveryManImageUrl}/${deliveryMan.image}',
+              image: '${Get.find<SplashController>().configModel!.baseUrls!.deliveryManImageUrl}/${deliveryMan!.image}',
               height: 40, width: 40, fit: BoxFit.cover,
             ),
           ),
           title: Text(
-            '${deliveryMan.fName} ${deliveryMan.lName}',
+            '${deliveryMan!.fName} ${deliveryMan!.lName}',
             style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
           ),
-          subtitle: RatingBar(rating: deliveryMan.avgRating, size: 15, ratingCount: deliveryMan.ratingCount ?? 0),
+          subtitle: RatingBar(rating: deliveryMan!.avgRating, size: 15, ratingCount: deliveryMan!.ratingCount ?? 0),
         ),
       ]),
     );

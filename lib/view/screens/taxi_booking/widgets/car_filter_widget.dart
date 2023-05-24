@@ -8,60 +8,60 @@ import 'package:sixam_mart/view/base/custom_image.dart';
 import 'filter_car_sorting_widget.dart';
 
 class CarFilterWidget extends StatelessWidget {
-  const CarFilterWidget({Key key}) : super(key: key);
+  const CarFilterWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CarSelectionController>(
       builder: (carSelectionController){
-        if(carSelectionController.isCarFilterActive)
-        return Container(
+        if(carSelectionController.isCarFilterActive) {
+          return Container(
           color: Theme.of(context).cardColor,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
             child: Column(
               children: [
-                SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+                const SizedBox(height: Dimensions.paddingSizeDefault,),
                 Center(
                   child: Container(
                     height: 5, width: 50,
                     decoration: BoxDecoration(
                       color: Theme.of(context).highlightColor,
-                      borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
                     ),
                   ),
                 ),
-                SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+                const SizedBox(height: Dimensions.paddingSizeDefault,),
                 Text("filter_by".tr,style: robotoRegular.copyWith(
                     color: Theme.of(context).primaryColor,
                   fontSize: Dimensions.fontSizeDefault,
                 ),),
-                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                const SizedBox(height: Dimensions.paddingSizeLarge),
                 Align(
                     alignment: Alignment.centerLeft,
                     child: Text('price_range'.tr,style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall),)),
-                SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+                const SizedBox(height: Dimensions.paddingSizeDefault,),
                 Container(
                   decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor.withOpacity(.09),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                      borderRadius: const BorderRadius.all(Radius.circular(5))),
                   height: 45,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text.rich(
                           TextSpan(
                             children: [
-                              TextSpan(text: '${Get.find<SplashController>().configModel.currencySymbol}', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
+                              TextSpan(text: '${Get.find<SplashController>().configModel!.currencySymbol}', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
                               TextSpan(
                                   text: carSelectionController.startingPrice.toString(),
                                   style: robotoBold.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeExtraLarge),
                               ),
                               TextSpan(
                                   text: '/hr',
-                                  style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5), fontSize: Dimensions.fontSizeSmall),
+                                  style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5), fontSize: Dimensions.fontSizeSmall),
                               ),
                             ],
                           ),
@@ -69,19 +69,19 @@ class CarFilterWidget extends StatelessWidget {
                         Container(
                           height: 35,
                           width: 1,
-                          color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.3),
+                          color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.3),
                         ),
                         Text.rich(
                           TextSpan(
                             children: [
-                              TextSpan(text: '${Get.find<SplashController>().configModel.currencySymbol}', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
+                              TextSpan(text: '${Get.find<SplashController>().configModel!.currencySymbol}', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
                               TextSpan(
                                   text: carSelectionController.endingPrice.toString(),
                                   style: robotoBold.copyWith(color:  Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeExtraLarge),
                               ),
                               TextSpan(
                                   text: '/hr',
-                                  style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5), fontSize: Dimensions.fontSizeSmall),
+                                  style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5), fontSize: Dimensions.fontSizeSmall),
                               ),
                             ],
                           ),
@@ -90,7 +90,7 @@ class CarFilterWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                const SizedBox(height: Dimensions.paddingSizeDefault),
 
                 RangeSlider(
                     values: carSelectionController.selectedPriceRange,
@@ -101,36 +101,36 @@ class CarFilterWidget extends StatelessWidget {
                       carSelectionController.selectPriceRange(newRange);
                     },
                 ),
-                SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                const SizedBox(height: Dimensions.paddingSizeDefault),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text('basic'.tr, style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5))),
+                    Text('basic'.tr, style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5))),
                     Container(height: 10, width: 1, color: Theme.of(context).primaryColor),
 
-                    Text('standard'.tr, style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5))),
+                    Text('standard'.tr, style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5))),
                     Container(height: 10, width: 1, color: Theme.of(context).primaryColor),
 
-                    Text('premium'.tr, style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5)),
+                    Text('premium'.tr, style: robotoRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5)),
                     ),
                   ],
                 ),
-                SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                const SizedBox(height: Dimensions.paddingSizeDefault),
 
                 Align(
                     alignment: Alignment.centerLeft,
                     child: Text('model'.tr,style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall))),
-                SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                const SizedBox(height: Dimensions.paddingSizeDefault),
 
-                Container(
+                SizedBox(
                   height: 50,
                   child: ListView.builder(
-                      itemCount: carSelectionController.brandModels.length,
+                      itemCount: carSelectionController.brandModels!.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context,index){
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
                           child: InkWell(
                             onTap: (){
                               carSelectionController.setBrandModel(index);
@@ -139,15 +139,15 @@ class CarFilterWidget extends StatelessWidget {
                                 width: 54,
                                 height: 52,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL)),
-                                  color: index != carSelectionController.selectedBrand ? Theme.of(context).textTheme.bodyLarge.color.withOpacity(.06) :
+                                  borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
+                                  color: index != carSelectionController.selectedBrand ? Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.06) :
                                   Theme.of(context).primaryColor.withOpacity(.1),
-                                  border: Border.all(color:index != carSelectionController.selectedBrand ? Theme.of(context).textTheme.bodyLarge.color.withOpacity(.06) : Theme.of(context).primaryColor )
+                                  border: Border.all(color:index != carSelectionController.selectedBrand ? Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.06) : Theme.of(context).primaryColor )
                                 ),
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                  borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                   child: CustomImage(
-                                      image: '${Get.find<SplashController>().configModel.baseUrls.vehicleBrandImageUrl}/${carSelectionController.brandModels[index].logo}',
+                                      image: '${Get.find<SplashController>().configModel!.baseUrls!.vehicleBrandImageUrl}/${carSelectionController.brandModels![index].logo}',
                                   ),
                                 ),
                             ),
@@ -155,7 +155,7 @@ class CarFilterWidget extends StatelessWidget {
                         );
                       }),
                 ),
-                SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                const SizedBox(height: Dimensions.paddingSizeDefault),
 
                 // Align(
                 //     alignment: Alignment.centerLeft,
@@ -187,14 +187,15 @@ class CarFilterWidget extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text('sort_by'.tr,style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall)),
                 ),
-                FilterCarSortingWidget(),
-                SizedBox(height: 20),
+                const FilterCarSortingWidget(),
+                const SizedBox(height: 20),
               ],
             ),
           ),
 
         );
-        return SizedBox();
+        }
+        return const SizedBox();
       },
     );
   }

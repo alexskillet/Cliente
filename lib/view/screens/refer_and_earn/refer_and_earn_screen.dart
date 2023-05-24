@@ -19,14 +19,14 @@ import 'package:sixam_mart/view/base/menu_drawer.dart';
 import 'package:sixam_mart/view/base/not_logged_in_screen.dart';
 
 class ReferAndEarnScreen extends StatefulWidget {
-  const ReferAndEarnScreen({Key key}) : super(key: key);
+  const ReferAndEarnScreen({Key? key}) : super(key: key);
 
   @override
   State<ReferAndEarnScreen> createState() => _ReferAndEarnScreenState();
 }
 
 class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
-  bool _isLoggedIn;
+  late bool _isLoggedIn;
 
   @override
   void initState() {
@@ -42,34 +42,34 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+      endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       appBar: CustomAppBar(title: 'refer_and_earn'.tr),
       body: Center(
         child: _isLoggedIn ? SingleChildScrollView(
           child: FooterView(
             child: SizedBox(
-              width: Dimensions.WEB_MAX_WIDTH,
+              width: Dimensions.webMaxWidth,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+                padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
                 child: GetBuilder<UserController>(builder: (userController) {
                     return Column( children: [
-                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                      const SizedBox(height: Dimensions.paddingSizeLarge),
 
                       Text('earn_money_on_every_referral'.tr, style: robotoRegular.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeSmall)),
-                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                       Text(
-                          'one_referral'.tr + '= ' + PriceConverter.convertPrice(Get.find<SplashController>().configModel != null
-                              ? Get.find<SplashController>().configModel.refEarningExchangeRate.toDouble() : 0.0),
+                          '${'one_referral'.tr}= ${PriceConverter.convertPrice(Get.find<SplashController>().configModel != null
+                              ? Get.find<SplashController>().configModel!.refEarningExchangeRate!.toDouble() : 0.0)}',
                           style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault), textDirection: TextDirection.ltr,
                       ),
-                      SizedBox(height: 40),
+                      const SizedBox(height: 40),
 
                       Center(
                         child: Row(mainAxisSize: MainAxisSize.min, children: [
                           Column(children: [
 
-                            Image.asset(Images.refer_image, width: ResponsiveHelper.isDesktop(context) ? 200 : 100,
+                            Image.asset(Images.referImage, width: ResponsiveHelper.isDesktop(context) ? 200 : 100,
                                 height: ResponsiveHelper.isDesktop(context) ? 250 : 150, fit: BoxFit.contain),
                             SizedBox(width: 120,
                                 child: Text('refer_your_code_to_your_friend'.tr , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall), textAlign: TextAlign.center),
@@ -78,56 +78,55 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                           SizedBox(width: ResponsiveHelper.isDesktop(context) ? 150 : 50),
 
                           Column(children: [
-                            Image.asset(Images.earn_money, width: ResponsiveHelper.isDesktop(context) ? 200 : 100,
+                            Image.asset(Images.earnMoney, width: ResponsiveHelper.isDesktop(context) ? 200 : 100,
                                 height: ResponsiveHelper.isDesktop(context) ? 250 : 150, fit: BoxFit.contain),
                             SizedBox(width: 120, child: Text(
-                                'get'.tr + ' ${PriceConverter.convertPrice(Get.find<SplashController>().configModel != null ? Get.find<SplashController>().configModel.refEarningExchangeRate.toDouble() : 0.0)} ' +
-                                    'on_joining'.tr , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall), textAlign: TextAlign.center, textDirection: TextDirection.ltr),
+                                '${'get'.tr} ${PriceConverter.convertPrice(Get.find<SplashController>().configModel != null ? Get.find<SplashController>().configModel!.refEarningExchangeRate!.toDouble() : 0.0)} ${'on_joining'.tr}' , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall), textAlign: TextAlign.center, textDirection: TextDirection.ltr),
                             ),
                           ]),
                         ]),
                       ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+                      const SizedBox(height: Dimensions.paddingSizeExtraLarge),
 
                       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
                         Text('your_referral_code'.tr, style: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeDefault)),
-                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                        const SizedBox(height: Dimensions.paddingSizeSmall),
 
                         DottedBorder(
                           color: Theme.of(context).primaryColor,
                           strokeWidth: 1,
                           strokeCap: StrokeCap.butt,
-                          dashPattern: [8, 5],
-                          padding: EdgeInsets.all(0),
+                          dashPattern: const [8, 5],
+                          padding: const EdgeInsets.all(0),
                           borderType: BorderType.RRect,
-                          radius: Radius.circular(Dimensions.RADIUS_SMALL),
+                          radius: const Radius.circular(Dimensions.radiusSmall),
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
-                            height: 50, decoration: BoxDecoration(color: Theme.of(context).primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
+                            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
+                            height: 50, decoration: BoxDecoration(color: Theme.of(context).primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
                             child: (userController.userInfoModel != null) ? Row(children: [
                               Expanded(
                                 child: Text(
-                                  '${userController.userInfoModel != null ? userController.userInfoModel.refCode ?? '' : ''}',
+                                  userController.userInfoModel != null ? userController.userInfoModel!.refCode ?? '' : '',
                                   style: robotoBlack.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeExtraLarge),
                                 ),
                               ),
                               InkWell(
                                 onTap: () {
-                                  if(userController.userInfoModel.refCode.isNotEmpty){
-                                    Clipboard.setData(ClipboardData(text: '${userController.userInfoModel != null ? userController.userInfoModel.refCode : ''}'));
+                                  if(userController.userInfoModel!.refCode!.isNotEmpty){
+                                    Clipboard.setData(ClipboardData(text: '${userController.userInfoModel != null ? userController.userInfoModel!.refCode : ''}'));
                                     showCustomSnackBar('referral_code_copied'.tr, isError: false);
                                   }
                                 },
                                 child: Text('tap_to_copy'.tr, style: robotoMedium),
                               ),
-                            ]) : CircularProgressIndicator(),
+                            ]) : const CircularProgressIndicator(),
                           ),
                         ),
                       ]),
-                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                      const SizedBox(height: Dimensions.paddingSizeLarge),
 
-                      CustomButton(buttonText: 'share'.tr,icon: Icons.share, onPressed: () => Share.share('${'this_is_my_refer_code'.tr}: ${userController.userInfoModel.refCode}')),
+                      CustomButton(buttonText: 'share'.tr,icon: Icons.share, onPressed: () => Share.share('${'this_is_my_refer_code'.tr}: ${userController.userInfoModel!.refCode}')),
 
                     ]);
                   }
@@ -135,7 +134,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
               ),
             ),
           ),
-        ) : NotLoggedInScreen(),
+        ) : const NotLoggedInScreen(),
       ),
     );
   }

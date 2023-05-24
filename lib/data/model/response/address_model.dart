@@ -1,22 +1,22 @@
 import 'package:sixam_mart/data/model/response/zone_response_model.dart';
 
 class AddressModel {
-  int id;
-  String addressType;
-  String contactPersonNumber;
-  String address;
-  String additionalAddress;
-  String latitude;
-  String longitude;
-  int zoneId;
-  List<int> zoneIds;
-  String method;
-  String contactPersonName;
-  String streetNumber;
-  String house;
-  String floor;
-  List<ZoneData> zoneData;
-  List<int> areaIds;
+  int? id;
+  String? addressType;
+  String? contactPersonNumber;
+  String? address;
+  String? additionalAddress;
+  String? latitude;
+  String? longitude;
+  int? zoneId;
+  List<int>? zoneIds;
+  String? method;
+  String? contactPersonName;
+  String? streetNumber;
+  String? house;
+  String? floor;
+  List<ZoneData>? zoneData;
+  List<int>? areaIds;
 
   AddressModel(
       {this.id,
@@ -46,7 +46,7 @@ class AddressModel {
     latitude = json['latitude'];
     longitude = json['longitude'];
     zoneId = json['zone_id'];
-    zoneIds = json['zone_ids'] != null ? json['zone_ids'].cast<int>() : null;
+    zoneIds = json['zone_ids']?.cast<int>();
     method = json['_method'];
     contactPersonName = json['contact_person_name'];
     streetNumber = json['road'];
@@ -55,32 +55,32 @@ class AddressModel {
     if (json['zone_data'] != null) {
       zoneData = [];
       json['zone_data'].forEach((v) {
-        zoneData.add(new ZoneData.fromJson(v));
+        zoneData!.add(ZoneData.fromJson(v));
       });
     }
-    areaIds = json['area_ids'] != null ? json['area_ids'].cast<int>() : null;
+    areaIds = json['area_ids']?.cast<int>();
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['address_type'] = this.addressType;
-    data['contact_person_number'] = this.contactPersonNumber;
-    data['address'] = this.address;
-    data['additional_address'] = this.additionalAddress;
-    data['latitude'] = this.latitude;
-    data['longitude'] = this.longitude;
-    data['zone_id'] = this.zoneId;
-    data['zone_ids'] = this.zoneIds;
-    data['_method'] = this.method;
-    data['contact_person_name'] = this.contactPersonName;
-    data['road'] = this.streetNumber;
-    data['house'] = this.house;
-    data['floor'] = this.floor;
-    if (this.zoneData != null) {
-      data['zone_data'] = this.zoneData.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['address_type'] = addressType;
+    data['contact_person_number'] = contactPersonNumber;
+    data['address'] = address;
+    data['additional_address'] = additionalAddress;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
+    data['zone_id'] = zoneId;
+    data['zone_ids'] = zoneIds;
+    data['_method'] = method;
+    data['contact_person_name'] = contactPersonName;
+    data['road'] = streetNumber;
+    data['house'] = house;
+    data['floor'] = floor;
+    if (zoneData != null) {
+      data['zone_data'] = zoneData!.map((v) => v.toJson()).toList();
     }
-    data['area_ids'] = this.areaIds;
+    data['area_ids'] = areaIds;
     return data;
   }
 }

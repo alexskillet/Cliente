@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 
 class CampaignScreen extends StatefulWidget {
   final BasicCampaignModel campaign;
-  CampaignScreen({@required this.campaign});
+  const CampaignScreen({Key? key, required this.campaign}) : super(key: key);
 
   @override
   State<CampaignScreen> createState() => _CampaignScreenState();
@@ -33,8 +33,8 @@ class _CampaignScreenState extends State<CampaignScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
-      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+      appBar: ResponsiveHelper.isDesktop(context) ? const WebMenuBar() : null,
+      endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       backgroundColor: Theme.of(context).cardColor,
       body: GetBuilder<CampaignController>(builder: (campaignController) {
         return CustomScrollView(
@@ -42,14 +42,14 @@ class _CampaignScreenState extends State<CampaignScreen> {
 
             ResponsiveHelper.isDesktop(context) ? SliverToBoxAdapter(
               child: Container(
-                color: Color(0xFF171A29),
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                color: const Color(0xFF171A29),
+                padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                 alignment: Alignment.center,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                  borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                   child: CustomImage(
                     fit: BoxFit.cover, height: 220, width: 1150,
-                    image: '${Get.find<SplashController>().configModel.baseUrls.campaignImageUrl}/${widget.campaign.image}',
+                    image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}/${widget.campaign.image}',
                   ),
                 ),
               ),
@@ -59,25 +59,25 @@ class _CampaignScreenState extends State<CampaignScreen> {
               pinned: true,
               floating: false,
               backgroundColor: Theme.of(context).primaryColor,
-              leading: IconButton(icon: Icon(Icons.chevron_left, color: Colors.white), onPressed: () => Get.back()),
+              leading: IconButton(icon: const Icon(Icons.chevron_left, color: Colors.white), onPressed: () => Get.back()),
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
-                  widget.campaign.title,
+                  widget.campaign.title!,
                   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Colors.white),
                 ),
                 background: CustomImage(
                   fit: BoxFit.cover,
-                  image: '${Get.find<SplashController>().configModel.baseUrls.campaignImageUrl}/${widget.campaign.image}',
+                  image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}/${widget.campaign.image}',
                 ),
               ),
             ),
 
             SliverToBoxAdapter(child: FooterView(child: Container(
-              width: Dimensions.WEB_MAX_WIDTH,
-              padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+              width: Dimensions.webMaxWidth,
+              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.RADIUS_EXTRA_LARGE)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(Dimensions.radiusExtraLarge)),
               ),
               child: Column(children: [
 
@@ -86,58 +86,58 @@ class _CampaignScreenState extends State<CampaignScreen> {
 
                     Row(children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                        borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                         child: CustomImage(
-                          image: '${Get.find<SplashController>().configModel.baseUrls.campaignImageUrl}/${campaignController.campaign.image}',
+                          image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}/${campaignController.campaign!.image}',
                           height: 40, width: 50, fit: BoxFit.cover,
                         ),
                       ),
-                      SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                      const SizedBox(width: Dimensions.paddingSizeSmall),
                       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Text(
-                          campaignController.campaign.title, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
+                          campaignController.campaign!.title!, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
                           maxLines: 1, overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          campaignController.campaign.description ?? '', maxLines: 2, overflow: TextOverflow.ellipsis,
+                          campaignController.campaign!.description ?? '', maxLines: 2, overflow: TextOverflow.ellipsis,
                           style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                         ),
                       ])),
                     ]),
-                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
-                    campaignController.campaign.startTime != null ? Row(children: [
+                    campaignController.campaign!.startTime != null ? Row(children: [
                       Text('campaign_schedule'.tr, style: robotoRegular.copyWith(
                         fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor,
                       )),
-                      SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                       Text(
-                        '${DateConverter.stringToLocalDateOnly(campaignController.campaign.availableDateStarts)}'
-                            ' - ${DateConverter.stringToLocalDateOnly(campaignController.campaign.availableDateEnds)}',
+                        '${DateConverter.stringToLocalDateOnly(campaignController.campaign!.availableDateStarts!)}'
+                            ' - ${DateConverter.stringToLocalDateOnly(campaignController.campaign!.availableDateEnds!)}',
                         style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).primaryColor),
                       ),
-                    ]) : SizedBox(),
-                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    ]) : const SizedBox(),
+                    const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
-                    campaignController.campaign.startTime != null ? Row(children: [
+                    campaignController.campaign!.startTime != null ? Row(children: [
                       Text('daily_time'.tr, style: robotoRegular.copyWith(
                         fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor,
                       )),
-                      SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                       Text(
-                        '${DateConverter.convertTimeToTime(campaignController.campaign.startTime)}'
-                            ' - ${DateConverter.convertTimeToTime(campaignController.campaign.endTime)}',
+                        '${DateConverter.convertTimeToTime(campaignController.campaign!.startTime!)}'
+                            ' - ${DateConverter.convertTimeToTime(campaignController.campaign!.endTime!)}',
                         style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).primaryColor),
                       ),
-                    ]) : SizedBox(),
-                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    ]) : const SizedBox(),
+                    const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                   ],
-                ) : SizedBox(),
+                ) : const SizedBox(),
 
                 ItemsView(
                   isStore: true, items: null,
-                  stores: campaignController.campaign != null ? campaignController.campaign.store : null,
+                  stores: campaignController.campaign != null ? campaignController.campaign!.store : null,
                 ),
 
               ]),

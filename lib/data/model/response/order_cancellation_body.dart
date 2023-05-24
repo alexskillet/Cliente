@@ -1,8 +1,8 @@
 class OrderCancellationBody {
-  int totalSize;
-  String limit;
-  String offset;
-  List<CancellationData> reasons;
+  int? totalSize;
+  String? limit;
+  String? offset;
+  List<CancellationData>? reasons;
 
   OrderCancellationBody({this.totalSize, this.limit, this.offset, this.reasons});
 
@@ -13,30 +13,30 @@ class OrderCancellationBody {
     if (json['data'] != null) {
       reasons = <CancellationData>[];
       json['data'].forEach((v) {
-        reasons.add(new CancellationData.fromJson(v));
+        reasons!.add(CancellationData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['total_size'] = this.totalSize;
-    data['limit'] = this.limit;
-    data['offset'] = this.offset;
-    if (this.reasons != null) {
-      data['data'] = this.reasons.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['total_size'] = totalSize;
+    data['limit'] = limit;
+    data['offset'] = offset;
+    if (reasons != null) {
+      data['data'] = reasons!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class CancellationData {
-  int id;
-  String reason;
-  String userType;
-  int status;
-  String createdAt;
-  String updatedAt;
+  int? id;
+  String? reason;
+  String? userType;
+  int? status;
+  String? createdAt;
+  String? updatedAt;
 
   CancellationData(
       {this.id,
@@ -56,13 +56,13 @@ class CancellationData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['reason'] = this.reason;
-    data['user_type'] = this.userType;
-    data['status'] = this.status;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['reason'] = reason;
+    data['user_type'] = userType;
+    data['status'] = status;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 class StoreModel {
-  int totalSize;
-  String limit;
-  int offset;
-  List<Store> stores;
+  int? totalSize;
+  String? limit;
+  int? offset;
+  List<Store>? stores;
 
   StoreModel({this.totalSize, this.limit, this.offset, this.stores});
 
@@ -15,61 +15,61 @@ class StoreModel {
     if (json['stores'] != null) {
       stores = [];
       json['stores'].forEach((v) {
-        stores.add(new Store.fromJson(v));
+        stores!.add(Store.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['total_size'] = this.totalSize;
-    data['limit'] = this.limit;
-    data['offset'] = this.offset;
-    if (this.stores != null) {
-      data['stores'] = this.stores.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['total_size'] = totalSize;
+    data['limit'] = limit;
+    data['offset'] = offset;
+    if (stores != null) {
+      data['stores'] = stores!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Store {
-  int id;
-  String name;
-  String phone;
-  String email;
-  String logo;
-  String latitude;
-  String longitude;
-  String address;
-  double minimumOrder;
-  String currency;
-  bool freeDelivery;
-  String coverPhoto;
-  bool delivery;
-  bool takeAway;
-  bool scheduleOrder;
-  double avgRating;
-  double tax;
-  int ratingCount;
-  int featured;
-  int zoneId;
-  int selfDeliverySystem;
-  bool posSystem;
-  double minimumShippingCharge;
-  double maximumShippingCharge;
-  double perKmShippingCharge;
-  int open;
-  bool active;
-  String deliveryTime;
-  List<int> categoryIds;
-  int veg;
-  int nonVeg;
-  int moduleId;
-  int orderPlaceToScheduleInterval;
-  Discount discount;
-  List<Schedules> schedules;
-  int vendorId;
-  bool prescriptionOrder;
+  int? id;
+  String? name;
+  String? phone;
+  String? email;
+  String? logo;
+  String? latitude;
+  String? longitude;
+  String? address;
+  double? minimumOrder;
+  String? currency;
+  bool? freeDelivery;
+  String? coverPhoto;
+  bool? delivery;
+  bool? takeAway;
+  bool? scheduleOrder;
+  double? avgRating;
+  double? tax;
+  int? ratingCount;
+  int? featured;
+  int? zoneId;
+  int? selfDeliverySystem;
+  bool? posSystem;
+  double? minimumShippingCharge;
+  double? maximumShippingCharge;
+  double? perKmShippingCharge;
+  int? open;
+  bool? active;
+  String? deliveryTime;
+  List<int>? categoryIds;
+  int? veg;
+  int? nonVeg;
+  int? moduleId;
+  int? orderPlaceToScheduleInterval;
+  Discount? discount;
+  List<Schedules>? schedules;
+  int? vendorId;
+  bool? prescriptionOrder;
 
   Store(
       {this.id,
@@ -116,24 +116,24 @@ class Store {
     name = json['name'];
     phone = json['phone'];
     email = json['email'];
-    logo = json['logo'] != null ? json['logo'] : '';
+    logo = json['logo'] ?? '';
     latitude = json['latitude'];
     longitude = json['longitude'];
     address = json['address'];
     minimumOrder = json['minimum_order'] == null ? 0 : json['minimum_order'].toDouble();
     currency = json['currency'];
     freeDelivery = json['free_delivery'];
-    coverPhoto = json['cover_photo'] != null ? json['cover_photo'] : '';
+    coverPhoto = json['cover_photo'] ?? '';
     delivery = json['delivery'];
     takeAway = json['take_away'];
     scheduleOrder = json['schedule_order'];
     avgRating = json['avg_rating'].toDouble();
-    tax = json['tax'] != null ? json['tax'].toDouble() : null;
+    tax = json['tax']?.toDouble();
     ratingCount = json['rating_count'];
     selfDeliverySystem = json['self_delivery_system'];
     posSystem = json['pos_system'];
     minimumShippingCharge = json['minimum_shipping_charge'].toDouble();
-    maximumShippingCharge = json['maximum_shipping_charge'] != null ? json['maximum_shipping_charge'].toDouble() : null;
+    maximumShippingCharge = json['maximum_shipping_charge']?.toDouble();
     perKmShippingCharge = json['per_km_shipping_charge'] != null ? json['per_km_shipping_charge'].toDouble() : 0;
     open = json['open'];
     active = json['active'];
@@ -145,77 +145,77 @@ class Store {
     moduleId = json['module_id'];
     orderPlaceToScheduleInterval = json['order_place_to_schedule_interval'];
     categoryIds = json['category_ids'] != null ? json['category_ids'].cast<int>() : [];
-    discount = json['discount'] != null ? new Discount.fromJson(json['discount']) : null;
+    discount = json['discount'] != null ? Discount.fromJson(json['discount']) : null;
     if (json['schedules'] != null) {
       schedules = <Schedules>[];
       json['schedules'].forEach((v) {
-        schedules.add(new Schedules.fromJson(v));
+        schedules!.add(Schedules.fromJson(v));
       });
     }
     vendorId = json['vendor_id'];
-    prescriptionOrder = json['prescription_order'] != null ? json['prescription_order'] : false;
+    prescriptionOrder = json['prescription_order'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['phone'] = this.phone;
-    data['email'] = this.email;
-    data['logo'] = this.logo;
-    data['latitude'] = this.latitude;
-    data['longitude'] = this.longitude;
-    data['address'] = this.address;
-    data['minimum_order'] = this.minimumOrder;
-    data['currency'] = this.currency;
-    data['free_delivery'] = this.freeDelivery;
-    data['cover_photo'] = this.coverPhoto;
-    data['delivery'] = this.delivery;
-    data['take_away'] = this.takeAway;
-    data['schedule_order'] = this.scheduleOrder;
-    data['avg_rating'] = this.avgRating;
-    data['tax'] = this.tax;
-    data['rating_count '] = this.ratingCount;
-    data['self_delivery_system'] = this.selfDeliverySystem;
-    data['pos_system'] = this.posSystem;
-    data['minimum_shipping_charge'] = this.minimumShippingCharge;
-    data['maximum_shipping_charge'] = this.maximumShippingCharge;
-    data['per_km_shipping_charge'] = this.perKmShippingCharge;
-    data['open'] = this.open;
-    data['active'] = this.active;
-    data['veg'] = this.veg;
-    data['featured'] = this.featured;
-    data['zone_id'] = this.zoneId;
-    data['non_veg'] = this.nonVeg;
-    data['module_id'] = this.moduleId;
-    data['order_place_to_schedule_interval'] = this.orderPlaceToScheduleInterval;
-    data['delivery_time'] = this.deliveryTime;
-    data['category_ids'] = this.categoryIds;
-    if (this.discount != null) {
-      data['discount'] = this.discount.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['phone'] = phone;
+    data['email'] = email;
+    data['logo'] = logo;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
+    data['address'] = address;
+    data['minimum_order'] = minimumOrder;
+    data['currency'] = currency;
+    data['free_delivery'] = freeDelivery;
+    data['cover_photo'] = coverPhoto;
+    data['delivery'] = delivery;
+    data['take_away'] = takeAway;
+    data['schedule_order'] = scheduleOrder;
+    data['avg_rating'] = avgRating;
+    data['tax'] = tax;
+    data['rating_count '] = ratingCount;
+    data['self_delivery_system'] = selfDeliverySystem;
+    data['pos_system'] = posSystem;
+    data['minimum_shipping_charge'] = minimumShippingCharge;
+    data['maximum_shipping_charge'] = maximumShippingCharge;
+    data['per_km_shipping_charge'] = perKmShippingCharge;
+    data['open'] = open;
+    data['active'] = active;
+    data['veg'] = veg;
+    data['featured'] = featured;
+    data['zone_id'] = zoneId;
+    data['non_veg'] = nonVeg;
+    data['module_id'] = moduleId;
+    data['order_place_to_schedule_interval'] = orderPlaceToScheduleInterval;
+    data['delivery_time'] = deliveryTime;
+    data['category_ids'] = categoryIds;
+    if (discount != null) {
+      data['discount'] = discount!.toJson();
     }
-    if (this.schedules != null) {
-      data['schedules'] = this.schedules.map((v) => v.toJson()).toList();
+    if (schedules != null) {
+      data['schedules'] = schedules!.map((v) => v.toJson()).toList();
     }
-    data['vendor_id'] = this.vendorId;
-    data['prescription_order'] = this.prescriptionOrder;
+    data['vendor_id'] = vendorId;
+    data['prescription_order'] = prescriptionOrder;
     return data;
   }
 }
 
 class Discount {
-  int id;
-  String startDate;
-  String endDate;
-  String startTime;
-  String endTime;
-  double minPurchase;
-  double maxDiscount;
-  double discount;
-  String discountType;
-  int storeId;
-  String createdAt;
-  String updatedAt;
+  int? id;
+  String? startDate;
+  String? endDate;
+  String? startTime;
+  String? endTime;
+  double? minPurchase;
+  double? maxDiscount;
+  double? discount;
+  String? discountType;
+  int? storeId;
+  String? createdAt;
+  String? updatedAt;
 
   Discount(
       {this.id,
@@ -235,8 +235,8 @@ class Discount {
     id = json['id'];
     startDate = json['start_date'];
     endDate = json['end_date'];
-    startTime = json['start_time'] != null ? json['start_time'].substring(0, 5) : null;
-    endTime = json['end_time'] != null ? json['end_time'].substring(0, 5) : null;
+    startTime = json['start_time']?.substring(0, 5);
+    endTime = json['end_time']?.substring(0, 5);
     minPurchase = json['min_purchase'].toDouble();
     maxDiscount = json['max_discount'].toDouble();
     discount = json['discount'].toDouble();
@@ -247,29 +247,29 @@ class Discount {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['start_date'] = this.startDate;
-    data['end_date'] = this.endDate;
-    data['start_time'] = this.startTime;
-    data['end_time'] = this.endTime;
-    data['min_purchase'] = this.minPurchase;
-    data['max_discount'] = this.maxDiscount;
-    data['discount'] = this.discount;
-    data['discount_type'] = this.discountType;
-    data['store_id'] = this.storeId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['start_date'] = startDate;
+    data['end_date'] = endDate;
+    data['start_time'] = startTime;
+    data['end_time'] = endTime;
+    data['min_purchase'] = minPurchase;
+    data['max_discount'] = maxDiscount;
+    data['discount'] = discount;
+    data['discount_type'] = discountType;
+    data['store_id'] = storeId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }
 
 class Schedules {
-  int id;
-  int storeId;
-  int day;
-  String openingTime;
-  String closingTime;
+  int? id;
+  int? storeId;
+  int? day;
+  String? openingTime;
+  String? closingTime;
 
   Schedules(
       {this.id,
@@ -287,23 +287,23 @@ class Schedules {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['store_id'] = this.storeId;
-    data['day'] = this.day;
-    data['opening_time'] = this.openingTime;
-    data['closing_time'] = this.closingTime;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['store_id'] = storeId;
+    data['day'] = day;
+    data['opening_time'] = openingTime;
+    data['closing_time'] = closingTime;
     return data;
   }
 }
 
 class Refund {
-  int id;
-  int orderId;
-  List<String> image;
-  String customerReason;
-  String customerNote;
-  String adminNote;
+  int? id;
+  int? orderId;
+  List<String>? image;
+  String? customerReason;
+  String? customerNote;
+  String? adminNote;
 
   Refund(
       {this.id,
@@ -319,7 +319,7 @@ class Refund {
     orderId = json['order_id'];
     if(json['image'] != null){
       image = [];
-      jsonDecode(json['image']).forEach((v) => image.add(v));
+      jsonDecode(json['image']).forEach((v) => image!.add(v));
     }
     customerReason = json['customer_reason'];
     customerNote = json['customer_note'];
@@ -327,13 +327,13 @@ class Refund {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['order_id'] = this.orderId;
-    data['image'] = this.image;
-    data['customer_reason'] = this.customerReason;
-    data['customer_note'] = this.customerNote;
-    data['admin_note'] = this.adminNote;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['order_id'] = orderId;
+    data['image'] = image;
+    data['customer_reason'] = customerReason;
+    data['customer_note'] = customerNote;
+    data['admin_note'] = adminNote;
     return data;
   }
 }

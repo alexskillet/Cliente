@@ -10,34 +10,34 @@ import 'package:sixam_mart/view/base/rating_bar.dart';
 class ReviewDialog extends StatelessWidget {
   final ReviewModel review;
   final bool fromOrderDetails;
-  const ReviewDialog({@required this.review, this.fromOrderDetails = false});
+  const ReviewDialog({Key? key, required this.review, this.fromOrderDetails = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
-      insetPadding: EdgeInsets.all(30),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
+      insetPadding: const EdgeInsets.all(30),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: SizedBox(width: 500, child: SingleChildScrollView(
-        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+        padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
         child: !fromOrderDetails ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
           ClipOval(
             child: CustomImage(
-              image: '${Get.find<SplashController>().configModel.baseUrls.itemImageUrl}/${review.itemImage ?? ''}',
+              image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}/${review.itemImage ?? ''}',
               height: 60, width: 60, fit: BoxFit.cover,
             ),
           ),
-          SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+          const SizedBox(width: Dimensions.paddingSizeSmall),
 
           Expanded(child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
 
             Text(
-              review.itemName, maxLines: 1, overflow: TextOverflow.ellipsis,
+              review.itemName!, maxLines: 1, overflow: TextOverflow.ellipsis,
               style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall),
             ),
 
-            RatingBar(rating: review.rating.toDouble(), ratingCount: null, size: 15),
+            RatingBar(rating: review.rating!.toDouble(), ratingCount: null, size: 15),
 
             Text(
               review.customerName ?? '',
@@ -46,15 +46,15 @@ class ReviewDialog extends StatelessWidget {
             ),
 
             Text(
-              review.comment,
+              review.comment!,
               style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor),
             ),
 
           ])),
 
         ]) : Text(
-          review.comment,
-          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyLarge.color),
+          review.comment!,
+          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyLarge!.color),
         ),
       )),
     );

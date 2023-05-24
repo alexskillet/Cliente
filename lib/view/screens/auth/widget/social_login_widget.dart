@@ -11,68 +11,66 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class SocialLoginWidget extends StatelessWidget {
+  const SocialLoginWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final GoogleSignIn _googleSignIn = GoogleSignIn();
+    final GoogleSignIn googleSignIn = GoogleSignIn();
 
-    return Get.find<SplashController>().configModel.socialLogin.isNotEmpty && (Get.find<SplashController>().configModel.socialLogin[0].status
-    || Get.find<SplashController>().configModel.socialLogin[1].status) ? Column(children: [
+    return Get.find<SplashController>().configModel!.socialLogin!.isNotEmpty && (Get.find<SplashController>().configModel!.socialLogin![0].status!
+    || Get.find<SplashController>().configModel!.socialLogin![1].status!) ? Column(children: [
 
       Center(child: Text('social_login'.tr, style: robotoMedium)),
-      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+      const SizedBox(height: Dimensions.paddingSizeSmall),
 
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
 
-        Get.find<SplashController>().configModel.socialLogin[0].status ? InkWell(
+        Get.find<SplashController>().configModel!.socialLogin![0].status! ? InkWell(
           onTap: () async {
-            GoogleSignInAccount _googleAccount = await _googleSignIn.signIn();
-            GoogleSignInAuthentication _auth = await _googleAccount.authentication;
-            if(_googleAccount != null) {
-             Get.find<AuthController>().loginWithSocialMedia(SocialLogInBody(
-                email: _googleAccount.email, token: _auth.idToken, uniqueId: _googleAccount.id, medium: 'google',
+            GoogleSignInAccount googleAccount = (await googleSignIn.signIn())!;
+            GoogleSignInAuthentication auth = await googleAccount.authentication;
+           Get.find<AuthController>().loginWithSocialMedia(SocialLogInBody(
+              email: googleAccount.email, token: auth.idToken, uniqueId: googleAccount.id, medium: 'google',
+            ));
+          },
+          child: Container(
+            height: 40,width: 40,
+            padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
+              boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5)],
+            ),
+            child: Image.asset(Images.google),
+          ),
+        ) : const SizedBox(),
+        SizedBox(width: Get.find<SplashController>().configModel!.socialLogin![0].status! ? Dimensions.paddingSizeSmall : 0),
+        // SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+
+        Get.find<SplashController>().configModel!.socialLogin![1].status! ? InkWell(
+          onTap: () async{
+            LoginResult result = await FacebookAuth.instance.login();
+            if (result.status == LoginStatus.success) {
+              Map userData = await FacebookAuth.instance.getUserData();
+              Get.find<AuthController>().loginWithSocialMedia(SocialLogInBody(
+                email: userData['email'], token: result.accessToken!.token, uniqueId: result.accessToken!.userId, medium: 'facebook',
               ));
             }
           },
           child: Container(
-            height: 40,width: 40,
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], spreadRadius: 1, blurRadius: 5)],
-            ),
-            child: Image.asset(Images.google),
-          ),
-        ) : SizedBox(),
-        SizedBox(width: Get.find<SplashController>().configModel.socialLogin[0].status ? Dimensions.PADDING_SIZE_SMALL : 0),
-        // SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-
-        Get.find<SplashController>().configModel.socialLogin[1].status ? InkWell(
-          onTap: () async{
-            LoginResult _result = await FacebookAuth.instance.login();
-            if (_result.status == LoginStatus.success) {
-              Map _userData = await FacebookAuth.instance.getUserData();
-              if(_userData != null){
-                Get.find<AuthController>().loginWithSocialMedia(SocialLogInBody(
-                  email: _userData['email'], token: _result.accessToken.token, uniqueId: _result.accessToken.userId, medium: 'facebook',
-                ));
-              }
-            }
-          },
-          child: Container(
             height: 40, width: 40,
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], spreadRadius: 1, blurRadius: 5)],
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
+              boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5)],
             ),
             child: Image.asset(Images.facebook),
           ),
-        ) : SizedBox(),
-        SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+        ) : const SizedBox(),
+        const SizedBox(width: Dimensions.paddingSizeSmall),
 
-        Get.find<SplashController>().configModel.appleLogin.isNotEmpty && Get.find<SplashController>().configModel.appleLogin[0].status
+        Get.find<SplashController>().configModel!.appleLogin!.isNotEmpty && Get.find<SplashController>().configModel!.appleLogin![0].status!
         && !GetPlatform.isAndroid && !GetPlatform.isWeb ? InkWell(
           onTap: () async {
             final credential = await SignInWithApple.getAppleIDCredential(scopes: [
@@ -80,7 +78,7 @@ class SocialLoginWidget extends StatelessWidget {
               AppleIDAuthorizationScopes.fullName,
             ],
               webAuthenticationOptions: WebAuthenticationOptions(
-                clientId: Get.find<SplashController>().configModel.appleLogin[0].clientId,
+                clientId: Get.find<SplashController>().configModel!.appleLogin![0].clientId!,
                 redirectUri: Uri.parse('https://6ammart-web.6amtech.com/apple'),
               ),
             );
@@ -90,19 +88,19 @@ class SocialLoginWidget extends StatelessWidget {
           },
           child: Container(
             height: 40, width: 40,
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], spreadRadius: 1, blurRadius: 5)],
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
+              boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5)],
             ),
-            child: Image.asset(Images.apple_logo),
+            child: Image.asset(Images.appleLogo),
           ),
-        ) : SizedBox(),
+        ) : const SizedBox(),
 
       ]),
-      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+      const SizedBox(height: Dimensions.paddingSizeLarge),
 
-    ]) : SizedBox();
+    ]) : const SizedBox();
   }
 }

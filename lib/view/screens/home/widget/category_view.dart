@@ -12,15 +12,17 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:get/get.dart';
 
 class CategoryView extends StatelessWidget {
+  const CategoryView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    ScrollController _scrollController = ScrollController();
+    ScrollController scrollController = ScrollController();
 
     return GetBuilder<CategoryController>(builder: (categoryController) {
-      return (categoryController.categoryList != null && categoryController.categoryList.length == 0) ? SizedBox() : Column(
+      return (categoryController.categoryList != null && categoryController.categoryList!.isEmpty) ? const SizedBox() : Column(
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             child: TitleWidget(title: 'categories'.tr, onTap: () => Get.toNamed(RouteHelper.getCategoryRoute())),
           ),
           Row(
@@ -29,17 +31,17 @@ class CategoryView extends StatelessWidget {
                 child: SizedBox(
                   height: 85,
                   child: categoryController.categoryList != null ? ListView.builder(
-                    controller: _scrollController,
-                    itemCount: categoryController.categoryList.length > 15 ? 15 : categoryController.categoryList.length,
-                    padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
-                    physics: BouncingScrollPhysics(),
+                    controller: scrollController,
+                    itemCount: categoryController.categoryList!.length > 15 ? 15 : categoryController.categoryList!.length,
+                    padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
+                    physics: const BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 1),
+                        padding: const EdgeInsets.symmetric(horizontal: 1),
                         child: InkWell(
                           onTap: () => Get.toNamed(RouteHelper.getCategoryItemRoute(
-                            categoryController.categoryList[index].id, categoryController.categoryList[index].name,
+                            categoryController.categoryList![index].id, categoryController.categoryList![index].name!,
                           )),
                           child: SizedBox(
                             width: 60,
@@ -47,25 +49,25 @@ class CategoryView extends StatelessWidget {
                               Container(
                                 height: 50, width: 50,
                                 margin: EdgeInsets.only(
-                                  left: index == 0 ? 0 : Dimensions.PADDING_SIZE_EXTRA_SMALL,
-                                  right: Dimensions.PADDING_SIZE_EXTRA_SMALL,
+                                  left: index == 0 ? 0 : Dimensions.paddingSizeExtraSmall,
+                                  right: Dimensions.paddingSizeExtraSmall,
                                 ),
                                 child: Stack(children: [
                                   ClipRRect(
-                                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                     child: CustomImage(
-                                      image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}/${categoryController.categoryList[index].image}',
+                                      image: '${Get.find<SplashController>().configModel!.baseUrls!.categoryImageUrl}/${categoryController.categoryList![index].image}',
                                       height: 50, width: 50, fit: BoxFit.cover,
                                     ),
                                   ),
                                 ]),
                               ),
-                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                               Padding(
-                                padding: EdgeInsets.only(right: index == 0 ? Dimensions.PADDING_SIZE_EXTRA_SMALL : 0),
+                                padding: EdgeInsets.only(right: index == 0 ? Dimensions.paddingSizeExtraSmall : 0),
                                 child: Text(
-                                  categoryController.categoryList[index].name,
+                                  categoryController.categoryList![index].name!,
                                   style: robotoMedium.copyWith(fontSize: 11),
                                   maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
                                 ),
@@ -80,24 +82,24 @@ class CategoryView extends StatelessWidget {
                 ),
               ),
 
-              ResponsiveHelper.isMobile(context) ? SizedBox() : categoryController.categoryList != null ? Column(
+              ResponsiveHelper.isMobile(context) ? const SizedBox() : categoryController.categoryList != null ? Column(
                 children: [
                   InkWell(
                     onTap: (){
-                      showDialog(context: context, builder: (con) => Dialog(child: Container(height: 550, width: 600, child: CategoryPopUp(
+                      showDialog(context: context, builder: (con) => Dialog(child: SizedBox(height: 550, width: 600, child: CategoryPopUp(
                         categoryController: categoryController,
                       ))));
                     },
                     child: Padding(
-                      padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+                      padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
                       child: CircleAvatar(
                         radius: 35,
                         backgroundColor: Theme.of(context).primaryColor,
-                        child: Text('view_all'.tr, style: TextStyle(fontSize: Dimensions.PADDING_SIZE_DEFAULT, color: Theme.of(context).cardColor)),
+                        child: Text('view_all'.tr, style: TextStyle(fontSize: Dimensions.paddingSizeDefault, color: Theme.of(context).cardColor)),
                       ),
                     ),
                   ),
-                  SizedBox(height: 10,)
+                  const SizedBox(height: 10,)
                 ],
               ): CategoryAllShimmer(categoryController: categoryController)
             ],
@@ -111,7 +113,7 @@ class CategoryView extends StatelessWidget {
 
 class CategoryShimmer extends StatelessWidget {
   final CategoryController categoryController;
-  CategoryShimmer({@required this.categoryController});
+  const CategoryShimmer({Key? key, required this.categoryController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -119,25 +121,25 @@ class CategoryShimmer extends StatelessWidget {
       height: 75,
       child: ListView.builder(
         itemCount: 14,
-        padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
-        physics: BouncingScrollPhysics(),
+        padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
+        physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return Padding(
-            padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+            padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
             child: Shimmer(
-              duration: Duration(seconds: 2),
+              duration: const Duration(seconds: 2),
               enabled: categoryController.categoryList == null,
               child: Column(children: [
                 Container(
                   height: 50, width: 50,
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Container(height: 10, width: 50, color: Colors.grey[300]),
               ]),
             ),
@@ -150,26 +152,26 @@ class CategoryShimmer extends StatelessWidget {
 
 class CategoryAllShimmer extends StatelessWidget {
   final CategoryController categoryController;
-  CategoryAllShimmer({@required this.categoryController});
+  const CategoryAllShimmer({Key? key, required this.categoryController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 75,
       child: Padding(
-        padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+        padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
         child: Shimmer(
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
           enabled: categoryController.categoryList == null,
           child: Column(children: [
             Container(
               height: 50, width: 50,
               decoration: BoxDecoration(
                 color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Container(height: 10, width: 50, color: Colors.grey[300]),
           ]),
         ),

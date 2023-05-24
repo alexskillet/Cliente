@@ -12,58 +12,58 @@ import 'package:get/get.dart';
 class OrderItemWidget extends StatelessWidget {
   final OrderModel order;
   final OrderDetailsModel orderDetails;
-  OrderItemWidget({@required this.order, @required this.orderDetails});
+  const OrderItemWidget({Key? key, required this.order, required this.orderDetails}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
-    String _addOnText = '';
-    orderDetails.addOns.forEach((addOn) {
-      _addOnText = _addOnText + '${(_addOnText.isEmpty) ? '' : ',  '}${addOn.name} (${addOn.quantity})';
-    });
+    String addOnText = '';
+    for (var addOn in orderDetails.addOns!) {
+      addOnText = '$addOnText${(addOnText.isEmpty) ? '' : ',  '}${addOn.name} (${addOn.quantity})';
+    }
 
-    String _variationText = '';
-    if(orderDetails.variation.length > 0) {
-      if(orderDetails.variation.length > 0) {
-        List<String> _variationTypes = orderDetails.variation[0].type.split('-');
-        if(_variationTypes.length == orderDetails.itemDetails.choiceOptions.length) {
-          int _index = 0;
-          orderDetails.itemDetails.choiceOptions.forEach((choice) {
-            _variationText = _variationText + '${(_index == 0) ? '' : ',  '}${choice.title} - ${_variationTypes[_index]}';
-            _index = _index + 1;
-          });
+    String? variationText = '';
+    if(orderDetails.variation!.isNotEmpty) {
+      if(orderDetails.variation!.isNotEmpty) {
+        List<String> variationTypes = orderDetails.variation![0].type!.split('-');
+        if(variationTypes.length == orderDetails.itemDetails!.choiceOptions!.length) {
+          int index = 0;
+          for (var choice in orderDetails.itemDetails!.choiceOptions!) {
+            variationText = '${variationText!}${(index == 0) ? '' : ',  '}${choice.title} - ${variationTypes[index]}';
+            index = index + 1;
+          }
         }else {
-          _variationText = orderDetails.itemDetails.variations[0].type;
+          variationText = orderDetails.itemDetails!.variations![0].type;
         }
       }
-    }else if(orderDetails.foodVariation.length > 0) {
-      for(FoodVariation variation in orderDetails.foodVariation) {
-        _variationText += '${_variationText.isNotEmpty ? ', ' : ''}${variation.name} (';
+    }else if(orderDetails.foodVariation!.isNotEmpty) {
+      for(FoodVariation variation in orderDetails.foodVariation!) {
+        variationText = '${variationText!}${variationText.isNotEmpty ? ', ' : ''}${variation.name} (';
         if(variation.variationValues != null){
-          for(VariationValue value in variation.variationValues) {
-            _variationText += '${_variationText.endsWith('(') ? '' : ', '}${value.level}';
+          for(VariationValue value in variation.variationValues!) {
+            variationText = '${variationText!}${variationText.endsWith('(') ? '' : ', '}${value.level}';
           }
         }
-        _variationText += ')';
+        variationText = '${variationText!})';
       }
     }
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
           child: CustomImage(
             height: 50, width: 50, fit: BoxFit.cover,
-            image: '${orderDetails.itemCampaignId != null ? Get.find<SplashController>().configModel.baseUrls.campaignImageUrl
-                : Get.find<SplashController>().configModel.baseUrls.itemImageUrl}/'
-                '${orderDetails.itemDetails.image}',
+            image: '${orderDetails.itemCampaignId != null ? Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl
+                : Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}/'
+                '${orderDetails.itemDetails!.image}',
           ),
         ),
-        SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+        const SizedBox(width: Dimensions.paddingSizeSmall),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
               Expanded(child: Text(
-                orderDetails.itemDetails.name,
+                orderDetails.itemDetails!.name!,
                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
                 maxLines: 2, overflow: TextOverflow.ellipsis,
               )),
@@ -73,57 +73,57 @@ class OrderItemWidget extends StatelessWidget {
                 style: robotoMedium.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeSmall),
               ),
             ]),
-            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            const SizedBox(height: Dimensions.paddingSizeExtraSmall),
             Row(children: [
               Expanded(child: Text(
                 PriceConverter.convertPrice(orderDetails.price),
                 style: robotoMedium, textDirection: TextDirection.ltr,
               )),
-              ((Get.find<SplashController>().configModel.moduleConfig.module.unit && orderDetails.itemDetails.unitType != null)
-              || (Get.find<SplashController>().configModel.moduleConfig.module.vegNonVeg && Get.find<SplashController>().configModel.toggleVegNonVeg)) ? Container(
-                padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL),
+              ((Get.find<SplashController>().configModel!.moduleConfig!.module!.unit! && orderDetails.itemDetails!.unitType != null)
+              || (Get.find<SplashController>().configModel!.moduleConfig!.module!.vegNonVeg! && Get.find<SplashController>().configModel!.toggleVegNonVeg!)) ? Container(
+                padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall, horizontal: Dimensions.paddingSizeSmall),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                  borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                   color: Theme.of(context).primaryColor.withOpacity(0.1),
                 ),
                 child: Text(
-                  Get.find<SplashController>().configModel.moduleConfig.module.unit ? orderDetails.itemDetails.unitType ?? ''
-                      : orderDetails.itemDetails.veg == 0 ? 'non_veg'.tr : 'veg'.tr,
+                  Get.find<SplashController>().configModel!.moduleConfig!.module!.unit! ? orderDetails.itemDetails!.unitType ?? ''
+                      : orderDetails.itemDetails!.veg == 0 ? 'non_veg'.tr : 'veg'.tr,
                   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).primaryColor),
                 ),
-              ) : SizedBox(),
+              ) : const SizedBox(),
             ]),
 
           ]),
         ),
       ]),
 
-      (Get.find<SplashController>().getModuleConfig(order.moduleType).addOn && _addOnText.isNotEmpty) ? Padding(
-        padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+      (Get.find<SplashController>().getModuleConfig(order.moduleType).addOn! && addOnText.isNotEmpty) ? Padding(
+        padding: const EdgeInsets.only(top: Dimensions.paddingSizeExtraSmall),
         child: Row(children: [
-          SizedBox(width: 60),
+          const SizedBox(width: 60),
           Text('${'addons'.tr}: ', style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall)),
           Flexible(child: Text(
-              _addOnText,
+              addOnText,
               style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor,
           ))),
         ]),
-      ) : SizedBox(),
+      ) : const SizedBox(),
 
-      _variationText.isNotEmpty ? Padding(
-        padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+      variationText!.isNotEmpty ? Padding(
+        padding: const EdgeInsets.only(top: Dimensions.paddingSizeExtraSmall),
         child: Row(children: [
-          SizedBox(width: 60),
+          const SizedBox(width: 60),
           Text('${'variations'.tr}: ', style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall)),
           Flexible(child: Text(
-              _variationText,
+              variationText,
               style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor,
           ))),
         ]),
-      ) : SizedBox(),
+      ) : const SizedBox(),
 
-      Divider(height: Dimensions.PADDING_SIZE_LARGE),
-      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+      const Divider(height: Dimensions.paddingSizeLarge),
+      const SizedBox(height: Dimensions.paddingSizeSmall),
     ]);
   }
 }

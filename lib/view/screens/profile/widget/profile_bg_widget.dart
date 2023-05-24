@@ -8,7 +8,7 @@ class ProfileBgWidget extends StatelessWidget {
   final Widget circularImage;
   final Widget mainWidget;
   final bool backButton;
-  ProfileBgWidget({@required this.mainWidget, @required this.circularImage, @required this.backButton});
+  const ProfileBgWidget({Key? key, required this.mainWidget, required this.circularImage, required this.backButton}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,23 +18,23 @@ class ProfileBgWidget extends StatelessWidget {
 
         Center(
           child: Container(
-            width: Dimensions.WEB_MAX_WIDTH, height: 260,
+            width: Dimensions.webMaxWidth, height: 260,
             color: Theme.of(context).primaryColor,
           ),
         ),
 
         SizedBox(
           width: context.width, height: 260,
-          child: Center(child: Image.asset(Images.profile_bg, height: 260, width: Dimensions.WEB_MAX_WIDTH, fit: BoxFit.fill)),
+          child: Center(child: Image.asset(Images.profileBg, height: 260, width: Dimensions.webMaxWidth, fit: BoxFit.fill)),
         ),
 
         Positioned(
           top: 200, left: 0, right: 0, bottom: 0,
           child: Center(
             child: Container(
-              width: Dimensions.WEB_MAX_WIDTH,
+              width: Dimensions.webMaxWidth,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.RADIUS_EXTRA_LARGE)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(Dimensions.radiusExtraLarge)),
                 color: Theme.of(context).cardColor,
               ),
             ),
@@ -55,7 +55,7 @@ class ProfileBgWidget extends StatelessWidget {
             icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).cardColor, size: 20),
             onPressed: () => Get.back(),
           ),
-        ) : SizedBox(),
+        ) : const SizedBox(),
 
         Positioned(
           top: 150, left: 0, right: 0,

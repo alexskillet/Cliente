@@ -4,48 +4,48 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TrackingStepperWidget extends StatelessWidget {
-  final String status;
+  final String? status;
   final bool takeAway;
-  TrackingStepperWidget({@required this.status, @required this.takeAway});
+  const TrackingStepperWidget({Key? key, required this.status, required this.takeAway}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int _status = -1;
+    int state = -1;
     if(status == 'pending') {
-      _status = 0;
+      state = 0;
     }else if(status == 'accepted' || status == 'confirmed') {
-      _status = 1;
+      state = 1;
     }else if(status == 'processing') {
-      _status = 2;
+      state = 2;
     }else if(status == 'handover') {
-      _status = takeAway ? 3 : 2;
+      state = takeAway ? 3 : 2;
     }else if(status == 'picked_up') {
-      _status = 3;
+      state = 3;
     }else if(status == 'delivered') {
-      _status = 4;
+      state = 4;
     }
 
     return Container(
-      padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+        borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
       ),
       child: Row(children: [
         CustomStepper(
-          title: 'order_placed'.tr, isActive: _status > -1, haveLeftBar: false, haveRightBar: true, rightActive: _status > 0,
+          title: 'order_placed'.tr, isActive: state > -1, haveLeftBar: false, haveRightBar: true, rightActive: state > 0,
         ),
         CustomStepper(
-          title: 'order_confirmed'.tr, isActive: _status > 0, haveLeftBar: true, haveRightBar: true, rightActive: _status > 1,
+          title: 'order_confirmed'.tr, isActive: state > 0, haveLeftBar: true, haveRightBar: true, rightActive: state > 1,
         ),
         CustomStepper(
-          title: 'preparing_item'.tr, isActive: _status > 1, haveLeftBar: true, haveRightBar: true, rightActive: _status > 2,
+          title: 'preparing_item'.tr, isActive: state > 1, haveLeftBar: true, haveRightBar: true, rightActive: state > 2,
         ),
         CustomStepper(
-          title: takeAway ? 'ready_for_handover'.tr : 'delivery_on_the_way'.tr, isActive: _status > 2, haveLeftBar: true, haveRightBar: true, rightActive: _status > 3,
+          title: takeAway ? 'ready_for_handover'.tr : 'delivery_on_the_way'.tr, isActive: state > 2, haveLeftBar: true, haveRightBar: true, rightActive: state > 3,
         ),
         CustomStepper(
-          title: 'delivered'.tr, isActive: _status > 3, haveLeftBar: true, haveRightBar: false, rightActive: _status > 4,
+          title: 'delivered'.tr, isActive: state > 3, haveLeftBar: true, haveRightBar: false, rightActive: state > 4,
         ),
       ]),
     );

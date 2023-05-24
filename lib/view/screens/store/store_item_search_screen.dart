@@ -11,8 +11,8 @@ import 'package:sixam_mart/view/base/paginated_list_view.dart';
 import 'package:sixam_mart/view/screens/store/widget/bottom_cart_widget.dart';
 
 class StoreItemSearchScreen extends StatefulWidget {
-  final String storeID;
-  const StoreItemSearchScreen({Key key, @required this.storeID}) : super(key: key);
+  final String? storeID;
+  const StoreItemSearchScreen({Key? key, required this.storeID}) : super(key: key);
 
   @override
   State<StoreItemSearchScreen> createState() => _StoreItemSearchScreenState();
@@ -33,13 +33,14 @@ class _StoreItemSearchScreenState extends State<StoreItemSearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
+        preferredSize: const Size(Dimensions.webMaxWidth, 60),
         child: Container(
-          height: 60 + context.mediaQueryPadding.top, width: Dimensions.WEB_MAX_WIDTH,
+          height: 60 + context.mediaQueryPadding.top, width: Dimensions.webMaxWidth,
           padding: EdgeInsets.only(top: context.mediaQueryPadding.top),
           color: Theme.of(context).cardColor,
           alignment: Alignment.center,
-          child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE, vertical: Dimensions.PADDING_SIZE_SMALL),
+          child: SizedBox(width: Dimensions.webMaxWidth, child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeSmall),
             child: Row(children: [
 
               IconButton(
@@ -57,13 +58,13 @@ class _StoreItemSearchScreenState extends State<StoreItemSearchScreen> {
                   hintText: 'search_item_in_store'.tr,
                   hintStyle: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).hintColor),
                   isDense: true,
-                  contentPadding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                  contentPadding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                     borderSide: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.3), width: 1),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                     borderSide: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.3), width: 1),
                   ),
                   suffixIcon: IconButton(
@@ -81,23 +82,22 @@ class _StoreItemSearchScreenState extends State<StoreItemSearchScreen> {
             ]),
           )),
         ),
-        preferredSize: Size(Dimensions.WEB_MAX_WIDTH, 60),
       ),
 
       body: GetBuilder<StoreController>(builder: (storeController) {
         return SingleChildScrollView(
           controller: _scrollController,
-          padding: ResponsiveHelper.isDesktop(context) ? null : EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-          child: FooterView(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: PaginatedListView(
+          padding: ResponsiveHelper.isDesktop(context) ? null : const EdgeInsets.all(Dimensions.paddingSizeSmall),
+          child: FooterView(child: SizedBox(width: Dimensions.webMaxWidth, child: PaginatedListView(
             scrollController: _scrollController,
-            onPaginate: (int offset) => storeController.getStoreSearchItemList(
-              storeController.searchText, widget.storeID, offset, storeController.searchType,
+            onPaginate: (int? offset) => storeController.getStoreSearchItemList(
+              storeController.searchText, widget.storeID, offset!, storeController.searchType,
             ),
-            totalSize: storeController.storeSearchItemModel != null ? storeController.storeSearchItemModel.totalSize : null,
-            offset: storeController.storeSearchItemModel != null ? storeController.storeSearchItemModel.offset : null,
+            totalSize: storeController.storeSearchItemModel != null ? storeController.storeSearchItemModel!.totalSize : null,
+            offset: storeController.storeSearchItemModel != null ? storeController.storeSearchItemModel!.offset : null,
             itemView: ItemsView(
               isStore: false, stores: null,
-              items: storeController.storeSearchItemModel != null ? storeController.storeSearchItemModel.items : null,
+              items: storeController.storeSearchItemModel != null ? storeController.storeSearchItemModel!.items : null,
               type: storeController.searchText.isNotEmpty ? storeController.searchType : null,
               inStorePage: true, onVegFilterTap: (String type) {
               storeController.getStoreSearchItemList(storeController.searchText, widget.storeID, 1, type);
@@ -107,7 +107,7 @@ class _StoreItemSearchScreenState extends State<StoreItemSearchScreen> {
       }),
 
       bottomNavigationBar: GetBuilder<CartController>(builder: (cartController) {
-        return cartController.cartList.length > 0 && !ResponsiveHelper.isDesktop(context) ? BottomCartWidget() : SizedBox();
+        return cartController.cartList.isNotEmpty && !ResponsiveHelper.isDesktop(context) ? const BottomCartWidget() : const SizedBox();
       })
 
     );

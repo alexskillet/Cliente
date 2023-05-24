@@ -27,7 +27,7 @@
   "enter_email_address": "Enter your email address",
   "enter_a_valid_email_address": "Enter a valid email address",
   "enter_phone_number": "Enter your phone number",
-  "invalid_phone_number": "Invalid phone number. Please enter your phone number without country code",
+  "invalid_phone_number": "Invalid phone number.",
   "enter_password": "Enter your password",
   "confirm_password_does_not_matched": "Confirmed password doesn't matched",
   "password_should_be": "Password should be greater than 6 characters",
@@ -772,5 +772,6 @@
   "no_reasons_available": "No reasons available",
   "you_did_not_select_select_any_reason": "You did not select select any reason",
   "switch_to_cod": "Switch to COD",
-  "cancellation_note": "Cancellation Note"
+  "cancellation_note": "Cancellation Note",
+  "enter_pickup": "Enter pickup"
 }

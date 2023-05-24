@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class CustomHeaderLine extends StatelessWidget {
-  final Color color;
+  final Color? color;
   final Color gradientColor1;
   final Color gradientColor2;
   final bool cancelOrder;
 
   const CustomHeaderLine(
-      {Key key,
+      {Key? key,
         this.color,
-        @required this.gradientColor1,
-        @required this.gradientColor2,
+        required this.gradientColor1,
+        required this.gradientColor2,
         this.cancelOrder = false})
       : super(key: key);
   @override
@@ -26,7 +26,7 @@ class CustomHeaderLine extends StatelessWidget {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
                 gradient: LinearGradient(
-                    stops: [0.6,0.5],
+                    stops: const [0.6,0.5],
                     tileMode: TileMode.repeated,
                     colors: [gradientColor1, gradientColor2])),
           ),

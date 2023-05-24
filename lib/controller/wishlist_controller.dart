@@ -6,35 +6,34 @@ import 'package:sixam_mart/data/model/response/store_model.dart';
 import 'package:sixam_mart/data/repository/item_repo.dart';
 import 'package:sixam_mart/data/repository/wishlist_repo.dart';
 import 'package:sixam_mart/view/base/custom_snackbar.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class WishListController extends GetxController implements GetxService {
   final WishListRepo wishListRepo;
   final ItemRepo itemRepo;
-  WishListController({@required this.wishListRepo, @required this.itemRepo});
+  WishListController({required this.wishListRepo, required this.itemRepo});
 
-  List<Item> _wishItemList;
-  List<Store> _wishStoreList;
-  List<int> _wishItemIdList = [];
-  List<int> _wishStoreIdList = [];
+  List<Item?>? _wishItemList;
+  List<Store?>? _wishStoreList;
+  List<int?> _wishItemIdList = [];
+  List<int?> _wishStoreIdList = [];
   bool _isRemoving = false;
 
-  List<Item> get wishItemList => _wishItemList;
-  List<Store> get wishStoreList => _wishStoreList;
-  List<int> get wishItemIdList => _wishItemIdList;
-  List<int> get wishStoreIdList => _wishStoreIdList;
+  List<Item?>? get wishItemList => _wishItemList;
+  List<Store?>? get wishStoreList => _wishStoreList;
+  List<int?> get wishItemIdList => _wishItemIdList;
+  List<int?> get wishStoreIdList => _wishStoreIdList;
   bool get isRemoving => _isRemoving;
 
-  void addToWishList(Item product, Store store, bool isStore, {bool getXSnackBar = false}) async {
+  void addToWishList(Item? product, Store? store, bool isStore, {bool getXSnackBar = false}) async {
     if(isStore) {
-      _wishStoreIdList.add(store.id);
-      _wishStoreList.add(store);
+      _wishStoreIdList.add(store!.id);
+      _wishStoreList!.add(store);
     }else{
-      _wishItemList.add(product);
-      _wishItemIdList.add(product.id);
+      _wishItemList!.add(product);
+      _wishItemIdList.add(product!.id);
     }
-    Response response = await wishListRepo.addWishList(isStore ? store.id : product.id, isStore);
+    Response response = await wishListRepo.addWishList(isStore ? store!.id : product!.id, isStore);
     if (response.statusCode == 200) {
       // if(isStore) {
       //   _wishStoreIdList.forEach((storeId) {
@@ -56,46 +55,46 @@ class WishListController extends GetxController implements GetxService {
       showCustomSnackBar(response.body['message'], isError: false, getXSnackBar: getXSnackBar);
     } else {
       if(isStore) {
-        _wishStoreIdList.forEach((storeId) {
-          if (storeId == store.id) {
+        for (var storeId in _wishStoreIdList) {
+          if (storeId == store!.id) {
             _wishStoreIdList.removeAt(_wishStoreIdList.indexOf(storeId));
           }
-        });
+        }
       }else{
-        _wishItemIdList.forEach((productId) {
-          if(productId == product.id){
+        for (var productId in _wishItemIdList) {
+          if(productId == product!.id){
             _wishItemIdList.removeAt(_wishItemIdList.indexOf(productId));
           }
-        });
+        }
       }
       ApiChecker.checkApi(response, getXSnackBar: getXSnackBar);
     }
     update();
   }
 
-  void removeFromWishList(int id, bool isStore, {bool getXSnackBar = false}) async {
+  void removeFromWishList(int? id, bool isStore, {bool getXSnackBar = false}) async {
     _isRemoving = true;
     update();
 
-    int _idIndex = -1;
-    int storeId, itemId;
-    Store store;
-    Item item;
+    int idIndex = -1;
+    int? storeId, itemId;
+    Store? store;
+    Item? item;
     if(isStore) {
-      _idIndex = _wishStoreIdList.indexOf(id);
-      if(_idIndex != -1) {
+      idIndex = _wishStoreIdList.indexOf(id);
+      if(idIndex != -1) {
         storeId = id;
-        _wishStoreIdList.removeAt(_idIndex);
-        store = _wishStoreList[_idIndex];
-        _wishStoreList.removeAt(_idIndex);
+        _wishStoreIdList.removeAt(idIndex);
+        store = _wishStoreList![idIndex];
+        _wishStoreList!.removeAt(idIndex);
       }
     }else {
-      _idIndex = _wishItemIdList.indexOf(id);
-      if(_idIndex != -1) {
+      idIndex = _wishItemIdList.indexOf(id);
+      if(idIndex != -1) {
         itemId = id;
-        _wishItemIdList.removeAt(_idIndex);
-        item = _wishItemList[_idIndex];
-        _wishItemList.removeAt(_idIndex);
+        _wishItemIdList.removeAt(idIndex);
+        item = _wishItemList![idIndex];
+        _wishItemList!.removeAt(idIndex);
       }
     }
     Response response = await wishListRepo.removeWishList(id, isStore);
@@ -106,10 +105,10 @@ class WishListController extends GetxController implements GetxService {
       ApiChecker.checkApi(response, getXSnackBar: getXSnackBar);
       if(isStore) {
         _wishStoreIdList.add(storeId);
-        _wishStoreList.add(store);
+        _wishStoreList!.add(store);
       }else {
         _wishItemIdList.add(itemId);
-        _wishItemList.add(item);
+        _wishItemList!.add(item);
       }
     }
     _isRemoving = false;
@@ -129,49 +128,49 @@ class WishListController extends GetxController implements GetxService {
       _wishItemIdList = [];
 
       response.body['item'].forEach((item) async {
-        if(item['module_type'] == null || !Get.find<SplashController>().getModuleConfig(item['module_type']).newVariation
+        if(item['module_type'] == null || !Get.find<SplashController>().getModuleConfig(item['module_type']).newVariation!
             || item['variations'] == null || item['variations'].isEmpty
             || (item['food_variations'] != null && item['food_variations'].isNotEmpty)){
 
-          Item _item = Item.fromJson(item);
+          Item i = Item.fromJson(item);
           if(Get.find<SplashController>().module == null){
-            Get.find<LocationController>().getUserAddress().zoneData.forEach((zone) {
-              zone.modules.forEach((module) {
-                if(module.id == _item.moduleId){
-                  if(module.pivot.zoneId == _item.zoneId){
-                    _wishItemList.add(_item);
-                    _wishItemIdList.add(_item.id);
+            for (var zone in Get.find<LocationController>().getUserAddress()!.zoneData!) {
+              for (var module in zone.modules!) {
+                if(module.id == i.moduleId){
+                  if(module.pivot!.zoneId == i.zoneId){
+                    _wishItemList!.add(i);
+                    _wishItemIdList.add(i.id);
                   }
                 }
-              });
-            });
+              }
+            }
           }else{
-            _wishItemList.add(_item);
-            _wishItemIdList.add(_item.id);
+            _wishItemList!.add(i);
+            _wishItemIdList.add(i.id);
           }
         }
       });
 
       response.body['store'].forEach((store) async {
         if(Get.find<SplashController>().module == null){
-          Get.find<LocationController>().getUserAddress().zoneData.forEach((zone) {
-            zone.modules.forEach((module) {
+          for (var zone in Get.find<LocationController>().getUserAddress()!.zoneData!) {
+            for (var module in zone.modules!) {
               if(module.id == Store.fromJson(store).moduleId){
-                if(module.pivot.zoneId == Store.fromJson(store).zoneId){
-                  _wishStoreList.add(Store.fromJson(store));
+                if(module.pivot!.zoneId == Store.fromJson(store).zoneId){
+                  _wishStoreList!.add(Store.fromJson(store));
                   _wishStoreIdList.add(Store.fromJson(store).id);
                 }
               }
-            });
-          });
+            }
+          }
         }else{
-          Store _store;
+          Store? s;
           try{
-            _store = Store.fromJson(store);
-          }catch(e){}
-          if(_store != null && Get.find<SplashController>().module.id == _store.moduleId) {
-            _wishStoreList.add(_store);
-            _wishStoreIdList.add(_store.id);
+            s = Store.fromJson(store);
+          }catch(_){}
+          if(s != null && Get.find<SplashController>().module!.id == s.moduleId) {
+            _wishStoreList!.add(s);
+            _wishStoreIdList.add(s.id);
           }
         }
 

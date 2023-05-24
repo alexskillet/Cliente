@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:sixam_mart/view/base/footer_view.dart';
 
 class NotLoggedInScreen extends StatelessWidget {
+  const NotLoggedInScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

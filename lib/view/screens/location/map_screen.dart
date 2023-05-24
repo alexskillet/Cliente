@@ -15,22 +15,22 @@ import 'package:sixam_mart/view/screens/order/widget/address_details.dart';
 class MapScreen extends StatefulWidget {
   final AddressModel address;
   final bool fromStore;
-  MapScreen({@required this.address, this.fromStore = false});
+  const MapScreen({Key? key, required this.address, this.fromStore = false}) : super(key: key);
 
   @override
-  _MapScreenState createState() => _MapScreenState();
+  MapScreenState createState() => MapScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
-  LatLng _latLng;
-  Set<Marker> _markers = Set.of([]);
-  GoogleMapController _mapController;
+class MapScreenState extends State<MapScreen> {
+  late LatLng _latLng;
+  Set<Marker> _markers = {};
+  GoogleMapController? _mapController;
 
   @override
   void initState() {
     super.initState();
 
-    _latLng = LatLng(double.parse(widget.address.latitude), double.parse(widget.address.longitude));
+    _latLng = LatLng(double.parse(widget.address.latitude!), double.parse(widget.address.longitude!));
     _setMarker();
   }
 
@@ -38,14 +38,14 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'location'.tr),
-      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+      endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: Center(
-        child: Container(
-          width: Dimensions.WEB_MAX_WIDTH,
+        child: SizedBox(
+          width: Dimensions.webMaxWidth,
           child: Stack(children: [
             GoogleMap(
               initialCameraPosition: CameraPosition(target: _latLng, zoom: 16),
-              minMaxZoomPreference: MinMaxZoomPreference(0, 16),
+              minMaxZoomPreference: const MinMaxZoomPreference(0, 16),
               zoomGesturesEnabled: true,
               myLocationButtonEnabled: false,
               zoomControlsEnabled: false,
@@ -54,22 +54,22 @@ class _MapScreenState extends State<MapScreen> {
               onMapCreated: (controller) => _mapController = controller,
             ),
             Positioned(
-              left: Dimensions.PADDING_SIZE_LARGE, right: Dimensions.PADDING_SIZE_LARGE, bottom: Dimensions.PADDING_SIZE_LARGE,
+              left: Dimensions.paddingSizeLarge, right: Dimensions.paddingSizeLarge, bottom: Dimensions.paddingSizeLarge,
               child: InkWell(
                 onTap: () {
                   if(_mapController != null) {
-                    _mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: _latLng, zoom: 17)));
+                    _mapController!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: _latLng, zoom: 17)));
                   }
                 },
                 child: Container(
-                  padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                     color: Theme.of(context).cardColor,
-                    boxShadow: [BoxShadow(color: Colors.grey[300], spreadRadius: 3, blurRadius: 10)],
+                    boxShadow: [BoxShadow(color: Colors.grey[300]!, spreadRadius: 3, blurRadius: 10)],
                   ),
                   child: widget.fromStore ? Text(
-                    widget.address.address, style: robotoMedium,
+                    widget.address.address!, style: robotoMedium,
                   ) : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -81,22 +81,22 @@ class _MapScreenState extends State<MapScreen> {
                               ? Icons.work_outline : Icons.location_on,
                           size: 30, color: Theme.of(context).primaryColor,
                         ),
-                        SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                        const SizedBox(width: Dimensions.paddingSizeSmall),
 
                         Expanded(
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
 
-                            Text(widget.address.addressType.tr, style: robotoRegular.copyWith(
+                            Text(widget.address.addressType!.tr, style: robotoRegular.copyWith(
                               fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor,
                             )),
-                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                            const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                             AddressDetails(addressDetails: widget.address),
 
                           ]),
                         ),
                       ]),
-                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                      const SizedBox(height: Dimensions.paddingSizeSmall),
 
                       Text('- ${widget.address.contactPersonName}', style: robotoMedium.copyWith(
                         color: Theme.of(context).primaryColor,
@@ -118,12 +118,12 @@ class _MapScreenState extends State<MapScreen> {
 
   void _setMarker() async {
     Uint8List destinationImageData = await convertAssetToUnit8List(
-      widget.fromStore ? Images.restaurant_marker : Images.location_marker, width: 120,
+      widget.fromStore ? Images.restaurantMarker : Images.locationMarker, width: 120,
     );
 
-    _markers = Set.of([]);
+    _markers = <Marker>{};
     _markers.add(Marker(
-      markerId: MarkerId('marker'),
+      markerId: const MarkerId('marker'),
       position: _latLng,
       icon: BitmapDescriptor.fromBytes(destinationImageData),
     ));
@@ -135,7 +135,7 @@ class _MapScreenState extends State<MapScreen> {
     ByteData data = await rootBundle.load(imagePath);
     Codec codec = await instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
     FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ImageByteFormat.png)).buffer.asUint8List();
+    return (await fi.image.toByteData(format: ImageByteFormat.png))!.buffer.asUint8List();
   }
 
 }

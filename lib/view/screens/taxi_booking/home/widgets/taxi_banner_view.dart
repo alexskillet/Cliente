@@ -9,16 +9,16 @@ import 'package:get/get.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class TaxiBannerView extends StatelessWidget {
-  TaxiBannerView();
+  const TaxiBannerView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
     return GetBuilder<BannerController>(builder: (bannerController) {
-      List<String> bannerList =  bannerController.taxiBannerImageList;
-      List<dynamic> bannerDataList = bannerController.taxiBannerDataList;
+      List<String?>? bannerList =  bannerController.taxiBannerImageList;
+      List<dynamic>? bannerDataList = bannerController.taxiBannerDataList;
 
-      return (bannerList != null && bannerList.length == 0) ? SizedBox() : Container(
+      return (bannerList != null && bannerList.isEmpty) ? const SizedBox() : SizedBox(
         width: MediaQuery.of(context).size.width,
         height: GetPlatform.isDesktop ? 500 : 110,
         child: bannerList != null ?
@@ -30,29 +30,29 @@ class TaxiBannerView extends StatelessWidget {
                 options: CarouselOptions(
                   autoPlay: true,
                   viewportFraction: 1,
-                  autoPlayInterval: Duration(seconds: 7),
+                  autoPlayInterval: const Duration(seconds: 7),
                   onPageChanged: (index, reason) {
                     bannerController.setCurrentIndex(index, true);
                   },
                 ),
-                itemCount: bannerList.length == 0 ? 1 : bannerList.length,
+                itemCount: bannerList.isEmpty ? 1 : bannerList.length,
                 itemBuilder: (context, index, _) {
-                  String _baseUrl = bannerDataList[index] is BasicCampaignModel ? Get.find<SplashController>()
-                      .configModel.baseUrls.campaignImageUrl  : Get.find<SplashController>().configModel.baseUrls.bannerImageUrl;
+                  String? baseUrl = bannerDataList![index] is BasicCampaignModel ? Get.find<SplashController>()
+                      .configModel!.baseUrls!.campaignImageUrl  : Get.find<SplashController>().configModel!.baseUrls!.bannerImageUrl;
                   return InkWell(
                     onTap: () async {},
                     child: Container(
                       decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                        boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 1, blurRadius: 5)],
+                        borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                        boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, spreadRadius: 1, blurRadius: 5)],
                       ),
                       width: 500,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                        borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                         child: GetBuilder<SplashController>(builder: (splashController) {
                           return CustomImage(
-                            image: '$_baseUrl/${bannerList[index]}',
+                            image: '$baseUrl/${bannerList[index]}',
                             fit: BoxFit.cover,
                           );
                         }),
@@ -77,10 +77,10 @@ class TaxiBannerView extends StatelessWidget {
             ),)
           ],
         ) : Shimmer(
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
           enabled: bannerList == null,
-          child: Container(margin: EdgeInsets.symmetric(horizontal: 10), decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+          child: Container(margin: const EdgeInsets.symmetric(horizontal: 10), decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
             color: Colors.grey[300],
           )),
         ),

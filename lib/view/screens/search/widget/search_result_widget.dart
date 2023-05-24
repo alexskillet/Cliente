@@ -9,14 +9,14 @@ import 'package:get/get.dart';
 
 class SearchResultWidget extends StatefulWidget {
   final String searchText;
-  SearchResultWidget({@required this.searchText});
+  const SearchResultWidget({Key? key, required this.searchText}) : super(key: key);
 
   @override
-  _SearchResultWidgetState createState() => _SearchResultWidgetState();
+  SearchResultWidgetState createState() => SearchResultWidgetState();
 }
 
-class _SearchResultWidgetState extends State<SearchResultWidget> with TickerProviderStateMixin {
-  TabController _tabController;
+class SearchResultWidgetState extends State<SearchResultWidget> with TickerProviderStateMixin {
+  TabController? _tabController;
 
   @override
   void initState() {
@@ -30,49 +30,51 @@ class _SearchResultWidgetState extends State<SearchResultWidget> with TickerProv
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
       GetBuilder<SearchController>(builder: (searchController) {
-        bool _isNull = true;
-        int _length = 0;
+        bool isNull = true;
+        int length = 0;
         if(searchController.isStore) {
-          _isNull = searchController.searchStoreList == null;
-          if(!_isNull) {
-            _length = searchController.searchStoreList.length;
+          isNull = searchController.searchStoreList == null;
+          if(!isNull) {
+            length = searchController.searchStoreList!.length;
           }
         }else {
-          _isNull = searchController.searchItemList == null;
-          if(!_isNull) {
-            _length = searchController.searchItemList.length;
+          isNull = searchController.searchItemList == null;
+          if(!isNull) {
+            length = searchController.searchItemList!.length;
           }
         }
-        return _isNull ? SizedBox() : Center(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Padding(
-          padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+        return isNull ? const SizedBox() : Center(child: SizedBox(width: Dimensions.webMaxWidth, child: Padding(
+          padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
           child: Row(children: [
             Text(
-              _length.toString(),
+              length.toString(),
               style: robotoBold.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeSmall),
             ),
-            SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            const SizedBox(width: Dimensions.paddingSizeExtraSmall),
             Expanded(child: Text(
               'results_found'.tr,
               style: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall),
             )),
             widget.searchText.isNotEmpty ? InkWell(
               onTap: () {
-                List<double> _prices = [];
+                List<double?> prices = [];
                 if(!Get.find<SearchController>().isStore) {
-                  Get.find<SearchController>().allItemList.forEach((product) => _prices.add(product.price));
-                  _prices.sort();
+                  for (var product in Get.find<SearchController>().allItemList!) {
+                    prices.add(product.price);
+                  }
+                  prices.sort();
                 }
-                double _maxValue = _prices.length > 0 ? _prices[_prices.length-1] : 1000;
-                Get.dialog(FilterWidget(maxValue: _maxValue, isStore: Get.find<SearchController>().isStore));
+                double? maxValue = prices.isNotEmpty ? prices[prices.length-1] : 1000;
+                Get.dialog(FilterWidget(maxValue: maxValue, isStore: Get.find<SearchController>().isStore));
               },
-              child: Icon(Icons.filter_list),
-            ) : SizedBox(),
+              child: const Icon(Icons.filter_list),
+            ) : const SizedBox(),
           ]),
         )));
       }),
 
       Center(child: Container(
-        width: Dimensions.WEB_MAX_WIDTH,
+        width: Dimensions.webMaxWidth,
         color: Theme.of(context).cardColor,
         child: TabBar(
           controller: _tabController,
@@ -84,23 +86,23 @@ class _SearchResultWidgetState extends State<SearchResultWidget> with TickerProv
           labelStyle: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
           tabs: [
             Tab(text: 'item'.tr),
-            Tab(text: Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+            Tab(text: Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText!
                 ? 'restaurants'.tr : 'stores'.tr),
           ],
         ),
       )),
 
       Expanded(child: NotificationListener(
-        onNotification: (scrollNotification) {
+        onNotification: (dynamic scrollNotification) {
           if (scrollNotification is ScrollEndNotification) {
-            Get.find<SearchController>().setStore(_tabController.index == 1);
+            Get.find<SearchController>().setStore(_tabController!.index == 1);
             Get.find<SearchController>().searchData(widget.searchText, false);
           }
           return false;
         },
         child: TabBarView(
           controller: _tabController,
-          children: [
+          children: const [
             ItemView(isItem: false),
             ItemView(isItem: true),
           ],

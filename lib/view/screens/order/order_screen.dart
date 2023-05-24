@@ -11,13 +11,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OrderScreen extends StatefulWidget {
+  const OrderScreen({Key? key}) : super(key: key);
+
   @override
-  _OrderScreenState createState() => _OrderScreenState();
+  OrderScreenState createState() => OrderScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin {
-  TabController _tabController;
-  bool _isLoggedIn;
+class OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin {
+  TabController? _tabController;
+  late bool _isLoggedIn;
 
   @override
   void initState() {
@@ -35,14 +37,14 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'my_orders'.tr, backButton: ResponsiveHelper.isDesktop(context)),
-      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+      endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: _isLoggedIn ? GetBuilder<OrderController>(
         builder: (orderController) {
           return Column(children: [
 
             Center(
               child: Container(
-                width: Dimensions.WEB_MAX_WIDTH,
+                width: Dimensions.webMaxWidth,
                 color: Theme.of(context).cardColor,
                 child: TabBar(
                   controller: _tabController,
@@ -62,7 +64,7 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
 
             Expanded(child: TabBarView(
               controller: _tabController,
-              children: [
+              children: const [
                 OrderView(isRunning: true),
                 OrderView(isRunning: false),
               ],
@@ -70,7 +72,7 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
 
           ]);
         },
-      ) : NotLoggedInScreen(),
+      ) : const NotLoggedInScreen(),
     );
   }
 }

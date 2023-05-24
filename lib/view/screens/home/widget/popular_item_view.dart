@@ -17,17 +17,17 @@ import 'package:get/get.dart';
 
 class PopularItemView extends StatelessWidget {
   final bool isPopular;
-  PopularItemView({@required this.isPopular});
+  const PopularItemView({Key? key, required this.isPopular}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ItemController>(builder: (itemController) {
-      List<Item> _itemList = isPopular ? itemController.popularItemList : itemController.reviewedItemList;
+      List<Item>? itemList = isPopular ? itemController.popularItemList : itemController.reviewedItemList;
 
-      return (_itemList != null && _itemList.length == 0) ? SizedBox() : Column(
+      return (itemList != null && itemList.isEmpty) ? const SizedBox() : Column(
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
+            padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
             child: TitleWidget(
               title: isPopular ? 'popular_items_nearby'.tr : 'best_reviewed_item'.tr,
               onTap: () => Get.toNamed(RouteHelper.getPopularItemRoute(isPopular)),
@@ -36,27 +36,27 @@ class PopularItemView extends StatelessWidget {
 
           SizedBox(
             height: 90,
-            child: _itemList != null ? ListView.builder(
+            child: itemList != null ? ListView.builder(
               controller: ScrollController(),
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
-              itemCount: _itemList.length > 10 ? 10 : _itemList.length,
+              padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
+              itemCount: itemList.length > 10 ? 10 : itemList.length,
               itemBuilder: (context, index){
                 return Padding(
-                  padding: EdgeInsets.fromLTRB(2, 2, Dimensions.PADDING_SIZE_SMALL, 2),
+                  padding: const EdgeInsets.fromLTRB(2, 2, Dimensions.paddingSizeSmall, 2),
                   child: InkWell(
                     onTap: () {
-                      Get.find<ItemController>().navigateToItemPage(_itemList[index], context);
+                      Get.find<ItemController>().navigateToItemPage(itemList[index], context);
                     },
                     child: Container(
                       height: 90, width: 250,
-                      padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                       decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                        borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                         boxShadow: [BoxShadow(
-                          color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300],
+                          color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300]!,
                           blurRadius: 5, spreadRadius: 1,
                         )],
                       ),
@@ -64,40 +64,40 @@ class PopularItemView extends StatelessWidget {
 
                         Stack(children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                             child: CustomImage(
-                              image: '${Get.find<SplashController>().configModel.baseUrls.itemImageUrl}'
-                                  '/${_itemList[index].image}',
+                              image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}'
+                                  '/${itemList[index].image}',
                               height: 80, width: 80, fit: BoxFit.cover,
                             ),
                           ),
                           DiscountTag(
-                            discount: itemController.getDiscount(_itemList[index]),
-                            discountType: itemController.getDiscountType(_itemList[index]),
+                            discount: itemController.getDiscount(itemList[index]),
+                            discountType: itemController.getDiscountType(itemList[index]),
                           ),
-                          itemController.isAvailable(_itemList[index]) ? SizedBox() : NotAvailableWidget(),
+                          itemController.isAvailable(itemList[index]) ? const SizedBox() : const NotAvailableWidget(),
                         ]),
 
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
                             child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
                               Text(
-                                _itemList[index].name,
+                                itemList[index].name!,
                                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
                                 maxLines: 1, overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                               Text(
-                                _itemList[index].storeName,
+                                itemList[index].storeName!,
                                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor),
                                 maxLines: 1, overflow: TextOverflow.ellipsis,
                               ),
 
                               RatingBar(
-                                rating: _itemList[index].avgRating, size: 12,
-                                ratingCount: _itemList[index].ratingCount,
+                                rating: itemList[index].avgRating, size: 12,
+                                ratingCount: itemList[index].ratingCount,
                               ),
 
                               Row(children: [
@@ -105,23 +105,23 @@ class PopularItemView extends StatelessWidget {
                                   child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                                     Text(
                                       PriceConverter.convertPrice(
-                                        itemController.getStartingPrice(_itemList[index]),
-                                        discount: _itemList[index].discount,
-                                        discountType: _itemList[index].discountType,
+                                        itemController.getStartingPrice(itemList[index]),
+                                        discount: itemList[index].discount,
+                                        discountType: itemList[index].discountType,
                                       ), textDirection: TextDirection.ltr,
                                       style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall),
                                     ),
-                                    SizedBox(width: _itemList[index].discount > 0 ? Dimensions.PADDING_SIZE_EXTRA_SMALL : 0),
-                                    _itemList[index].discount > 0  ? Flexible(child: Text(
-                                      PriceConverter.convertPrice(itemController.getStartingPrice(_itemList[index])),
+                                    SizedBox(width: itemList[index].discount! > 0 ? Dimensions.paddingSizeExtraSmall : 0),
+                                    itemList[index].discount! > 0  ? Flexible(child: Text(
+                                      PriceConverter.convertPrice(itemController.getStartingPrice(itemList[index])),
                                       style: robotoMedium.copyWith(
                                         fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor,
                                         decoration: TextDecoration.lineThrough,
                                       ), textDirection: TextDirection.ltr,
-                                    )) : SizedBox(),
+                                    )) : const SizedBox(),
                                   ]),
                                 ),
-                                Icon(Icons.add, size: 20),
+                                const Icon(Icons.add, size: 20),
                               ]),
                             ]),
                           ),
@@ -132,7 +132,7 @@ class PopularItemView extends StatelessWidget {
                   ),
                 );
               },
-            ) : PopularItemShimmer(enabled: _itemList == null),
+            ) : PopularItemShimmer(enabled: itemList == null),
           ),
         ],
       );
@@ -142,65 +142,65 @@ class PopularItemView extends StatelessWidget {
 
 class PopularItemShimmer extends StatelessWidget {
   final bool enabled;
-  PopularItemShimmer({@required this.enabled});
+  const PopularItemShimmer({Key? key, required this.enabled}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
+      padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
       itemCount: 10,
       itemBuilder: (context, index){
         return Padding(
-          padding: EdgeInsets.fromLTRB(2, 2, Dimensions.PADDING_SIZE_SMALL, 2),
+          padding: const EdgeInsets.fromLTRB(2, 2, Dimensions.paddingSizeSmall, 2),
           child: Container(
             height: 90, width: 250,
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+              borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
               boxShadow: [BoxShadow(
-                color: Colors.grey[Get.find<ThemeController>().darkTheme ? 700 : 300],
+                color: Colors.grey[Get.find<ThemeController>().darkTheme ? 700 : 300]!,
                 blurRadius: 5, spreadRadius: 1,
               )],
             ),
             child: Shimmer(
-              duration: Duration(seconds: 1),
-              interval: Duration(seconds: 1),
+              duration: const Duration(seconds: 1),
+              interval: const Duration(seconds: 1),
               enabled: enabled,
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
 
                 Container(
                   height: 80, width: 80,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                     color: Colors.grey[300],
                   ),
                 ),
 
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
                       Container(height: 15, width: 100, color: Colors.grey[300]),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
 
                       Container(height: 10, width: 130, color: Colors.grey[300]),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
 
-                      RatingBar(rating: 0, size: 12, ratingCount: 0),
+                      const RatingBar(rating: 0, size: 12, ratingCount: 0),
 
                       Row(children: [
                         Expanded(
                           child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                             Container(height: 15, width: 50, color: Colors.grey[300]),
-                            SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                            const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                             Container(height: 10, width: 50, color: Colors.grey[300]),
                           ]),
                         ),
-                        Icon(Icons.add, size: 20),
+                        const Icon(Icons.add, size: 20),
                       ]),
                     ]),
                   ),

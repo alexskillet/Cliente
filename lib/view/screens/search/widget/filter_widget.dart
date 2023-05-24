@@ -9,19 +9,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class FilterWidget extends StatelessWidget {
-  final double maxValue;
+  final double? maxValue;
   final bool isStore;
-  FilterWidget({@required this.maxValue, @required this.isStore});
+  const FilterWidget({Key? key, required this.maxValue, required this.isStore}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
-      insetPadding: EdgeInsets.all(30),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
+      insetPadding: const EdgeInsets.all(30),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: Container(
         width: 600,
-        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
         child: GetBuilder<SearchController>(builder: (searchController) {
           return SingleChildScrollView(
             child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -30,7 +30,7 @@ class FilterWidget extends StatelessWidget {
                 InkWell(
                   onTap: () => Navigator.of(context).pop(),
                   child: Padding(
-                    padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                     child: Icon(Icons.close, color: Theme.of(context).disabledColor),
                   ),
                 ),
@@ -42,13 +42,13 @@ class FilterWidget extends StatelessWidget {
                   buttonText: 'reset'.tr, transparent: true, width: 65,
                 ),
               ]),
-              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+              const SizedBox(height: Dimensions.paddingSizeLarge),
 
               Text('sort_by'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
               GridView.builder(
                 itemCount: searchController.sortList.length,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: ResponsiveHelper.isDesktop(context) ? 3 : ResponsiveHelper.isTab(context) ? 3 : 2,
@@ -64,7 +64,7 @@ class FilterWidget extends StatelessWidget {
                       decoration: BoxDecoration(
                         border: Border.all(color: searchController.sortIndex == index ? Colors.transparent
                             : Theme.of(context).disabledColor),
-                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                        borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                         color: searchController.sortIndex == index ? Theme.of(context).primaryColor
                             : Theme.of(context).disabledColor.withOpacity(0.1),
                       ),
@@ -81,24 +81,24 @@ class FilterWidget extends StatelessWidget {
                   );
                 },
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+              const SizedBox(height: Dimensions.paddingSizeLarge),
 
               Text('filter_by'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-              (Get.find<SplashController>().configModel.toggleVegNonVeg
-              && Get.find<SplashController>().configModel.moduleConfig.module.vegNonVeg) ? CustomCheckBox(
+              const SizedBox(height: Dimensions.paddingSizeSmall),
+              (Get.find<SplashController>().configModel!.toggleVegNonVeg!
+              && Get.find<SplashController>().configModel!.moduleConfig!.module!.vegNonVeg!) ? CustomCheckBox(
                 title: 'veg'.tr,
                 value: searchController.veg,
                 onClick: () => searchController.toggleVeg(),
-              ) : SizedBox(),
-              (Get.find<SplashController>().configModel.toggleVegNonVeg
-              && Get.find<SplashController>().configModel.moduleConfig.module.vegNonVeg) ? CustomCheckBox(
+              ) : const SizedBox(),
+              (Get.find<SplashController>().configModel!.toggleVegNonVeg!
+              && Get.find<SplashController>().configModel!.moduleConfig!.module!.vegNonVeg!) ? CustomCheckBox(
                 title: 'non_veg'.tr,
                 value: searchController.nonVeg,
                 onClick: () => searchController.toggleNonVeg(),
-              ) : SizedBox(),
+              ) : const SizedBox(),
               CustomCheckBox(
-                title: isStore ? Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+                title: isStore ? Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText!
                     ? 'currently_opened_restaurants'.tr : 'currently_opened_stores'.tr : 'currently_available_items'.tr,
                 value: searchController.isAvailableItems,
                 onClick: () {
@@ -106,22 +106,22 @@ class FilterWidget extends StatelessWidget {
                 },
               ),
               CustomCheckBox(
-                title: isStore ? Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+                title: isStore ? Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText!
                     ? 'discounted_restaurants'.tr : 'discounted_stores'.tr : 'discounted_items'.tr,
                 value: searchController.isDiscountedItems,
                 onClick: () {
                   searchController.toggleDiscountedItems();
                 },
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+              const SizedBox(height: Dimensions.paddingSizeLarge),
 
-              isStore ? SizedBox() : Column(children: [
+              isStore ? const SizedBox() : Column(children: [
                 Text('price'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
                 RangeSlider(
                   values: RangeValues(searchController.lowerValue, searchController.upperValue),
-                  max: maxValue.toInt().toDouble(),
+                  max: maxValue!.toInt().toDouble(),
                   min: 0,
-                  divisions: maxValue.toInt(),
+                  divisions: maxValue!.toInt(),
                   activeColor: Theme.of(context).primaryColor,
                   inactiveColor: Theme.of(context).primaryColor.withOpacity(0.3),
                   labels: RangeLabels(searchController.lowerValue.toString(), searchController.upperValue.toString()),
@@ -129,7 +129,7 @@ class FilterWidget extends StatelessWidget {
                     searchController.setLowerAndUpperValue(rangeValues.start, rangeValues.end);
                   },
                 ),
-                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                const SizedBox(height: Dimensions.paddingSizeLarge),
               ]),
 
               Text('rating'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
@@ -152,7 +152,7 @@ class FilterWidget extends StatelessWidget {
                   },
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               CustomButton(
                 buttonText: 'apply_filters'.tr,

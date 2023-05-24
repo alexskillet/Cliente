@@ -9,7 +9,7 @@ import 'package:sixam_mart/view/base/custom_button.dart';
 import 'package:sixam_mart/view/base/my_text_field.dart';
 
 class TripCompletedConfirmationScreen extends StatelessWidget {
-  const TripCompletedConfirmationScreen({Key key}) : super(key: key);
+  const TripCompletedConfirmationScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,30 +17,30 @@ class TripCompletedConfirmationScreen extends StatelessWidget {
       appBar: CustomAppBar(title: 'trip_completed'.tr,),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
+          padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+              const SizedBox(height: Dimensions.paddingSizeDefault,),
               Text('trip_completed'.tr,style: robotoBold.copyWith(
                   fontSize: Dimensions.fontSizeExtraLarge,
                 color: Theme.of(context).primaryColor,
               ),),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
-              Image.asset(Images.trip_completed_car,scale: 3,),
-              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE,),
+              const SizedBox(height: Dimensions.paddingSizeDefault,),
+              Image.asset(Images.tripCompletedCar,scale: 3,),
+              const SizedBox(height: Dimensions.paddingSizeExtraLarge,),
               Text('your_trip_has_been_complete'.tr,textAlign: TextAlign.center,style: robotoRegular.copyWith(
-                  color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5),
+                  color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5),
                   fontSize: Dimensions.fontSizeDefault,
               ),),
 
-              SizedBox(height: 40,),
+              const SizedBox(height: 40,),
               Text('how_was_your_service'.tr,style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge,color: Theme.of(context).primaryColor),),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text('give_us_your_valuable_review'.tr,style: robotoRegular.copyWith(
-                  color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5),
+                  color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5),
                   fontSize: Dimensions.fontSizeSmall),),
-              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE,),
+              const SizedBox(height: Dimensions.paddingSizeExtraLarge,),
 
               SizedBox(
                 height: 30,
@@ -62,11 +62,11 @@ class TripCompletedConfirmationScreen extends StatelessWidget {
                   },
                 ),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_LARGE,),
+              const SizedBox(height: Dimensions.paddingSizeLarge,),
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.1)),
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  border: Border.all(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.1)),
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
                 ),
                 child: MyTextField(
                   maxLines: 3,
@@ -76,7 +76,7 @@ class TripCompletedConfirmationScreen extends StatelessWidget {
                   fillColor: Theme.of(context).disabledColor.withOpacity(0.05),
                 ),
               ),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
 
               CustomButton(
                   onPressed: (){

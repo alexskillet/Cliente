@@ -1,19 +1,19 @@
 class StoreBody {
-  String storeName;
-  String storeAddress;
-  String tax;
-  String minDeliveryTime;
-  String maxDeliveryTime;
-  String lat;
-  String lng;
-  String fName;
-  String lName;
-  String phone;
-  String email;
-  String password;
-  String zoneId;
-  String moduleId;
-  String deliveryTimeType;
+  String? storeName;
+  String? storeAddress;
+  String? tax;
+  String? minDeliveryTime;
+  String? maxDeliveryTime;
+  String? lat;
+  String? lng;
+  String? fName;
+  String? lName;
+  String? phone;
+  String? email;
+  String? password;
+  String? zoneId;
+  String? moduleId;
+  String? deliveryTimeType;
 
   StoreBody(
       {this.storeName,
@@ -52,22 +52,22 @@ class StoreBody {
   }
 
   Map<String, String> toJson() {
-    final Map<String, String> data = new Map<String, String>();
-    data['name'] = this.storeName;
-    data['address'] = this.storeAddress;
-    data['tax'] = this.tax;
-    data['minimum_delivery_time'] = this.minDeliveryTime;
-    data['maximum_delivery_time'] = this.maxDeliveryTime;
-    data['latitude'] = this.lat;
-    data['longitude'] = this.lng;
-    data['f_name'] = this.fName;
-    data['l_name'] = this.lName;
-    data['phone'] = this.phone;
-    data['email'] = this.email;
-    data['password'] = this.password;
-    data['zone_id'] = this.zoneId;
-    data['module_id'] = this.moduleId;
-    data['delivery_time_type'] = this.deliveryTimeType;
+    final Map<String, String> data = <String, String>{};
+    data['name'] = storeName!;
+    data['address'] = storeAddress!;
+    data['tax'] = tax!;
+    data['minimum_delivery_time'] = minDeliveryTime!;
+    data['maximum_delivery_time'] = maxDeliveryTime!;
+    data['latitude'] = lat!;
+    data['longitude'] = lng!;
+    data['f_name'] = fName!;
+    data['l_name'] = lName!;
+    data['phone'] = phone!;
+    data['email'] = email!;
+    data['password'] = password!;
+    data['zone_id'] = zoneId!;
+    data['module_id'] = moduleId!;
+    data['delivery_time_type'] = deliveryTimeType!;
     return data;
   }
 }

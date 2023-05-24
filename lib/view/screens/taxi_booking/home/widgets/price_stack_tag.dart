@@ -4,8 +4,8 @@ import 'package:sixam_mart/util/images.dart';
 import 'package:sixam_mart/util/styles.dart';
 
 class ReviewStackTag extends StatelessWidget {
-  final String value;
-  const ReviewStackTag({Key key,  this.value}) : super(key: key);
+  final String? value;
+  const ReviewStackTag({Key? key,  this.value}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class ReviewStackTag extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5),
             ),
             gradient: LinearGradient(colors: [
@@ -25,15 +25,15 @@ class ReviewStackTag extends StatelessWidget {
           ),
 
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL,vertical:Dimensions.PADDING_SIZE_EXTRA_SMALL ),
+            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall,vertical:Dimensions.paddingSizeExtraSmall ),
             child: Row(
               children: [
                 Image.asset(
-                  Images.star_fill,
+                  Images.starFill,
                   width: 10,
                   height: 10,
                 ),
-                Text(value,
+                Text(value!,
                   style: robotoRegular.copyWith(
                     fontSize: Dimensions.fontSizeExtraSmall, color: Colors.white,
                   ),

@@ -19,7 +19,7 @@ import 'widgets/select_payment_method.dart';
 class BookingCheckoutScreen extends StatefulWidget {
   final Vehicles vehicle;
   final UserInformationBody filterBody;
-  const BookingCheckoutScreen({Key key, @required this.vehicle, @required this.filterBody}) : super(key: key);
+  const BookingCheckoutScreen({Key? key, required this.vehicle, required this.filterBody}) : super(key: key);
 
   @override
   State<BookingCheckoutScreen> createState() => _BookingCheckoutScreenState();
@@ -40,7 +40,7 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
       appBar: CustomAppBar(title: 'checkout'.tr),
       body: Column(
         children: [
-          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+          const SizedBox(height: Dimensions.paddingSizeSmall),
           ///payment status section
 
           GetBuilder<BookingCheckoutController>(
@@ -52,10 +52,12 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
 
           GetBuilder<BookingCheckoutController>(
               builder: (bookingCheckoutController){
-                if(Get.find<BookingCheckoutController>().currentPage.name == 'orderDetails')
-                return Expanded(child: BookingDetailsInfo(vehicle: widget.vehicle, filterBody: widget.filterBody));
-                if(Get.find<BookingCheckoutController>().currentPage.name == 'payment' )
-                  return SelectPaymentMethod();
+                if(Get.find<BookingCheckoutController>().currentPage.name == 'orderDetails') {
+                  return Expanded(child: BookingDetailsInfo(vehicle: widget.vehicle, filterBody: widget.filterBody));
+                }
+                if(Get.find<BookingCheckoutController>().currentPage.name == 'payment' ) {
+                  return const SelectPaymentMethod();
+                }
                 return Expanded(child: BookingCompleteInfo(vehicle: widget.vehicle, filterBody: widget.filterBody));
               }
           )
@@ -65,11 +67,11 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
       bottomSheet: GetBuilder<BookingCheckoutController>(
         builder: (bookingCheckoutController){
 
-          double _subTotalPrice = widget.filterBody.distance * (widget.filterBody.fareCategory == 'hourly' ? widget.vehicle.insidePerHourCharge : widget.vehicle.insidePerKmCharge);
-          double _vatTax = widget.vehicle.provider.tax.toDouble();
-          double _serviceFee = widget.vehicle.provider.comission.toDouble();
+          double subTotalPrice = widget.filterBody.distance! * (widget.filterBody.fareCategory == 'hourly' ? widget.vehicle.insidePerHourCharge! : widget.vehicle.insidePerKmCharge!);
+          double vatTax = widget.vehicle.provider!.tax!.toDouble();
+          double serviceFee = widget.vehicle.provider!.comission!.toDouble();
 
-          double _totalPrice = (_subTotalPrice - bookingCheckoutController.couponDiscount) + _vatTax + _serviceFee;
+          double totalPrice = (subTotalPrice - bookingCheckoutController.couponDiscount!) + vatTax + serviceFee;
           return Container(
             height: 80,
             decoration: BoxDecoration(
@@ -77,12 +79,12 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
               boxShadow: kElevationToShadow[4],
             ),
             child: Padding(
-              padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+              padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if(bookingCheckoutController.currentPage.name == 'orderDetails')
-                    Container(width: context.width / 2,
+                    SizedBox(width: context.width / 2,
                       child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -90,10 +92,10 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
                         Text(
                           'total'.tr,
                           style: robotoRegular.copyWith(
-                            color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.4),
+                            color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.4),
                           ),),
                         Text(
-                          PriceConverter.convertPrice(_totalPrice), style: robotoMedium.copyWith(
+                          PriceConverter.convertPrice(totalPrice), style: robotoMedium.copyWith(
                             fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor),
                         ),
                       ],
@@ -109,7 +111,7 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
                           bookingCheckoutController.placeTrip(filterBody: widget.filterBody, vehicle: widget.vehicle).then((success) {
                             if(success){
                               Get.dialog(PaymentCompleteDialog(
-                                icon: Images.complete_checked, title: 'booking_payment_is_done_successfully'.tr,
+                                icon: Images.completeChecked, title: 'booking_payment_is_done_successfully'.tr,
                                 description: 'to_know_others_information'.tr,
                                 shortDescription: 'please_call_or_chat_with_car_provider'.tr,
                                 onYesPressed: () {
@@ -129,7 +131,7 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
                       },
                       buttonText: bookingCheckoutController.currentPage.name == 'complete' ? 'check_order_status'.tr
                           : bookingCheckoutController.currentPage.name == 'payment' ? 'confirm'.tr : 'rent_this_car'.tr,
-                    ) : Center(child: CircularProgressIndicator()),
+                    ) : const Center(child: CircularProgressIndicator()),
                   ),
                 ],
               ),

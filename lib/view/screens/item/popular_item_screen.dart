@@ -9,7 +9,7 @@ import 'package:sixam_mart/view/base/menu_drawer.dart';
 
 class PopularItemScreen extends StatefulWidget {
   final bool isPopular;
-  PopularItemScreen({@required this.isPopular});
+  const PopularItemScreen({Key? key, required this.isPopular}) : super(key: key);
 
   @override
   State<PopularItemScreen> createState() => _PopularItemScreenState();
@@ -32,9 +32,9 @@ class _PopularItemScreenState extends State<PopularItemScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: widget.isPopular ? 'popular_items_nearby'.tr : 'best_reviewed_item'.tr, showCart: true),
-      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+      endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: Scrollbar(child: SingleChildScrollView(child: FooterView(child: SizedBox(
-        width: Dimensions.WEB_MAX_WIDTH,
+        width: Dimensions.webMaxWidth,
         child: GetBuilder<ItemController>(builder: (itemController) {
           return ItemsView(
             isStore: false, stores: null, type: widget.isPopular ? itemController.popularType : itemController.reviewType,

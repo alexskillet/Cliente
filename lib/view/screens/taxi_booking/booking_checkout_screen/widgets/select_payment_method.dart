@@ -8,25 +8,25 @@ import 'package:sixam_mart/util/styles.dart';
 import 'package:sixam_mart/view/screens/taxi_booking/booking_checkout_screen/widgets/taxi_payment_button.dart';
 
 class SelectPaymentMethod extends StatelessWidget {
-  const SelectPaymentMethod({Key key}) : super(key: key);
+  const SelectPaymentMethod({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<BookingCheckoutController>(
       builder: (bookingCheckoutController) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
 
             children: [
 
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+              const SizedBox(height: Dimensions.paddingSizeDefault,),
 
 
               Image.asset(Images.digitalPay, scale: 2),
-              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+              const SizedBox(height: Dimensions.paddingSizeExtraLarge),
 
               // Column(
               //   mainAxisAlignment: MainAxisAlignment.center,
@@ -53,7 +53,7 @@ class SelectPaymentMethod extends StatelessWidget {
               // ),
 
               TaxiPaymentButton(
-                icon: Images.cash_on_delivery,
+                icon: Images.cashOnDelivery,
                 title: 'cash_on_delivery'.tr,
                 subtitle: 'pay_your_payment_after_getting_item'.tr,
                 isSelected: bookingCheckoutController.paymentMethodIndex == 0,
@@ -61,7 +61,7 @@ class SelectPaymentMethod extends StatelessWidget {
               ),
 
               TaxiPaymentButton(
-                icon: Images.digital_payment,
+                icon: Images.digitalPayment,
                 title: 'digital_payment'.tr,
                 subtitle: 'faster_and_safe_way'.tr,
                 isSelected: bookingCheckoutController.paymentMethodIndex == 1,
@@ -75,7 +75,7 @@ class SelectPaymentMethod extends StatelessWidget {
                 isSelected: bookingCheckoutController.paymentMethodIndex == 2,
                 onTap: () => bookingCheckoutController.setPaymentMethod(2),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+              const SizedBox(height: Dimensions.paddingSizeDefault),
 
             ],
           ),
@@ -84,29 +84,29 @@ class SelectPaymentMethod extends StatelessWidget {
     );
   }
 
-  Widget taxiPaymentWidget(BuildContext context, {String icon, String title, String subTitle}){
+  Widget taxiPaymentWidget(BuildContext context, {String? icon, String? title, String? subTitle}){
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
         color: Theme.of(context).cardColor,
-        boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300], blurRadius: 5, spreadRadius: 1,)],),
+        boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300]!, blurRadius: 5, spreadRadius: 1,)],),
       child: Padding(
-        padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+        padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [
                 Image.asset(Images.paypal,width: 15,height: 18.30),
-                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+                const SizedBox(width: Dimensions.paddingSizeExtraLarge),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('paypal'.tr,style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault)),
-                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                     Text('faster_and_safer_way_to_send_money'.tr,style: robotoRegular.copyWith(
-                        color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.4),
+                        color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.4),
                         fontSize: Dimensions.fontSizeDefault),),
                   ],
                 ),
@@ -115,8 +115,8 @@ class SelectPaymentMethod extends StatelessWidget {
 
             Container(
               decoration: BoxDecoration(color: Theme.of(context).primaryColor, shape: BoxShape.circle),
-              padding: EdgeInsets.all(2),
-              child: Icon(Icons.check, size: 14, color: Colors.white),
+              padding: const EdgeInsets.all(2),
+              child: const Icon(Icons.check, size: 14, color: Colors.white),
             )
 
           ],
@@ -133,13 +133,13 @@ class SelectPaymentMethod extends StatelessWidget {
           billName,
           style: robotoRegular.copyWith(
               fontSize: Dimensions.fontSizeDefault,
-              color:isPrimary ?Theme.of(Get.context).primaryColor:Theme.of(Get.context).textTheme.bodyLarge.color),
+              color:isPrimary ?Theme.of(Get.context!).primaryColor:Theme.of(Get.context!).textTheme.bodyLarge!.color),
         ),
         Text(
           '\$ $price',
           style: robotoRegular.copyWith(
               fontSize: Dimensions.fontSizeDefault,
-              color:isPrimary ?Theme.of(Get.context).primaryColor:Theme.of(Get.context).textTheme.bodyLarge.color),
+              color:isPrimary ?Theme.of(Get.context!).primaryColor:Theme.of(Get.context!).textTheme.bodyLarge!.color),
         ),
       ],
     );

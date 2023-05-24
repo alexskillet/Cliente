@@ -1,4 +1,5 @@
 import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sixam_mart/controller/car_selection_controller.dart';
@@ -16,7 +17,7 @@ import 'widgets/rider_car_list.dart';
 
 class SelectCarScreen extends StatefulWidget {
   final UserInformationBody filterBody;
-  const SelectCarScreen({Key key, @required this.filterBody}) : super(key: key);
+  const SelectCarScreen({Key? key, required this.filterBody}) : super(key: key);
 
   @override
   State<SelectCarScreen> createState() => _SelectCarScreenState();
@@ -38,7 +39,7 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
   @override
   void dispose() {
     super.dispose();
-    scrollController?.dispose();
+    scrollController.dispose();
   }
 
   @override
@@ -49,8 +50,10 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
       ),
       body: GetBuilder<CarSelectionController>(
         builder: (carSelectionController){
-          print("isCarFilterActive");
-          print(carSelectionController.isCarFilterActive);
+          if (kDebugMode) {
+            print("isCarFilterActive");
+            print(carSelectionController.isCarFilterActive);
+          }
           return ExpandableBottomSheet(
             background: GestureDetector(
               onTap: (){
@@ -61,14 +64,14 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
               child: Column(children: [
                 Container(
                   color: Theme.of(context).canvasColor,
-                  margin: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+                  margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
 
                       TripInfoWidget(filterBody: widget.filterBody),
-                      SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                      const SizedBox(height: Dimensions.paddingSizeDefault),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,42 +83,42 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
                               width: 27, height: 21,
                               decoration: BoxDecoration(
                                   color: Theme.of(context).primaryColor,
-                                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                                  borderRadius: const BorderRadius.all(Radius.circular(4)),
                               ),
-                              child: Image.asset(Images.car_filter,scale: 2.5),
+                              child: Image.asset(Images.carFilter,scale: 2.5),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,)
+                      const SizedBox(height: Dimensions.paddingSizeDefault,)
                     ],
                   ),
                 ),
 
                 Expanded(
-                  child: carSelectionController.vehicleModel != null ? carSelectionController.vehicleModel.vehicles.isNotEmpty ? RefreshIndicator(
+                  child: carSelectionController.vehicleModel != null ? carSelectionController.vehicleModel!.vehicles!.isNotEmpty ? RefreshIndicator(
                     onRefresh: () async => await carSelectionController.getVehiclesList(widget.filterBody, 1, isUpdate: true),
                     child: Container(
-                      width: Dimensions.WEB_MAX_WIDTH,
+                      width: Dimensions.webMaxWidth,
                       decoration: BoxDecoration(color: Theme.of(context).cardColor),
                       child: SingleChildScrollView(
                         controller: scrollController,
                         child: PaginatedListView(
-                          offset: carSelectionController.vehicleModel != null ? carSelectionController.vehicleModel.offset : null,
-                          onPaginate: (int offset) async => await carSelectionController.getVehiclesList(widget.filterBody, offset),
+                          offset: carSelectionController.vehicleModel != null ? carSelectionController.vehicleModel!.offset : null,
+                          onPaginate: (int? offset) async => await carSelectionController.getVehiclesList(widget.filterBody, offset!),
                           scrollController: scrollController,
-                          totalSize: carSelectionController.vehicleModel != null ? carSelectionController.vehicleModel.totalSize : null,
+                          totalSize: carSelectionController.vehicleModel != null ? carSelectionController.vehicleModel!.totalSize : null,
                           itemView: RiderCarList(vehicleModel: carSelectionController.vehicleModel, filterBody: widget.filterBody),
                         ),
                       ),
                     ),
-                  ) : Center(child: Text('no_vehicle_available'.tr)) : Center(child: CircularProgressIndicator()),
+                  ) : Center(child: Text('no_vehicle_available'.tr)) : const Center(child: CircularProgressIndicator()),
                 )
 
               ]),
             ),
             persistentContentHeight: 500,
-            expandableContent:CarFilterWidget(),
+            expandableContent:const CarFilterWidget(),
             persistentFooter: carSelectionController.isCarFilterActive? Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -124,15 +127,14 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
                   boxShadow: kElevationToShadow[4],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                   child: CustomButton(
                     buttonText: 'apply_filter'.tr,
                     onPressed: () {
-                      print("tapped");
                       UserInformationBody filterBody = UserInformationBody(
                         from: widget.filterBody.from, to: widget.filterBody.to, fareCategory: widget.filterBody.fareCategory, distance: widget.filterBody.distance,
                         minPrice: carSelectionController.startingPrice, maxPrice: carSelectionController.endingPrice,
-                        brandModelId: carSelectionController.brandModels[carSelectionController.selectedBrand].id,
+                        brandModelId: carSelectionController.brandModels![carSelectionController.selectedBrand].id,
                         filterType: carSelectionController.sortByIndex==0 ? 'top_rated' : 'km/h',
                       );
                       carSelectionController.carFilter();
@@ -141,7 +143,7 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
                   ),
                 ),
               ),
-            ):SizedBox(),
+            ):const SizedBox(),
 
           );
         },

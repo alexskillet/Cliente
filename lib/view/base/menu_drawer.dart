@@ -12,14 +12,14 @@ import 'package:sixam_mart/util/styles.dart';
 import 'package:sixam_mart/view/base/confirmation_dialog.dart';
 
 class MenuDrawer extends StatefulWidget {
-  const MenuDrawer({Key key}) : super(key: key);
+  const MenuDrawer({Key? key}) : super(key: key);
 
   @override
-  _MenuDrawerState createState() => _MenuDrawerState();
+  MenuDrawerState createState() => MenuDrawerState();
 }
 
-class _MenuDrawerState extends State<MenuDrawer> with SingleTickerProviderStateMixin {
-  List<Menu> _menuList = [
+class MenuDrawerState extends State<MenuDrawer> with SingleTickerProviderStateMixin {
+  final List<Menu> _menuList = [
     Menu(icon: Images.profile, title: 'profile'.tr, onTap: () {
       Get.offNamed(RouteHelper.getProfileRoute());
     }),
@@ -50,59 +50,59 @@ class _MenuDrawerState extends State<MenuDrawer> with SingleTickerProviderStateM
   static const _buttonTime = Duration(milliseconds: 500);
   final _animationDuration = _initialDelayTime + (_staggerTime * 7) + _buttonDelayTime + _buttonTime;
 
-  AnimationController _staggeredController;
+  late AnimationController _staggeredController;
   final List<Interval> _itemSlideIntervals = [];
 
   @override
   void initState() {
     super.initState();
 
-    if(Get.find<SplashController>().configModel.refundPolicyStatus == 1) {
+    if(Get.find<SplashController>().configModel!.refundPolicyStatus == 1) {
       _menuList.add(Menu(icon: Images.refund, title: 'refund_policy'.tr, onTap: () {
         Get.offNamed(RouteHelper.getHtmlRoute('refund-policy'));
       }));
     }
-    if(Get.find<SplashController>().configModel.cancellationPolicyStatus == 1) {
-      _menuList.add(Menu(icon: Images.cancelation, title: 'cancellation_policy'.tr, onTap: () {
+    if(Get.find<SplashController>().configModel!.cancellationPolicyStatus == 1) {
+      _menuList.add(Menu(icon: Images.cancellation, title: 'cancellation_policy'.tr, onTap: () {
         Get.offNamed(RouteHelper.getHtmlRoute('cancellation-policy'));
       }));
     }
-    if(Get.find<SplashController>().configModel.shippingPolicyStatus == 1) {
-      _menuList.add(Menu(icon: Images.shipping_policy, title: 'shipping_policy'.tr, onTap: () {
+    if(Get.find<SplashController>().configModel!.shippingPolicyStatus == 1) {
+      _menuList.add(Menu(icon: Images.shippingPolicy, title: 'shipping_policy'.tr, onTap: () {
         Get.offNamed(RouteHelper.getHtmlRoute('shipping-policy'));
       }));
     }
 
-    if(Get.find<SplashController>().configModel.customerWalletStatus == 1) {
+    if(Get.find<SplashController>().configModel!.customerWalletStatus == 1) {
       _menuList.add(Menu(icon: Images.wallet, title: 'wallet'.tr, onTap: () {
         Get.offNamed(RouteHelper.getWalletRoute(true));
       }));
     }
 
-    if(Get.find<SplashController>().configModel.loyaltyPointStatus == 1) {
+    if(Get.find<SplashController>().configModel!.loyaltyPointStatus == 1) {
       _menuList.add(Menu(icon: Images.loyal, title: 'loyalty_points'.tr, onTap: () {
         Get.offNamed(RouteHelper.getWalletRoute(false));
       }));
     }
-    if(Get.find<SplashController>().configModel.refEarningStatus == 1) {
-      _menuList.add(Menu(icon: Images.refer_code, title: 'refer_and_earn'.tr, onTap: () {
+    if(Get.find<SplashController>().configModel!.refEarningStatus == 1) {
+      _menuList.add(Menu(icon: Images.referCode, title: 'refer_and_earn'.tr, onTap: () {
         Get.offNamed(RouteHelper.getReferAndEarnRoute());
       }));
     }
-    if(Get.find<SplashController>().configModel.toggleDmRegistration) {
+    if(Get.find<SplashController>().configModel!.toggleDmRegistration!) {
       _menuList.add(Menu(
-        icon: Images.delivery_man_join, title: 'join_as_a_delivery_man'.tr,onTap: (){
+        icon: Images.deliveryManJoin, title: 'join_as_a_delivery_man'.tr,onTap: (){
           Get.toNamed(RouteHelper.getDeliverymanRegistrationRoute());
       }));
     }
-    if(Get.find<SplashController>().configModel.toggleStoreRegistration) {
+    if(Get.find<SplashController>().configModel!.toggleStoreRegistration!) {
       _menuList.add(Menu(
-        icon: Images.restaurant_join, title: Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+        icon: Images.restaurantJoin, title: Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText!
           ? 'join_as_a_restaurant'.tr : 'join_as_a_store'.tr,
         onTap: () => Get.toNamed(RouteHelper.getRestaurantRegistrationRoute()),
       ));
     }
-    _menuList.add(Menu(icon: Images.log_out, title: Get.find<AuthController>().isLoggedIn() ? 'logout'.tr : 'sign_in'.tr, onTap: () {
+    _menuList.add(Menu(icon: Images.logOut, title: Get.find<AuthController>().isLoggedIn() ? 'logout'.tr : 'sign_in'.tr, onTap: () {
       Get.back();
       if(Get.find<AuthController>().isLoggedIn()) {
         Get.dialog(ConfirmationDialog(icon: Images.support, description: 'are_you_sure_to_logout'.tr, isLogOut: true, onYesPressed: () {
@@ -147,13 +147,13 @@ class _MenuDrawerState extends State<MenuDrawer> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveHelper.isDesktop(context) ? _buildContent() : SizedBox();
+    return ResponsiveHelper.isDesktop(context) ? _buildContent() : const SizedBox();
   }
 
   Widget _buildContent() {
     return Align(alignment: Alignment.topRight, child: Container(
       width: 300,
-      decoration: BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30)), color: Theme.of(context).cardColor),
+      decoration: BoxDecoration(borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(30)), color: Theme.of(context).cardColor),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,10 +161,10 @@ class _MenuDrawerState extends State<MenuDrawer> with SingleTickerProviderStateM
           children: [
 
             Container(
-              padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_LARGE, horizontal: 25),
-              margin: EdgeInsets.only(right: 30),
+              padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeLarge, horizontal: 25),
+              margin: const EdgeInsets.only(right: 30),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomRight: Radius.circular(Dimensions.RADIUS_EXTRA_LARGE)),
+                borderRadius: const BorderRadius.only(bottomRight: Radius.circular(Dimensions.radiusExtraLarge)),
                 color: Theme.of(context).primaryColor,
               ),
               alignment: Alignment.centerLeft,
@@ -173,9 +173,9 @@ class _MenuDrawerState extends State<MenuDrawer> with SingleTickerProviderStateM
 
             ListView.builder(
               itemCount: _menuList.length,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              padding: EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
+              padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
               itemBuilder: (context, index) {
                 return AnimatedBuilder(
                   animation: _staggeredController,
@@ -195,20 +195,20 @@ class _MenuDrawerState extends State<MenuDrawer> with SingleTickerProviderStateM
                     );
                   },
                   child: InkWell(
-                    onTap: _menuList[index].onTap,
+                    onTap: _menuList[index].onTap as void Function()?,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeExtraSmall),
                       child: Row(children: [
 
                         Container(
                           height: 60, width: 60, alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(Dimensions.RADIUS_EXTRA_LARGE),
+                            borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
                             color: index != _menuList.length-1 ? Theme.of(context).primaryColor : Get.find<AuthController>().isLoggedIn() ? Theme.of(context).colorScheme.error : Colors.green,
                           ),
                           child: Image.asset(_menuList[index].icon, color: Colors.white, height: 30, width: 30),
                         ),
-                        SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                        const SizedBox(width: Dimensions.paddingSizeSmall),
 
                         Expanded(child: Text(_menuList[index].title, style: robotoMedium, overflow: TextOverflow.ellipsis, maxLines: 1)),
 
@@ -231,5 +231,5 @@ class Menu {
   String title;
   Function onTap;
 
-  Menu({@required this.icon, @required this.title, @required this.onTap});
+  Menu({required this.icon, required this.title, required this.onTap});
 }

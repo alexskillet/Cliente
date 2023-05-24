@@ -9,29 +9,27 @@ import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/view/base/custom_image.dart';
 
 class ItemImageView extends StatelessWidget {
-  final Item item;
-  ItemImageView({@required this.item});
+  final Item? item;
+  ItemImageView({Key? key, required this.item}) : super(key: key);
 
   final PageController _controller = PageController();
 
   @override
   Widget build(BuildContext context) {
-    print('=========${Get.find<SplashController>().configModel.baseUrls.campaignImageUrl}');
-    List<String> _imageList = [];
-    _imageList.add(item.image);
-    _imageList.addAll(item.images);
+    List<String?> imageList = [];
+    imageList.add(item!.image);
+    imageList.addAll(item!.images!);
 
     return GetBuilder<ItemController>(
       builder: (itemController) {
-        String _baseUrl = item.availableDateStarts == null ? Get.find<SplashController>().
-            configModel.baseUrls.itemImageUrl : Get.find<SplashController>().configModel.baseUrls.campaignImageUrl;
-        print('-----------$_baseUrl');
+        String? baseUrl = item!.availableDateStarts == null ? Get.find<SplashController>().
+            configModel!.baseUrls!.itemImageUrl : Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl;
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             InkWell(
               onTap: () => Navigator.of(context).pushNamed(
-                RouteHelper.getItemImagesRoute(item),
+                RouteHelper.getItemImagesRoute(item!),
                 arguments: ItemImageView(item: item),
               ),
               child: Stack(children: [
@@ -39,13 +37,12 @@ class ItemImageView extends StatelessWidget {
                   height: ResponsiveHelper.isDesktop(context)? 350: MediaQuery.of(context).size.width * 0.7,
                   child: PageView.builder(
                     controller: _controller,
-                    itemCount: _imageList.length,
+                    itemCount: imageList.length,
                     itemBuilder: (context, index) {
-                      print('>>>>>>>>>>$_baseUrl/${_imageList[index]}');
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: CustomImage(
-                          image: '$_baseUrl/${_imageList[index]}',
+                          image: '$baseUrl/${imageList[index]}',
                           height: 200,
                           width: MediaQuery.of(context).size.width,
                         ),
@@ -59,10 +56,10 @@ class ItemImageView extends StatelessWidget {
                 Positioned(
                   left: 0, right: 0, bottom: 0,
                   child: Padding(
-                    padding: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
+                    padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: _indicators(context, itemController, _imageList),
+                      children: _indicators(context, itemController, imageList),
                     ),
                   ),
                 ),
@@ -75,9 +72,9 @@ class ItemImageView extends StatelessWidget {
     );
   }
 
-  List<Widget> _indicators(BuildContext context, ItemController itemController, List<String> _imageList) {
+  List<Widget> _indicators(BuildContext context, ItemController itemController, List<String?> imageList) {
     List<Widget> indicators = [];
-    for (int index = 0; index < _imageList.length; index++) {
+    for (int index = 0; index < imageList.length; index++) {
       indicators.add(TabPageSelectorIndicator(
         backgroundColor: index == itemController.imageSliderIndex ? Theme.of(context).primaryColor : Colors.white,
         borderColor: Colors.white,

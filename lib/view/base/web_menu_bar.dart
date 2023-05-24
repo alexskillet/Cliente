@@ -16,11 +16,13 @@ import 'package:sixam_mart/view/base/text_hover.dart';
 import 'package:sixam_mart/view/screens/search/widget/search_field.dart';
 
 class WebMenuBar extends StatefulWidget implements PreferredSizeWidget {
+  const WebMenuBar({Key? key}) : super(key: key);
+
   @override
   State<WebMenuBar> createState() => _WebMenuBarState();
 
   @override
-  Size get preferredSize => Size(Dimensions.WEB_MAX_WIDTH, 70);
+  Size get preferredSize => const Size(Dimensions.webMaxWidth, 70);
 }
 
 class _WebMenuBarState extends State<WebMenuBar> {
@@ -29,10 +31,10 @@ class _WebMenuBarState extends State<WebMenuBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: Dimensions.WEB_MAX_WIDTH,
+      width: Dimensions.webMaxWidth,
       color: Theme.of(context).cardColor,
-      padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-      child: Center(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Row(children: [
+      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+      child: Center(child: SizedBox(width: Dimensions.webMaxWidth, child: Row(children: [
 
         InkWell(
           onTap: () => Get.toNamed(RouteHelper.getInitialRoute()),
@@ -42,21 +44,21 @@ class _WebMenuBarState extends State<WebMenuBar> {
         Get.find<LocationController>().getUserAddress() != null ? Expanded(child: InkWell(
           onTap: () => Get.toNamed(RouteHelper.getAccessLocationRoute('home')),
           child: Padding(
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+            padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
             child: GetBuilder<LocationController>(builder: (locationController) {
               return Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Icon(
-                    locationController.getUserAddress().addressType == 'home' ? Icons.home_filled
-                        : locationController.getUserAddress().addressType == 'office' ? Icons.work : Icons.location_on,
-                    size: 20, color: Theme.of(context).textTheme.bodyLarge.color,
+                    locationController.getUserAddress()!.addressType == 'home' ? Icons.home_filled
+                        : locationController.getUserAddress()!.addressType == 'office' ? Icons.work : Icons.location_on,
+                    size: 20, color: Theme.of(context).textTheme.bodyLarge!.color,
                   ),
-                  SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                   Flexible(
                     child: Text(
-                      locationController.getUserAddress().address,
+                      locationController.getUserAddress()!.address!,
                       style: robotoRegular.copyWith(
-                        color: Theme.of(context).textTheme.bodyLarge.color, fontSize: Dimensions.fontSizeSmall,
+                        color: Theme.of(context).textTheme.bodyLarge!.color, fontSize: Dimensions.fontSizeSmall,
                       ),
                       maxLines: 1, overflow: TextOverflow.ellipsis,
                     ),
@@ -66,25 +68,25 @@ class _WebMenuBarState extends State<WebMenuBar> {
               );
             }),
           ),
-        )) : Expanded(child: SizedBox()),
-        SizedBox(width: 20),
+        )) : const Expanded(child: SizedBox()),
+        const SizedBox(width: 20),
 
         Get.find<LocationController>().getUserAddress() == null ? Row(children: [
           MenuButton(title: 'home'.tr, onTap: () => Get.toNamed(RouteHelper.getInitialRoute())),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           MenuButton(title: 'about_us'.tr, onTap: () => Get.toNamed(RouteHelper.getHtmlRoute('about-us'))),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           MenuButton(title: 'privacy_policy'.tr, onTap: () => Get.toNamed(RouteHelper.getHtmlRoute('privacy-policy'))),
         ]) : SizedBox(width: 250, child: GetBuilder<SearchController>(builder: (searchController) {
-          _searchController.text = searchController.searchHomeText;
+          _searchController.text = searchController.searchHomeText!;
           return SearchField(
             controller: _searchController,
-            hint: Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+            hint: Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText!
                 ? 'search_food_or_restaurant'.tr : 'search_item_or_store'.tr,
-            suffixIcon: searchController.searchHomeText.length > 0 ? Icons.highlight_remove : Icons.search,
+            suffixIcon: searchController.searchHomeText!.isNotEmpty ? Icons.highlight_remove : Icons.search,
             filledColor: Theme.of(context).colorScheme.background,
             iconPressed: () {
-              if(searchController.searchHomeText.length > 0) {
+              if(searchController.searchHomeText!.isNotEmpty) {
                 _searchController.text = '';
                 searchController.clearSearchHomeText();
               }else {
@@ -94,48 +96,48 @@ class _WebMenuBarState extends State<WebMenuBar> {
             onSubmit: (text) => searchData(),
           );
         })),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
 
         MenuIconButton(icon: Icons.notifications, onTap: () => Get.toNamed(RouteHelper.getNotificationRoute())),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         MenuIconButton(icon: Icons.favorite, onTap: () => Get.toNamed(RouteHelper.getMainRoute('favourite'))),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         MenuIconButton(icon: Icons.shopping_cart, isCart: true, onTap: () => Get.toNamed(RouteHelper.getCartRoute())),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         GetBuilder<LocalizationController>(builder: (localizationController) {
-          int _index = 0;
-          List<DropdownMenuItem<int>> _languageList = [];
+          int index0 = 0;
+          List<DropdownMenuItem<int>> languageList = [];
           for(int index=0; index<AppConstants.languages.length; index++) {
-            _languageList.add(DropdownMenuItem(
+            languageList.add(DropdownMenuItem(
+              value: index,
               child: TextHover(builder: (hovered) {
                 return Row(children: [
-                  Image.asset(AppConstants.languages[index].imageUrl, height: 20, width: 20),
-                  SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  Text(AppConstants.languages[index].languageName, style: robotoRegular.copyWith(color: hovered ? Theme.of(context).primaryColor : null)),
+                  Image.asset(AppConstants.languages[index].imageUrl!, height: 20, width: 20),
+                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                  Text(AppConstants.languages[index].languageName!, style: robotoRegular.copyWith(color: hovered ? Theme.of(context).primaryColor : null)),
                 ]);
               }),
-              value: index,
             ));
             if(AppConstants.languages[index].languageCode == localizationController.locale.languageCode) {
-              _index = index;
+              index0 = index;
             }
           }
           return DropdownButton<int>(
-            value: _index,
-            items: _languageList,
+            value: index0,
+            items: languageList,
             dropdownColor: Theme.of(context).cardColor,
-            icon: Icon(Icons.keyboard_arrow_down),
-            elevation: 0, iconSize: 30, underline: SizedBox(),
-            onChanged: (int index) {
-              localizationController.setLanguage(Locale(AppConstants.languages[index].languageCode, AppConstants.languages[index].countryCode));
+            icon: const Icon(Icons.keyboard_arrow_down),
+            elevation: 0, iconSize: 30, underline: const SizedBox(),
+            onChanged: (int? index) {
+              localizationController.setLanguage(Locale(AppConstants.languages[index!].languageCode!, AppConstants.languages[index].countryCode));
             },
           );
         }),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         MenuIconButton(icon: Icons.menu, onTap: () {
           Scaffold.of(context).openEndDrawer();
         }),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         GetBuilder<AuthController>(builder: (authController) {
           return InkWell(
             onTap: () {
@@ -143,14 +145,14 @@ class _WebMenuBarState extends State<WebMenuBar> {
             },
             child: Container(
               height: 40,
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                 color: Theme.of(context).primaryColor,
               ),
               child: Row(children: [
                 Icon(authController.isLoggedIn() ? Icons.person_pin_rounded : Icons.lock, size: 20, color: Colors.white),
-                SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                const SizedBox(width: Dimensions.paddingSizeSmall),
                 Text(authController.isLoggedIn() ? 'profile'.tr : 'sign_in'.tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Colors.white)),
               ]),
             ),
@@ -163,7 +165,7 @@ class _WebMenuBarState extends State<WebMenuBar> {
 
   void searchData() {
     if (_searchController.text.trim().isEmpty) {
-      showCustomSnackBar(Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+      showCustomSnackBar(Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText!
           ? 'search_food_or_restaurant'.tr : 'search_item_or_store'.tr);
     } else {
       Get.toNamed(RouteHelper.getSearchRoute(queryText: _searchController.text.trim()));
@@ -175,13 +177,13 @@ class _WebMenuBarState extends State<WebMenuBar> {
 class MenuButton extends StatelessWidget {
   final String title;
   final Function onTap;
-  MenuButton({@required this.title, @required this.onTap});
+  const MenuButton({Key? key, required this.title, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextHover(builder: (hovered) {
       return InkWell(
-        onTap: onTap,
+        onTap: onTap as void Function()?,
         child: Text(title, style: robotoRegular.copyWith(color: hovered ? Theme.of(context).primaryColor : null)),
       );
     });
@@ -192,20 +194,20 @@ class MenuIconButton extends StatelessWidget {
   final IconData icon;
   final bool isCart;
   final Function onTap;
-  const MenuIconButton({@required this.icon, this.isCart = false, @required this.onTap});
+  const MenuIconButton({Key? key, required this.icon, this.isCart = false, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextHover(builder: (hovered) {
       return IconButton(
-        onPressed: onTap,
+        onPressed: onTap as void Function()?,
         icon: GetBuilder<CartController>(builder: (cartController) {
           return Stack(clipBehavior: Clip.none, children: [
             Icon(
               icon,
-              color: hovered ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyLarge.color,
+              color: hovered ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyLarge!.color,
             ),
-            (isCart && cartController.cartList.length > 0) ? Positioned(
+            (isCart && cartController.cartList.isNotEmpty) ? Positioned(
               top: -5, right: -5,
               child: Container(
                 height: 15, width: 15, alignment: Alignment.center,
@@ -215,7 +217,7 @@ class MenuIconButton extends StatelessWidget {
                   style: robotoRegular.copyWith(fontSize: 12, color: Theme.of(context).cardColor),
                 ),
               ),
-            ) : SizedBox()
+            ) : const SizedBox()
           ]);
         }),
       );

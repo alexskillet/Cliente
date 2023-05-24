@@ -11,30 +11,30 @@ import 'package:get/get.dart';
 import 'package:sixam_mart/view/base/custom_snackbar.dart';
 
 class PaymentFailedDialog extends StatelessWidget {
-  final String orderID;
-  final String orderType;
-  final double orderAmount;
-  final double maxCodOrderAmount;
-  final bool isCashOnDelivery;
-  PaymentFailedDialog({@required this.orderID, @required this.maxCodOrderAmount, @required this.orderAmount, @required this.orderType, @required this.isCashOnDelivery});
+  final String? orderID;
+  final String? orderType;
+  final double? orderAmount;
+  final double? maxCodOrderAmount;
+  final bool? isCashOnDelivery;
+  const PaymentFailedDialog({Key? key, required this.orderID, required this.maxCodOrderAmount, required this.orderAmount, required this.orderType, required this.isCashOnDelivery}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
-      insetPadding: EdgeInsets.all(30),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
+      insetPadding: const EdgeInsets.all(30),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: SizedBox(width: 500, child: Padding(
-        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+        padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
 
           Padding(
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+            padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
             child: Image.asset(Images.warning, width: 70, height: 70),
           ),
 
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
             child: Text(
               'are_you_agree_with_this_order_fail'.tr, textAlign: TextAlign.center,
               style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraLarge, color: Colors.red),
@@ -42,46 +42,46 @@ class PaymentFailedDialog extends StatelessWidget {
           ),
 
           Padding(
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+            padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
             child: Text(
               'if_you_do_not_pay'.tr,
               style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge), textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+          const SizedBox(height: Dimensions.paddingSizeLarge),
 
           GetBuilder<OrderController>(builder: (orderController) {
             return !orderController.isLoading ? Column(children: [
-              isCashOnDelivery ? CustomButton(
+              isCashOnDelivery! ? CustomButton(
                 buttonText: 'switch_to_cash_on_delivery'.tr,
                 onPressed: () {
-                  if((((maxCodOrderAmount != null && orderAmount < maxCodOrderAmount) || maxCodOrderAmount == null || maxCodOrderAmount == 0) && orderType != 'parcel') || orderType == 'parcel'){
+                  if((((maxCodOrderAmount != null && orderAmount! < maxCodOrderAmount!) || maxCodOrderAmount == null || maxCodOrderAmount == 0) && orderType != 'parcel') || orderType == 'parcel'){
                     orderController.switchToCOD(orderID);
                   }else{
-                    if(Get.isDialogOpen) {
+                    if(Get.isDialogOpen!) {
                       Get.back();
                     }
-                    showCustomSnackBar('you_cant_order_more_then'.tr + ' ${PriceConverter.convertPrice(maxCodOrderAmount)} ' + 'in_cash_on_delivery'.tr);
+                    showCustomSnackBar('${'you_cant_order_more_then'.tr} ${PriceConverter.convertPrice(maxCodOrderAmount)} ${'in_cash_on_delivery'.tr}');
                   }
                 },
-                radius: Dimensions.RADIUS_SMALL, height: 40,
-              ) : SizedBox(),
-              SizedBox(width: Get.find<SplashController>().configModel.cashOnDelivery ? Dimensions.PADDING_SIZE_LARGE : 0),
+                radius: Dimensions.radiusSmall, height: 40,
+              ) : const SizedBox(),
+              SizedBox(width: Get.find<SplashController>().configModel!.cashOnDelivery! ? Dimensions.paddingSizeLarge : 0),
               TextButton(
                 onPressed: () {
-                  Get.find<OrderController>().cancelOrder(int.parse(orderID), 'Digital payment issue').then((success) {
+                  Get.find<OrderController>().cancelOrder(int.parse(orderID!), 'Digital payment issue').then((success) {
                     if(success){
                       Get.offAllNamed(RouteHelper.getInitialRoute());
                     }
                   });
                 },
                 style: TextButton.styleFrom(
-                  backgroundColor: Theme.of(context).disabledColor.withOpacity(0.3), minimumSize: Size(Dimensions.WEB_MAX_WIDTH, 40), padding: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
+                  backgroundColor: Theme.of(context).disabledColor.withOpacity(0.3), minimumSize: const Size(Dimensions.webMaxWidth, 40), padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
                 ),
-                child: Text('cancel_order'.tr, textAlign: TextAlign.center, style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge.color)),
+                child: Text('cancel_order'.tr, textAlign: TextAlign.center, style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color)),
               ),
-            ]) : Center(child: CircularProgressIndicator());
+            ]) : const Center(child: CircularProgressIndicator());
           }),
 
         ]),

@@ -18,7 +18,7 @@ import 'package:sixam_mart/view/screens/auth/widget/module_view.dart';
 import 'package:sixam_mart/view/screens/auth/widget/select_location_view.dart';
 
 class StoreRegistrationScreen extends StatefulWidget {
-  const StoreRegistrationScreen({Key key}) : super(key: key);
+  const StoreRegistrationScreen({Key? key}) : super(key: key);
 
   @override
   State<StoreRegistrationScreen> createState() => _StoreRegistrationScreenState();
@@ -60,11 +60,11 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'store_registration'.tr),
-      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+      endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: SingleChildScrollView(
-        padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL, horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+        padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall, horizontal: Dimensions.paddingSizeDefault),
         child: FooterView(
-          child: Center(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: GetBuilder<AuthController>(builder: (authController) {
+          child: Center(child: SizedBox(width: Dimensions.webMaxWidth, child: GetBuilder<AuthController>(builder: (authController) {
             return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
               CustomTextField(
@@ -76,7 +76,7 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                 capitalization: TextCapitalization.words,
                 showTitle: true,
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
               CustomTextField(
                 hintText: 'store_address'.tr,
@@ -88,7 +88,7 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                 maxLines: 3,
                 showTitle: true,
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
               CustomTextField(
                 hintText: 'vat_tax'.tr,
@@ -99,7 +99,7 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                 isAmount: true,
                 showTitle: true,
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
               Row(children: [
                 Expanded(child: CustomTextField(
@@ -111,7 +111,7 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                   isNumber: true,
                   showTitle: true,
                 )),
-                SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                const SizedBox(width: Dimensions.paddingSizeSmall),
                 Expanded(child: CustomTextField(
                   hintText: 'maximum_delivery_time'.tr,
                   controller: _maxTimeController,
@@ -122,7 +122,7 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                   showTitle: true,
                 )),
               ]),
-              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+              const SizedBox(height: Dimensions.paddingSizeLarge),
 
               Row(children: [
                   Expanded(
@@ -131,26 +131,26 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                         'delivery_time_type'.tr,
                         style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
                       ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      const SizedBox(height: Dimensions.paddingSizeExtraSmall),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                          boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 2, blurRadius: 5, offset: Offset(0, 5))],
+                          color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                          boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, spreadRadius: 2, blurRadius: 5, offset: const Offset(0, 5))],
                         ),
                         child: DropdownButton<String>(
                           value: authController.deliveryTimeTypeList[authController.deliveryTimeTypeIndex],
-                          items: authController.deliveryTimeTypeList.map((String value) {
+                          items: authController.deliveryTimeTypeList.map((String? value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value.tr),
+                              child: Text(value!.tr),
                             );
                           }).toList(),
                           onChanged: (value) {
                             authController.setDeliveryTimeTypeIndex(value, true);
                           },
                           isExpanded: true,
-                          underline: SizedBox(),
+                          underline: const SizedBox(),
                         ),
                       ),
                     ]),
@@ -160,20 +160,20 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                   Expanded(child: ModuleViewWidget()),*/
                 ],
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+              const SizedBox(height: Dimensions.paddingSizeLarge),
 
               Text(
                 'logo'.tr,
                 style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
               Align(alignment: Alignment.center, child: Stack(children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                  borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                   child: authController.pickedLogo != null ? GetPlatform.isWeb ? Image.network(
-                    authController.pickedLogo.path, width: 150, height: 120, fit: BoxFit.cover,
+                    authController.pickedLogo!.path, width: 150, height: 120, fit: BoxFit.cover,
                   ) : Image.file(
-                    File(authController.pickedLogo.path), width: 150, height: 120, fit: BoxFit.cover,
+                    File(authController.pickedLogo!.path), width: 150, height: 120, fit: BoxFit.cover,
                   ) : Image.asset(
                     Images.placeholder, width: 150, height: 120, fit: BoxFit.cover,
                   ),
@@ -184,35 +184,35 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                     onTap: () => authController.pickImage(true, false),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                        color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                         border: Border.all(width: 1, color: Theme.of(context).primaryColor),
                       ),
                       child: Container(
-                        margin: EdgeInsets.all(25),
+                        margin: const EdgeInsets.all(25),
                         decoration: BoxDecoration(
                           border: Border.all(width: 2, color: Colors.white),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.camera_alt, color: Colors.white),
+                        child: const Icon(Icons.camera_alt, color: Colors.white),
                       ),
                     ),
                   ),
                 ),
               ])),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
               Text(
                 'cover_photo'.tr,
                 style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
               Stack(children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                  borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                   child: authController.pickedCover != null ? GetPlatform.isWeb ? Image.network(
-                    authController.pickedCover.path, width: context.width, height: 170, fit: BoxFit.cover,
+                    authController.pickedCover!.path, width: context.width, height: 170, fit: BoxFit.cover,
                   ) : Image.file(
-                    File(authController.pickedCover.path), width: context.width, height: 170, fit: BoxFit.cover,
+                    File(authController.pickedCover!.path), width: context.width, height: 170, fit: BoxFit.cover,
                   ) : Image.asset(
                     Images.placeholder, width: context.width, height: 170, fit: BoxFit.cover,
                   ),
@@ -223,34 +223,34 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                     onTap: () => authController.pickImage(false, false),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                        color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                         border: Border.all(width: 1, color: Theme.of(context).primaryColor),
                       ),
                       child: Container(
-                        margin: EdgeInsets.all(25),
+                        margin: const EdgeInsets.all(25),
                         decoration: BoxDecoration(
                           border: Border.all(width: 3, color: Colors.white),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.camera_alt, color: Colors.white, size: 50),
+                        child: const Icon(Icons.camera_alt, color: Colors.white, size: 50),
                       ),
                     ),
                   ),
                 ),
               ]),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
-              authController.zoneList != null ? SelectLocationView(fromView: true) : Center(child: CircularProgressIndicator()),
-              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+              authController.zoneList != null ? const SelectLocationView(fromView: true) : const Center(child: CircularProgressIndicator()),
+              const SizedBox(height: Dimensions.paddingSizeLarge),
 
-              authController.moduleList != null ? ModuleViewWidget() : SizedBox(),
-              SizedBox(height: authController.moduleList != null ? Dimensions.PADDING_SIZE_LARGE : 0),
+              authController.moduleList != null ? const ModuleViewWidget() : const SizedBox(),
+              SizedBox(height: authController.moduleList != null ? Dimensions.paddingSizeLarge : 0),
 
               Center(child: Text(
                 'owner_information'.tr,
                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
               )),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
               Row(children: [
                 Expanded(child: CustomTextField(
@@ -262,7 +262,7 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                   capitalization: TextCapitalization.words,
                   showTitle: true,
                 )),
-                SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                const SizedBox(width: Dimensions.paddingSizeSmall),
                 Expanded(child: CustomTextField(
                   hintText: 'last_name'.tr,
                   controller: _lNameController,
@@ -273,7 +273,7 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                   showTitle: true,
                 )),
               ]),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
               CustomTextField(
                 hintText: 'phone'.tr,
@@ -283,13 +283,13 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                 inputType: TextInputType.phone,
                 showTitle: true,
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+              const SizedBox(height: Dimensions.paddingSizeLarge),
 
               Center(child: Text(
                 'login_information'.tr,
                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
               )),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
               CustomTextField(
                 hintText: 'email'.tr,
@@ -299,7 +299,7 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                 inputType: TextInputType.emailAddress,
                 showTitle: true,
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
               Row(children: [
                 Expanded(child: CustomTextField(
@@ -311,7 +311,7 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                   isPassword: true,
                   showTitle: true,
                 )),
-                SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                const SizedBox(width: Dimensions.paddingSizeSmall),
                 Expanded(child: CustomTextField(
                   hintText: 'confirm_password'.tr,
                   controller: _confirmPasswordController,
@@ -321,33 +321,33 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                   showTitle: true,
                 )),
               ]),
-              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+              const SizedBox(height: Dimensions.paddingSizeLarge),
 
               !authController.isLoading ? CustomButton(
                 buttonText: 'submit'.tr,
                 onPressed: () {
-                  String _name = _nameController.text.trim();
-                  String _address = _addressController.text.trim();
-                  String _vat = _vatController.text.trim();
-                  String _minTime = _minTimeController.text.trim();
-                  String _maxTime = _maxTimeController.text.trim();
-                  String _fName = _fNameController.text.trim();
-                  String _lName = _lNameController.text.trim();
-                  String _phone = _phoneController.text.trim();
-                  String _email = _emailController.text.trim();
-                  String _password = _passwordController.text.trim();
-                  String _confirmPassword = _confirmPasswordController.text.trim();
-                  if(_name.isEmpty) {
+                  String name = _nameController.text.trim();
+                  String address = _addressController.text.trim();
+                  String vat = _vatController.text.trim();
+                  String minTime = _minTimeController.text.trim();
+                  String maxTime = _maxTimeController.text.trim();
+                  String fName = _fNameController.text.trim();
+                  String lName = _lNameController.text.trim();
+                  String phone = _phoneController.text.trim();
+                  String email = _emailController.text.trim();
+                  String password = _passwordController.text.trim();
+                  String confirmPassword = _confirmPasswordController.text.trim();
+                  if(name.isEmpty) {
                     showCustomSnackBar('enter_store_name'.tr);
-                  }else if(_address.isEmpty) {
+                  }else if(address.isEmpty) {
                     showCustomSnackBar('enter_store_address'.tr);
-                  }else if(_vat.isEmpty) {
+                  }else if(vat.isEmpty) {
                     showCustomSnackBar('enter_vat_amount'.tr);
-                  }else if(_minTime.isEmpty) {
+                  }else if(minTime.isEmpty) {
                     showCustomSnackBar('enter_minimum_delivery_time'.tr);
-                  }else if(_maxTime.isEmpty) {
+                  }else if(maxTime.isEmpty) {
                     showCustomSnackBar('enter_maximum_delivery_time'.tr);
-                  }else if(double.parse(_minTime) > double.parse(_maxTime)) {
+                  }else if(double.parse(minTime) > double.parse(maxTime)) {
                     showCustomSnackBar('maximum_delivery_time_can_not_be_smaller_then_minimum_delivery_time'.tr);
                   }else if(authController.pickedLogo == null) {
                     showCustomSnackBar('select_store_logo'.tr);
@@ -355,34 +355,34 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> {
                     showCustomSnackBar('select_store_cover_photo'.tr);
                   }else if(authController.restaurantLocation == null) {
                     showCustomSnackBar('set_store_location'.tr);
-                  }else if(_fName.isEmpty) {
+                  }else if(fName.isEmpty) {
                     showCustomSnackBar('enter_your_first_name'.tr);
-                  }else if(_lName.isEmpty) {
+                  }else if(lName.isEmpty) {
                     showCustomSnackBar('enter_your_last_name'.tr);
-                  }else if(_phone.isEmpty) {
+                  }else if(phone.isEmpty) {
                     showCustomSnackBar('enter_phone_number'.tr);
-                  }else if(_email.isEmpty) {
+                  }else if(email.isEmpty) {
                     showCustomSnackBar('enter_email_address'.tr);
-                  }else if(!GetUtils.isEmail(_email)) {
+                  }else if(!GetUtils.isEmail(email)) {
                     showCustomSnackBar('enter_a_valid_email_address'.tr);
-                  }else if(_password.isEmpty) {
+                  }else if(password.isEmpty) {
                     showCustomSnackBar('enter_password'.tr);
-                  }else if(_password.length < 6) {
+                  }else if(password.length < 6) {
                     showCustomSnackBar('password_should_be'.tr);
-                  }else if(_password != _confirmPassword) {
+                  }else if(password != confirmPassword) {
                     showCustomSnackBar('confirm_password_does_not_matched'.tr);
                   }else {
                     authController.registerStore(StoreBody(
-                      storeName: _name, storeAddress: _address, tax: _vat, minDeliveryTime: _minTime,
-                      maxDeliveryTime: _maxTime, lat: authController.restaurantLocation.latitude.toString(), email: _email,
-                      lng: authController.restaurantLocation.longitude.toString(), fName: _fName, lName: _lName, phone: _phone,
-                      password: _password, zoneId: authController.zoneList[authController.selectedZoneIndex].id.toString(),
-                      moduleId: authController.moduleList[authController.selectedModuleIndex].id.toString(),
+                      storeName: name, storeAddress: address, tax: vat, minDeliveryTime: minTime,
+                      maxDeliveryTime: maxTime, lat: authController.restaurantLocation!.latitude.toString(), email: email,
+                      lng: authController.restaurantLocation!.longitude.toString(), fName: fName, lName: lName, phone: phone,
+                      password: password, zoneId: authController.zoneList![authController.selectedZoneIndex!].id.toString(),
+                      moduleId: authController.moduleList![authController.selectedModuleIndex!].id.toString(),
                       deliveryTimeType: authController.deliveryTimeTypeList[authController.deliveryTimeTypeIndex],
                     ));
                   }
                 },
-              ) : Center(child: CircularProgressIndicator()),
+              ) : const Center(child: CircularProgressIndicator()),
 
             ]);
           }))),

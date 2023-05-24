@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sixam_mart/controller/user_controller.dart';
 import 'package:sixam_mart/data/api/api_checker.dart';
@@ -8,16 +7,16 @@ import 'package:sixam_mart/view/base/custom_snackbar.dart';
 
 class WalletController extends GetxController implements GetxService{
   final WalletRepo walletRepo;
-  WalletController({@required this.walletRepo});
+  WalletController({required this.walletRepo});
 
-  List<Transaction> _transactionList;
+  List<Transaction>? _transactionList;
   List<String> _offsetList = [];
   int _offset = 1;
-  int _pageSize;
+  int? _pageSize;
   bool _isLoading = false;
 
-  List<Transaction> get transactionList => _transactionList;
-  int get popularPageSize => _pageSize;
+  List<Transaction>? get transactionList => _transactionList;
+  int? get popularPageSize => _pageSize;
   bool get isLoading => _isLoading;
   int get offset => _offset;
 
@@ -52,7 +51,7 @@ class WalletController extends GetxController implements GetxService{
         if (offset == '1') {
           _transactionList = [];
         }
-        _transactionList.addAll(WalletModel.fromJson(response.body).data);
+        _transactionList!.addAll(WalletModel.fromJson(response.body).data!);
         _pageSize = WalletModel.fromJson(response.body).totalSize;
 
         _isLoading = false;

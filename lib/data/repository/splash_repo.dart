@@ -4,7 +4,6 @@ import 'package:sixam_mart/data/api/api_client.dart';
 import 'package:sixam_mart/data/model/response/address_model.dart';
 import 'package:sixam_mart/data/model/response/module_model.dart';
 import 'package:sixam_mart/util/app_constants.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sixam_mart/util/html_type.dart';
@@ -12,131 +11,131 @@ import 'package:sixam_mart/util/html_type.dart';
 class SplashRepo {
   ApiClient apiClient;
   final SharedPreferences sharedPreferences;
-  SplashRepo({@required this.sharedPreferences, @required this.apiClient});
+  SplashRepo({required this.sharedPreferences, required this.apiClient});
 
   Future<Response> getConfigData() async {
-    return await apiClient.getData(AppConstants.CONFIG_URI);
+    return await apiClient.getData(AppConstants.configUri);
   }
 
-  Future<ModuleModel> initSharedData() async {
-    if(!sharedPreferences.containsKey(AppConstants.THEME)) {
-      sharedPreferences.setBool(AppConstants.THEME, false);
+  Future<ModuleModel?> initSharedData() async {
+    if(!sharedPreferences.containsKey(AppConstants.theme)) {
+      sharedPreferences.setBool(AppConstants.theme, false);
     }
-    if(!sharedPreferences.containsKey(AppConstants.COUNTRY_CODE)) {
-      sharedPreferences.setString(AppConstants.COUNTRY_CODE, AppConstants.languages[0].countryCode);
+    if(!sharedPreferences.containsKey(AppConstants.countryCode)) {
+      sharedPreferences.setString(AppConstants.countryCode, AppConstants.languages[0].countryCode!);
     }
-    if(!sharedPreferences.containsKey(AppConstants.LANGUAGE_CODE)) {
-      sharedPreferences.setString(AppConstants.LANGUAGE_CODE, AppConstants.languages[0].languageCode);
+    if(!sharedPreferences.containsKey(AppConstants.languageCode)) {
+      sharedPreferences.setString(AppConstants.languageCode, AppConstants.languages[0].languageCode!);
     }
-    if(!sharedPreferences.containsKey(AppConstants.CART_LIST)) {
-      sharedPreferences.setStringList(AppConstants.CART_LIST, []);
+    if(!sharedPreferences.containsKey(AppConstants.cartList)) {
+      sharedPreferences.setStringList(AppConstants.cartList, []);
     }
-    if(!sharedPreferences.containsKey(AppConstants.SEARCH_HISTORY)) {
-      sharedPreferences.setStringList(AppConstants.SEARCH_HISTORY, []);
+    if(!sharedPreferences.containsKey(AppConstants.searchHistory)) {
+      sharedPreferences.setStringList(AppConstants.searchHistory, []);
     }
-    if(!sharedPreferences.containsKey(AppConstants.NOTIFICATION)) {
-      sharedPreferences.setBool(AppConstants.NOTIFICATION, true);
+    if(!sharedPreferences.containsKey(AppConstants.notification)) {
+      sharedPreferences.setBool(AppConstants.notification, true);
     }
-    if(!sharedPreferences.containsKey(AppConstants.INTRO)) {
-      sharedPreferences.setBool(AppConstants.INTRO, true);
+    if(!sharedPreferences.containsKey(AppConstants.intro)) {
+      sharedPreferences.setBool(AppConstants.intro, true);
     }
-    if(!sharedPreferences.containsKey(AppConstants.NOTIFICATION_COUNT)) {
-      sharedPreferences.setInt(AppConstants.NOTIFICATION_COUNT, 0);
+    if(!sharedPreferences.containsKey(AppConstants.notificationCount)) {
+      sharedPreferences.setInt(AppConstants.notificationCount, 0);
     }
-    ModuleModel _module;
-    if(sharedPreferences.containsKey(AppConstants.MODULE_ID)) {
+    ModuleModel? module;
+    if(sharedPreferences.containsKey(AppConstants.moduleId)) {
       try {
-        _module = ModuleModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.MODULE_ID)));
-      }catch(e) {}
+        module = ModuleModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.moduleId)!));
+      }catch(_) {}
     }
-    return _module;
+    return module;
   }
 
   void disableIntro() {
-    sharedPreferences.setBool(AppConstants.INTRO, false);
+    sharedPreferences.setBool(AppConstants.intro, false);
   }
 
-  bool showIntro() {
-    return sharedPreferences.getBool(AppConstants.INTRO);
+  bool? showIntro() {
+    return sharedPreferences.getBool(AppConstants.intro);
   }
 
   Future<void> setStoreCategory(int storeCategoryID) async {
-    AddressModel _addressModel;
+    AddressModel? addressModel;
     try {
-      _addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.USER_ADDRESS)));
-    }catch(e) {}
+      addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.userAddress)!));
+    }catch(_) {}
     apiClient.updateHeader(
-      sharedPreferences.getString(AppConstants.TOKEN), _addressModel == null ? null : _addressModel.zoneIds,
-      _addressModel == null ? null : _addressModel.areaIds, sharedPreferences.getString(AppConstants.LANGUAGE_CODE),
-      storeCategoryID, _addressModel == null ? null : _addressModel.latitude, _addressModel == null ? null : _addressModel.longitude,
+      sharedPreferences.getString(AppConstants.token), addressModel?.zoneIds,
+      addressModel?.areaIds, sharedPreferences.getString(AppConstants.languageCode),
+      storeCategoryID, addressModel?.latitude, addressModel?.longitude,
     );
   }
 
-  Future<Response> getModules({Map<String, String> headers}) async {
-    return await apiClient.getData(AppConstants.MODULES_URI, headers: headers);
+  Future<Response> getModules({Map<String, String>? headers}) async {
+    return await apiClient.getData(AppConstants.moduleUri, headers: headers);
   }
 
-  Future<void> setModule(ModuleModel module) async {
-    AddressModel _addressModel;
+  Future<void> setModule(ModuleModel? module) async {
+    AddressModel? addressModel;
     try {
-      _addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.USER_ADDRESS)));
-    }catch(e) {}
+      addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.userAddress)!));
+    }catch(_) {}
     apiClient.updateHeader(
-      sharedPreferences.getString(AppConstants.TOKEN), _addressModel == null ? null : _addressModel.zoneIds, _addressModel == null ? null : _addressModel.areaIds,
-      sharedPreferences.getString(AppConstants.LANGUAGE_CODE), module != null ? module.id : null,
-        _addressModel == null ? null : _addressModel.latitude, _addressModel == null ? null : _addressModel.longitude
+      sharedPreferences.getString(AppConstants.token), addressModel?.zoneIds, addressModel?.areaIds,
+      sharedPreferences.getString(AppConstants.languageCode), module?.id,
+        addressModel?.latitude, addressModel?.longitude
     );
     if(module != null) {
-      await sharedPreferences.setString(AppConstants.MODULE_ID, jsonEncode(module.toJson()));
+      await sharedPreferences.setString(AppConstants.moduleId, jsonEncode(module.toJson()));
     }else {
-      await sharedPreferences.remove(AppConstants.MODULE_ID);
+      await sharedPreferences.remove(AppConstants.moduleId);
     }
   }
 
-  Future<void> setCacheModule(ModuleModel module) async {
+  Future<void> setCacheModule(ModuleModel? module) async {
     if(module != null) {
-      await sharedPreferences.setString(AppConstants.CACHE_MODULE_ID, jsonEncode(module.toJson()));
+      await sharedPreferences.setString(AppConstants.cacheModuleId, jsonEncode(module.toJson()));
     }else {
-      await sharedPreferences.remove(AppConstants.CACHE_MODULE_ID);
+      await sharedPreferences.remove(AppConstants.cacheModuleId);
     }
   }
 
-  ModuleModel getCacheModule() {
-    ModuleModel _module;
-    if(sharedPreferences.containsKey(AppConstants.CACHE_MODULE_ID)) {
+  ModuleModel? getCacheModule() {
+    ModuleModel? module;
+    if(sharedPreferences.containsKey(AppConstants.cacheModuleId)) {
       try {
-        _module = ModuleModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.CACHE_MODULE_ID)));
-      }catch(e) {}
+        module = ModuleModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.cacheModuleId)!));
+      }catch(_) {}
     }
-    return _module;
+    return module;
   }
 
-  ModuleModel getModule() {
-    ModuleModel _module;
-    if(sharedPreferences.containsKey(AppConstants.MODULE_ID)) {
+  ModuleModel? getModule() {
+    ModuleModel? module;
+    if(sharedPreferences.containsKey(AppConstants.moduleId)) {
       try {
-        _module = ModuleModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.MODULE_ID)));
-      }catch(e) {}
+        module = ModuleModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.moduleId)!));
+      }catch(_) {}
     }
-    return _module;
+    return module;
   }
 
   Future<Response> getHtmlText(HtmlType htmlType) async {
     return await apiClient.getData(
-      htmlType == HtmlType.TERMS_AND_CONDITION ? AppConstants.TERMS_AND_CONDITIONS_URI
-        : htmlType == HtmlType.PRIVACY_POLICY ? AppConstants.PRIVACY_POLICY_URI : htmlType == HtmlType.ABOUT_US
-          ? AppConstants.ABOUT_US_URI : htmlType == HtmlType.SHIPPING_POLICY ? AppConstants.SHIPPING_POLICY_URI
-          : htmlType == HtmlType.CANCELATION ? AppConstants.CANCELATION_URI : AppConstants.REFUND_URI,
+      htmlType == HtmlType.termsAndCondition ? AppConstants.termsAndConditionUri
+        : htmlType == HtmlType.privacyPolicy ? AppConstants.privacyPolicyUri : htmlType == HtmlType.aboutUs
+          ? AppConstants.aboutUsUri : htmlType == HtmlType.shippingPolicy ? AppConstants.shippingPolicyUri
+          : htmlType == HtmlType.cancellation ? AppConstants.cancellationUri : AppConstants.refundUri,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
-        AppConstants.MODULE_ID: ''
+        AppConstants.moduleId: ''
       },
     );
   }
 
   Future<Response> subscribeEmail(String email) async {
-    return await apiClient.postData(AppConstants.SUBSCRIPTION_URI, {'email': email});
+    return await apiClient.postData(AppConstants.subscriptionUri, {'email': email});
   }
 
 }

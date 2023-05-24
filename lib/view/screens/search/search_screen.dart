@@ -20,16 +20,16 @@ import 'package:get/get.dart';
 import 'package:sixam_mart/view/screens/store/widget/bottom_cart_widget.dart';
 
 class SearchScreen extends StatefulWidget {
-  final String queryText;
-  SearchScreen({@required this.queryText});
+  final String? queryText;
+  const SearchScreen({Key? key, required this.queryText}) : super(key: key);
 
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  SearchScreenState createState() => SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
-  bool _isLoggedIn;
+  late bool _isLoggedIn;
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _SearchScreenState extends State<SearchScreen> {
       Get.find<SearchController>().getSuggestedItems();
     }
     Get.find<SearchController>().getHistoryList();
-    if(widget.queryText.isNotEmpty) {
+    if(widget.queryText!.isNotEmpty) {
       _actionSearch(true, widget.queryText, true);
     }
   }
@@ -57,19 +57,19 @@ class _SearchScreenState extends State<SearchScreen> {
         }
       },
       child: Scaffold(
-        appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
-        endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+        appBar: ResponsiveHelper.isDesktop(context) ? const WebMenuBar() : null,
+        endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
         body: SafeArea(child: Padding(
-          padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
+          padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
           child: GetBuilder<SearchController>(builder: (searchController) {
-            _searchController.text = searchController.searchText;
+            _searchController.text = searchController.searchText!;
             return Column(children: [
 
-              widget.queryText.isNotEmpty ? SizedBox() : Center(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Row(children: [
-                SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+              widget.queryText!.isNotEmpty ? const SizedBox() : Center(child: SizedBox(width: Dimensions.webMaxWidth, child: Row(children: [
+                const SizedBox(width: Dimensions.paddingSizeSmall),
                 Expanded(child: SearchField(
                   controller: _searchController,
-                  hint: Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+                  hint: Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText!
                       ? 'search_food_or_restaurant'.tr : 'search_item_or_store'.tr,
                   suffixIcon: !searchController.isSearchMode ? Icons.filter_list : Icons.search,
                   iconPressed: () => _actionSearch(false, _searchController.text.trim(), false),
@@ -84,27 +84,27 @@ class _SearchScreenState extends State<SearchScreen> {
               ]))),
 
               Expanded(child: searchController.isSearchMode ? SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                physics: const BouncingScrollPhysics(),
+                padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.zero : const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
                 child: FooterView(
-                  child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  child: SizedBox(width: Dimensions.webMaxWidth, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
-                    searchController.historyList.length > 0 ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    searchController.historyList.isNotEmpty ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                       Text('history'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)),
                       InkWell(
                         onTap: () => searchController.clearSearchAddress(),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL, horizontal: 4),
+                          padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall, horizontal: 4),
                           child: Text('clear_all'.tr, style: robotoRegular.copyWith(
                             fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor,
                           )),
                         ),
                       ),
-                    ]) : SizedBox(),
+                    ]) : const SizedBox(),
 
                     ListView.builder(
                       itemCount: searchController.historyList.length,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return Column(children: [
@@ -113,9 +113,9 @@ class _SearchScreenState extends State<SearchScreen> {
                               child: InkWell(
                                 onTap: () => searchController.searchData(searchController.historyList[index], false),
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                  padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
                                   child: Text(
-                                    searchController.historyList[index],
+                                    searchController.historyList[index]!,
                                     style: robotoRegular.copyWith(color: Theme.of(context).disabledColor),
                                     maxLines: 1, overflow: TextOverflow.ellipsis,
                                   ),
@@ -125,52 +125,52 @@ class _SearchScreenState extends State<SearchScreen> {
                             InkWell(
                               onTap: () => searchController.removeHistory(index),
                               child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
                                 child: Icon(Icons.close, color: Theme.of(context).disabledColor, size: 20),
                               ),
                             )
                           ]),
-                          index != searchController.historyList.length-1 ? Divider() : SizedBox(),
+                          index != searchController.historyList.length-1 ? const Divider() : const SizedBox(),
                         ]);
                       },
                     ),
-                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                    const SizedBox(height: Dimensions.paddingSizeLarge),
 
                     (_isLoggedIn && searchController.suggestedItemList != null) ? Text(
                       'suggestions'.tr, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
-                    ) : SizedBox(),
-                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                    (_isLoggedIn && searchController.suggestedItemList != null) ? searchController.suggestedItemList.length > 0 ?  GridView.builder(
+                    ) : const SizedBox(),
+                    const SizedBox(height: Dimensions.paddingSizeSmall),
+                    (_isLoggedIn && searchController.suggestedItemList != null) ? searchController.suggestedItemList!.isNotEmpty ?  GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: ResponsiveHelper.isMobile(context) ? 2 : 4, childAspectRatio: (1/ 0.4),
-                        mainAxisSpacing: Dimensions.PADDING_SIZE_SMALL, crossAxisSpacing: Dimensions.PADDING_SIZE_SMALL,
+                        mainAxisSpacing: Dimensions.paddingSizeSmall, crossAxisSpacing: Dimensions.paddingSizeSmall,
                       ),
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: searchController.suggestedItemList.length,
+                      itemCount: searchController.suggestedItemList!.length,
                       itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () {
-                            Get.find<ItemController>().navigateToItemPage(searchController.suggestedItemList[index], context);
+                            Get.find<ItemController>().navigateToItemPage(searchController.suggestedItemList![index], context);
                           },
                           child: Container(
                             decoration: BoxDecoration(
                               color: Theme.of(context).cardColor,
-                              borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                              borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                             ),
                             child: Row(children: [
-                              SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                              const SizedBox(width: Dimensions.paddingSizeSmall),
                               ClipRRect(
-                                borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                 child: CustomImage(
-                                  image: '${Get.find<SplashController>().configModel.baseUrls.itemImageUrl}'
-                                      '/${searchController.suggestedItemList[index].image}',
+                                  image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}'
+                                      '/${searchController.suggestedItemList![index].image}',
                                   width: 45, height: 45, fit: BoxFit.cover,
                                 ),
                               ),
-                              SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                              const SizedBox(width: Dimensions.paddingSizeSmall),
                               Expanded(child: Text(
-                                searchController.suggestedItemList[index].name,
+                                searchController.suggestedItemList![index].name!,
                                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
                                 maxLines: 2, overflow: TextOverflow.ellipsis,
                               )),
@@ -178,7 +178,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                         );
                       },
-                    ) : Padding(padding: EdgeInsets.only(top: 10), child: Text('no_suggestions_available'.tr)) : SizedBox(),
+                    ) : Padding(padding: const EdgeInsets.only(top: 10), child: Text('no_suggestions_available'.tr)) : const SizedBox(),
                   ])),
                 ),
               ) : SearchResultWidget(searchText: _searchController.text.trim())),
@@ -188,28 +188,30 @@ class _SearchScreenState extends State<SearchScreen> {
         )),
 
           bottomNavigationBar: GetBuilder<CartController>(builder: (cartController) {
-            return cartController.cartList.length > 0 && !ResponsiveHelper.isDesktop(context) ? BottomCartWidget() : SizedBox();
+            return cartController.cartList.isNotEmpty && !ResponsiveHelper.isDesktop(context) ? const BottomCartWidget() : const SizedBox();
           })
       ),
     );
   }
 
-  void _actionSearch(bool isSubmit, String queryText, bool fromHome) {
+  void _actionSearch(bool isSubmit, String? queryText, bool fromHome) {
     if(Get.find<SearchController>().isSearchMode || isSubmit) {
-      if(queryText.isNotEmpty) {
+      if(queryText!.isNotEmpty) {
         Get.find<SearchController>().searchData(queryText, fromHome);
       }else {
-        showCustomSnackBar(Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+        showCustomSnackBar(Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText!
             ? 'search_food_or_restaurant'.tr : 'search_item_or_store'.tr);
       }
     }else {
-      List<double> _prices = [];
+      List<double?> prices = [];
       if(!Get.find<SearchController>().isStore) {
-        Get.find<SearchController>().allItemList.forEach((product) => _prices.add(product.price));
-        _prices.sort();
+        for (var product in Get.find<SearchController>().allItemList!) {
+          prices.add(product.price);
+        }
+        prices.sort();
       }
-      double _maxValue = _prices.length > 0 ? _prices[_prices.length-1] : 1000;
-      Get.dialog(FilterWidget(maxValue: _maxValue, isStore: Get.find<SearchController>().isStore));
+      double? maxValue = prices.isNotEmpty ? prices[prices.length-1] : 1000;
+      Get.dialog(FilterWidget(maxValue: maxValue, isStore: Get.find<SearchController>().isStore));
     }
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:sixam_mart/data/api/api_client.dart';
 import 'package:sixam_mart/data/model/body/user_information_body.dart';
@@ -7,11 +6,11 @@ import 'package:sixam_mart/util/app_constants.dart';
 class CarSelectionRepo {
   final ApiClient apiClient;
 
-  CarSelectionRepo({@required this.apiClient});
+  CarSelectionRepo({required this.apiClient});
 
   Future<Response> getVehiclesList(UserInformationBody body, int offset) async {
-    return await apiClient.getData('${AppConstants.VEHICLES_LIST}?offset=$offset&limit=10&start_latitude=${body.from.latitude}'
-        '&start_longitude=${body.from.longitude}&end_latitude=${body.to.latitude}&end_longitude=${body.to.longitude}'
+    return await apiClient.getData('${AppConstants.vehicleListUri}?offset=$offset&limit=10&start_latitude=${body.from!.latitude}'
+        '&start_longitude=${body.from!.longitude}&end_latitude=${body.to!.latitude}&end_longitude=${body.to!.longitude}'
         '&fare_category=${body.fareCategory}&distance=${body.distance}&duration=${body.duration}&filter_type=${body.filterType}'
         '&filter_min_price=${body.minPrice.toString() == 'null'?'': body.minPrice}'
         '&filter_max_price=${body.maxPrice.toString() == 'null'?'': body.maxPrice}&'
@@ -19,7 +18,7 @@ class CarSelectionRepo {
   }
 
   Future<Response> getBrandList() async {
-    return await apiClient.getData(AppConstants.BRAND_LIST);
+    return await apiClient.getData(AppConstants.bandListUri);
   }
 
 }

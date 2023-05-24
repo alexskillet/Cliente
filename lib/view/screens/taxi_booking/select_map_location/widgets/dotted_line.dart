@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 class DottedLine extends StatelessWidget {
   /// Creates dotted line with the given parameters
   const DottedLine({
-    Key key,
+    Key? key,
     this.direction = Axis.horizontal,
     this.lineLength = double.infinity,
     this.lineThickness = 1.0,
@@ -55,7 +55,7 @@ class DottedLine extends StatelessWidget {
   /// The first color is beginning color, the second one is ending color.
   ///
   /// If this is specified, [dashColor] has no effect.
-  final List<Color> dashGradient;
+  final List<Color>? dashGradient;
   /// The radius of the dash. Default (0.0).
   final double dashRadius;
   /// The length of the dash gap. Default (4.0).
@@ -68,7 +68,7 @@ class DottedLine extends StatelessWidget {
   /// The first color is beginning color, the second one is ending color.
   ///
   /// If this is specified, [dashGapColor] has no effect.
-  final List<Color> dashGapGradient;
+  final List<Color>? dashGapGradient;
   /// The radius of the dash gap. Default (0.0).
   final double dashGapRadius;
   @override
@@ -138,8 +138,8 @@ class DottedLine extends StatelessWidget {
     return dashGradient == null
         ? dashColor
         : _calculateGradientColor(
-      dashGradient[0],
-      dashGradient[1],
+      dashGradient![0],
+      dashGradient![1],
       maxDashCount,
       index,
     );
@@ -158,8 +158,8 @@ class DottedLine extends StatelessWidget {
     return dashGapGradient == null
         ? dashGapColor
         : _calculateGradientColor(
-      dashGapGradient[0],
-      dashGapGradient[1],
+      dashGapGradient![0],
+      dashGapGradient![1],
       maxDashGapCount,
       index,
     );

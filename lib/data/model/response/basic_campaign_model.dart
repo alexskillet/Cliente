@@ -1,15 +1,15 @@
 import 'package:sixam_mart/data/model/response/store_model.dart';
 
 class BasicCampaignModel {
-  int id;
-  String title;
-  String image;
-  String description;
-  String availableDateStarts;
-  String availableDateEnds;
-  String startTime;
-  String endTime;
-  List<Store> store;
+  int? id;
+  String? title;
+  String? image;
+  String? description;
+  String? availableDateStarts;
+  String? availableDateEnds;
+  String? startTime;
+  String? endTime;
+  List<Store>? store;
 
   BasicCampaignModel(
       {this.id,
@@ -34,23 +34,23 @@ class BasicCampaignModel {
     if (json['stores'] != null) {
       store = [];
       json['stores'].forEach((v) {
-        store.add(new Store.fromJson(v));
+        store!.add(Store.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['image'] = this.image;
-    data['description'] = this.description;
-    data['available_date_starts'] = this.availableDateStarts;
-    data['available_date_ends'] = this.availableDateEnds;
-    data['start_time'] = this.startTime;
-    data['end_time'] = this.endTime;
-    if (this.store != null) {
-      data['stores'] = this.store.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['image'] = image;
+    data['description'] = description;
+    data['available_date_starts'] = availableDateStarts;
+    data['available_date_ends'] = availableDateEnds;
+    data['start_time'] = startTime;
+    data['end_time'] = endTime;
+    if (store != null) {
+      data['stores'] = store!.map((v) => v.toJson()).toList();
     }
     return data;
   }

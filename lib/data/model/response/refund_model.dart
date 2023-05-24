@@ -1,5 +1,5 @@
 class RefundModel {
-  List<RefundReasons> refundReasons;
+  List<RefundReasons>? refundReasons;
 
   RefundModel({this.refundReasons});
 
@@ -7,27 +7,27 @@ class RefundModel {
     if (json['refund_reasons'] != null) {
       refundReasons = <RefundReasons>[];
       json['refund_reasons'].forEach((v) {
-        refundReasons.add(new RefundReasons.fromJson(v));
+        refundReasons!.add(RefundReasons.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.refundReasons != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (refundReasons != null) {
       data['refund_reasons'] =
-          this.refundReasons.map((v) => v.toJson()).toList();
+          refundReasons!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class RefundReasons {
-  int id;
-  String reason;
-  int status;
-  String createdAt;
-  String updatedAt;
+  int? id;
+  String? reason;
+  int? status;
+  String? createdAt;
+  String? updatedAt;
 
   RefundReasons(
       {this.id, this.reason, this.status, this.createdAt, this.updatedAt});
@@ -41,12 +41,12 @@ class RefundReasons {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['reason'] = this.reason;
-    data['status'] = this.status;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['reason'] = reason;
+    data['status'] = status;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

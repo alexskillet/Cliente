@@ -28,24 +28,24 @@ import 'package:sixam_mart/view/screens/location/widget/permission_dialog.dart';
 
 class LocationController extends GetxController implements GetxService {
   final LocationRepo locationRepo;
-  LocationController({@required this.locationRepo});
+  LocationController({required this.locationRepo});
 
   Position _position = Position(longitude: 0, latitude: 0, timestamp: DateTime.now(), accuracy: 1, altitude: 1, heading: 1, speed: 1, speedAccuracy: 1);
   Position _pickPosition = Position(longitude: 0, latitude: 0, timestamp: DateTime.now(), accuracy: 1, altitude: 1, heading: 1, speed: 1, speedAccuracy: 1);
   bool _loading = false;
-  String _address = '';
-  String _pickAddress = '';
-  List<Marker> _markers = <Marker>[];
-  List<AddressModel> _addressList;
-  List<AddressModel> _allAddressList;
+  String? _address = '';
+  String? _pickAddress = '';
+  final List<Marker> _markers = <Marker>[];
+  List<AddressModel>? _addressList;
+  late List<AddressModel> _allAddressList;
   int _addressTypeIndex = 0;
-  List<String> _addressTypeList = ['home', 'office', 'others'];
+  final List<String?> _addressTypeList = ['home', 'office', 'others'];
   bool _isLoading = false;
   bool _inZone = false;
   int _zoneID = 0;
   bool _buttonDisabled = true;
   bool _changeAddress = true;
-  GoogleMapController _mapController;
+  GoogleMapController? _mapController;
   List<PredictionModel> _predictionList = [];
   bool _updateAddAddressData = true;
 
@@ -55,59 +55,59 @@ class LocationController extends GetxController implements GetxService {
   bool get loading => _loading;
   Position get position => _position;
   Position get pickPosition => _pickPosition;
-  String get address => _address;
-  String get pickAddress => _pickAddress;
+  String? get address => _address;
+  String? get pickAddress => _pickAddress;
   List<Marker> get markers => _markers;
-  List<AddressModel> get addressList => _addressList;
-  List<String> get addressTypeList => _addressTypeList;
+  List<AddressModel>? get addressList => _addressList;
+  List<String?> get addressTypeList => _addressTypeList;
   int get addressTypeIndex => _addressTypeIndex;
   bool get inZone => _inZone;
   int get zoneID => _zoneID;
   bool get buttonDisabled => _buttonDisabled;
-  GoogleMapController get mapController => _mapController;
+  GoogleMapController? get mapController => _mapController;
 
-  Future<AddressModel> getCurrentLocation(bool fromAddress, {GoogleMapController mapController, LatLng defaultLatLng, bool notify = true}) async {
+  Future<AddressModel> getCurrentLocation(bool fromAddress, {GoogleMapController? mapController, LatLng? defaultLatLng, bool notify = true}) async {
     _loading = true;
     if(notify) {
       update();
     }
-    AddressModel _addressModel;
-    Position _myPosition;
+    AddressModel addressModel;
+    Position myPosition;
     try {
       Position newLocalData = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      _myPosition = newLocalData;
+      myPosition = newLocalData;
     }catch(e) {
-      _myPosition = Position(
-        latitude: defaultLatLng != null ? defaultLatLng.latitude : double.parse(Get.find<SplashController>().configModel.defaultLocation.lat ?? '0'),
-        longitude: defaultLatLng != null ? defaultLatLng.longitude : double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
+      myPosition = Position(
+        latitude: defaultLatLng != null ? defaultLatLng.latitude : double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lat ?? '0'),
+        longitude: defaultLatLng != null ? defaultLatLng.longitude : double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lng ?? '0'),
         timestamp: DateTime.now(), accuracy: 1, altitude: 1, heading: 1, speed: 1, speedAccuracy: 1,
       );
     }
     if(fromAddress) {
-      _position = _myPosition;
+      _position = myPosition;
     }else {
-      _pickPosition = _myPosition;
+      _pickPosition = myPosition;
     }
     if (mapController != null) {
       mapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(_myPosition.latitude, _myPosition.longitude), zoom: 17),
+        CameraPosition(target: LatLng(myPosition.latitude, myPosition.longitude), zoom: 17),
       ));
     }
-    String _addressFromGeocode = await getAddressFromGeocode(LatLng(_myPosition.latitude, _myPosition.longitude));
-    fromAddress ? _address = _addressFromGeocode : _pickAddress = _addressFromGeocode;
-    ZoneResponseModel _responseModel = await getZone(_myPosition.latitude.toString(), _myPosition.longitude.toString(), true);
-    _buttonDisabled = !_responseModel.isSuccess;
-    _addressModel = AddressModel(
-      latitude: _myPosition.latitude.toString(), longitude: _myPosition.longitude.toString(), addressType: 'others',
-      zoneId: _responseModel.isSuccess ? _responseModel.zoneIds[0] : 0, zoneIds: _responseModel.zoneIds,
-      address: _addressFromGeocode, zoneData: _responseModel.zoneData, areaIds: _responseModel.areaIds,
+    String addressFromGeocode = await getAddressFromGeocode(LatLng(myPosition.latitude, myPosition.longitude));
+    fromAddress ? _address = addressFromGeocode : _pickAddress = addressFromGeocode;
+    ZoneResponseModel responseModel = await getZone(myPosition.latitude.toString(), myPosition.longitude.toString(), true);
+    _buttonDisabled = !responseModel.isSuccess;
+    addressModel = AddressModel(
+      latitude: myPosition.latitude.toString(), longitude: myPosition.longitude.toString(), addressType: 'others',
+      zoneId: responseModel.isSuccess ? responseModel.zoneIds[0] : 0, zoneIds: responseModel.zoneIds,
+      address: addressFromGeocode, zoneData: responseModel.zoneData, areaIds: responseModel.areaIds,
     );
     _loading = false;
     update();
-    return _addressModel;
+    return addressModel;
   }
 
-  Future<ZoneResponseModel> getZone(String lat, String long, bool markerLoad, {bool updateInAddress = false}) async {
+  Future<ZoneResponseModel> getZone(String? lat, String? long, bool markerLoad, {bool updateInAddress = false}) async {
     if(markerLoad) {
       _loading = true;
     }else {
@@ -116,20 +116,20 @@ class LocationController extends GetxController implements GetxService {
     if(!updateInAddress){
       update();
     }
-    ZoneResponseModel _responseModel;
+    ZoneResponseModel responseModel;
     Response response = await locationRepo.getZone(lat, long);
     if(response.statusCode == 200) {
       _inZone = true;
       _zoneID = int.parse(jsonDecode(response.body['zone_id'])[0].toString());
-      List<int> _zoneIds = [];
+      List<int> zoneIds = [];
       jsonDecode(response.body['zone_id']).forEach((zoneId) {
-        _zoneIds.add(int.parse(zoneId.toString()));
+        zoneIds.add(int.parse(zoneId.toString()));
       });
-      List<ZoneData> _zoneData = [];
+      List<ZoneData> zoneData = [];
       response.body['zone_data'].forEach((data) {
-        _zoneData.add(ZoneData.fromJson(data));
+        zoneData.add(ZoneData.fromJson(data));
       });
-      List<int> _areaIds = [];
+      List<int> areaIds = [];
       ///for taxi booking
       // if(response.body['area_id'] != null){
       //   jsonDecode(response.body['area_id']).forEach((areaId) {
@@ -139,15 +139,15 @@ class LocationController extends GetxController implements GetxService {
       //   showCustomSnackBar('outside_of_city'.tr);
       // }
 
-      _responseModel = ZoneResponseModel(true, '', _zoneIds, _zoneData, _areaIds);
+      responseModel = ZoneResponseModel(true, '', zoneIds, zoneData, areaIds);
       if(updateInAddress) {
-        AddressModel _address = getUserAddress();
-        _address.zoneData = _zoneData;
-        saveUserAddress(_address);
+        AddressModel address = getUserAddress()!;
+        address.zoneData = zoneData;
+        saveUserAddress(address);
       }
     }else {
       _inZone = false;
-      _responseModel = ZoneResponseModel(false, response.statusText, [], [], []);
+      responseModel = ZoneResponseModel(false, response.statusText, [], [], []);
     }
     if(markerLoad) {
       _loading = false;
@@ -155,48 +155,48 @@ class LocationController extends GetxController implements GetxService {
       _isLoading = false;
     }
     update();
-    return _responseModel;
+    return responseModel;
   }
 
   Future<void> syncZoneData() async {
-    ZoneResponseModel _response = await getZone(getUserAddress().latitude, getUserAddress().longitude, false, updateInAddress: true);
-    AddressModel _address = getUserAddress();
-    _address.zoneId = _response.zoneIds[0];
-    _address.zoneIds = [];
-    _address.zoneIds.addAll(_response.zoneIds);
-    _address.zoneData = [];
-    _address.zoneData.addAll(_response.zoneData);
-    _address.areaIds = [];
-    _address.areaIds.addAll(_response.areaIds);
-    await saveUserAddress(_address);
+    ZoneResponseModel response = await getZone(getUserAddress()!.latitude, getUserAddress()!.longitude, false, updateInAddress: true);
+    AddressModel address = getUserAddress()!;
+    address.zoneId = response.zoneIds[0];
+    address.zoneIds = [];
+    address.zoneIds!.addAll(response.zoneIds);
+    address.zoneData = [];
+    address.zoneData!.addAll(response.zoneData);
+    address.areaIds = [];
+    address.areaIds!.addAll(response.areaIds);
+    await saveUserAddress(address);
     update();
   }
 
-  void updatePosition(CameraPosition position, bool fromAddress) async {
+  void updatePosition(CameraPosition? position, bool fromAddress) async {
     if(_updateAddAddressData) {
       _loading = true;
       update();
       try {
         if (fromAddress) {
           _position = Position(
-            latitude: position.target.latitude, longitude: position.target.longitude, timestamp: DateTime.now(),
+            latitude: position!.target.latitude, longitude: position.target.longitude, timestamp: DateTime.now(),
             heading: 1, accuracy: 1, altitude: 1, speedAccuracy: 1, speed: 1,
           );
         } else {
           _pickPosition = Position(
-            latitude: position.target.latitude, longitude: position.target.longitude, timestamp: DateTime.now(),
+            latitude: position!.target.latitude, longitude: position.target.longitude, timestamp: DateTime.now(),
             heading: 1, accuracy: 1, altitude: 1, speedAccuracy: 1, speed: 1,
           );
         }
-        ZoneResponseModel _responseModel = await getZone(position.target.latitude.toString(), position.target.longitude.toString(), true);
-        _buttonDisabled = !_responseModel.isSuccess;
+        ZoneResponseModel responseModel = await getZone(position.target.latitude.toString(), position.target.longitude.toString(), true);
+        _buttonDisabled = !responseModel.isSuccess;
         if (_changeAddress) {
-          String _addressFromGeocode = await getAddressFromGeocode(LatLng(position.target.latitude, position.target.longitude));
-          fromAddress ? _address = _addressFromGeocode : _pickAddress = _addressFromGeocode;
+          String addressFromGeocode = await getAddressFromGeocode(LatLng(position.target.latitude, position.target.longitude));
+          fromAddress ? _address = addressFromGeocode : _pickAddress = addressFromGeocode;
         } else {
           _changeAddress = true;
         }
-      } catch (e) {}
+      } catch (_) {}
       _loading = false;
       update();
     }else {
@@ -204,17 +204,17 @@ class LocationController extends GetxController implements GetxService {
     }
   }
 
-  Future<ResponseModel> deleteUserAddressByID(int id, int index) async {
+  Future<ResponseModel> deleteUserAddressByID(int? id, int index) async {
     Response response = await locationRepo.removeAddressByID(id);
-    ResponseModel _responseModel;
+    ResponseModel responseModel;
     if (response.statusCode == 200) {
-      _addressList.removeAt(index);
-      _responseModel = ResponseModel(true, response.body['message']);
+      _addressList!.removeAt(index);
+      responseModel = ResponseModel(true, response.body['message']);
     } else {
-      _responseModel = ResponseModel(false, response.statusText);
+      responseModel = ResponseModel(false, response.statusText);
     }
     update();
-    return _responseModel;
+    return responseModel;
   }
 
   Future<void> getAddressList() async {
@@ -223,7 +223,7 @@ class LocationController extends GetxController implements GetxService {
       _addressList = [];
       _allAddressList = [];
       response.body['addresses'].forEach((address) {
-        _addressList.add(AddressModel.fromJson(address));
+        _addressList!.add(AddressModel.fromJson(address));
         _allAddressList.add(AddressModel.fromJson(address));
       });
     } else {
@@ -235,20 +235,20 @@ class LocationController extends GetxController implements GetxService {
   void filterAddresses(String queryText) {
     if(_addressList != null) {
       _addressList = [];
-      if (queryText == null || queryText.isEmpty) {
-        _addressList.addAll(_allAddressList);
+      if (queryText.isEmpty) {
+        _addressList!.addAll(_allAddressList);
       } else {
-        _allAddressList.forEach((address) {
-          if (address.address.toLowerCase().contains(queryText.toLowerCase())) {
-            _addressList.add(address);
+        for (var address in _allAddressList) {
+          if (address.address!.toLowerCase().contains(queryText.toLowerCase())) {
+            _addressList!.add(address);
           }
-        });
+        }
       }
       update();
     }
   }
 
-  Future<ResponseModel> addAddress(AddressModel addressModel, bool fromCheckout, bool fromRide, int storeZoneId) async {
+  Future<ResponseModel> addAddress(AddressModel addressModel, bool fromCheckout, bool fromRide, int? storeZoneId) async {
     _isLoading = true;
     update();
     Response response = await locationRepo.addAddress(addressModel);
@@ -257,16 +257,16 @@ class LocationController extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       if(fromRide){
         getAddressList();
-        String message = response.body["message"];
+        String? message = response.body["message"];
         responseModel = ResponseModel(true, message);
       }
       else if(fromCheckout && !response.body['zone_ids'].contains(storeZoneId)) {
-        responseModel = ResponseModel(false, Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+        responseModel = ResponseModel(false, Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText!
             ? 'your_selected_location_is_from_different_zone'.tr : 'your_selected_location_is_from_different_zone_store'.tr);
       }else {
         getAddressList();
         Get.find<OrderController>().setAddressIndex(0);
-        String message = response.body["message"];
+        String? message = response.body["message"];
         responseModel = ResponseModel(true, message);
       }
     } else {
@@ -276,7 +276,7 @@ class LocationController extends GetxController implements GetxService {
     return responseModel;
   }
 
-  Future<ResponseModel> updateAddress(AddressModel addressModel, int addressId) async {
+  Future<ResponseModel> updateAddress(AddressModel addressModel, int? addressId) async {
     _isLoading = true;
     update();
     Response response = await locationRepo.updateAddress(addressModel, addressId);
@@ -297,12 +297,12 @@ class LocationController extends GetxController implements GetxService {
     return await locationRepo.saveUserAddress(userAddress, address.zoneIds, address.areaIds, address.latitude, address.longitude);
   }
 
-  AddressModel getUserAddress() {
-    AddressModel _addressModel;
+  AddressModel? getUserAddress() {
+    AddressModel? addressModel;
     try {
-      _addressModel = AddressModel.fromJson(jsonDecode(locationRepo.getUserAddress()));
-    }catch(e) {}
-    return _addressModel;
+      addressModel = AddressModel.fromJson(jsonDecode(locationRepo.getUserAddress()!));
+    }catch(_) {}
+    return addressModel;
   }
 
   void setAddressTypeIndex(int index) {
@@ -310,13 +310,13 @@ class LocationController extends GetxController implements GetxService {
     update();
   }
 
-  void saveAddressAndNavigate(AddressModel address, bool fromSignUp, String route, bool canRoute, bool isDesktop) {
-    if(Get.find<CartController>().cartList.length > 0) {
+  void saveAddressAndNavigate(AddressModel? address, bool fromSignUp, String? route, bool canRoute, bool isDesktop) {
+    if(Get.find<CartController>().cartList.isNotEmpty) {
       Get.dialog(ConfirmationDialog(
         icon: Images.warning, title: 'are_you_sure_to_reset'.tr, description: 'if_you_change_location'.tr,
         onYesPressed: () {
           Get.back();
-          _setZoneData(address, fromSignUp, route, canRoute, isDesktop);
+          _setZoneData(address!, fromSignUp, route, canRoute, isDesktop);
         },
         onNoPressed: () {
           Get.back();
@@ -324,21 +324,21 @@ class LocationController extends GetxController implements GetxService {
         },
       ));
     }else {
-      _setZoneData(address, fromSignUp, route, canRoute, isDesktop);
+      _setZoneData(address!, fromSignUp, route, canRoute, isDesktop);
     }
   }
 
-  void _setZoneData(AddressModel address, bool fromSignUp, String route, bool canRoute, bool isDesktop) {
+  void _setZoneData(AddressModel address, bool fromSignUp, String? route, bool canRoute, bool isDesktop) {
     Get.find<LocationController>().getZone(address.latitude, address.longitude, false).then((response) async {
       if (response.isSuccess) {
         Get.find<CartController>().clearCartList();
         address.zoneId = response.zoneIds[0];
         address.zoneIds = [];
-        address.zoneIds.addAll(response.zoneIds);
+        address.zoneIds!.addAll(response.zoneIds);
         address.zoneData = [];
-        address.zoneData.addAll(response.zoneData);
+        address.zoneData!.addAll(response.zoneData);
         address.areaIds = [];
-        address.areaIds.addAll(response.areaIds);
+        address.areaIds!.addAll(response.areaIds);
         autoNavigate(address, fromSignUp, route, canRoute, isDesktop);
       } else {
         Get.back();
@@ -347,41 +347,41 @@ class LocationController extends GetxController implements GetxService {
     });
   }
 
-  void autoNavigate(AddressModel address, bool fromSignUp, String route, bool canRoute, bool isDesktop) async {
-    if (isDesktop && Get.find<SplashController>().configModel.module == null) {
-      List<int> _zoneIds = address.zoneIds;
-      Map<String, String> _header = {
+  void autoNavigate(AddressModel? address, bool fromSignUp, String? route, bool canRoute, bool isDesktop) async {
+    if (isDesktop && Get.find<SplashController>().configModel!.module == null) {
+      List<int>? zoneIds = address!.zoneIds;
+      Map<String, String> header = {
         'Content-Type': 'application/json; charset=UTF-8',
-        AppConstants.ZONE_ID: _zoneIds != null ? jsonEncode(_zoneIds) : null,
+        AppConstants.zoneId: zoneIds != null ? jsonEncode(zoneIds) : '',
       };
 
-      Get.find<SplashController>().getModules(headers: _header);
-      if (Get.isDialogOpen) {
+      Get.find<SplashController>().getModules(headers: header);
+      if (Get.isDialogOpen!) {
         Get.back();
       }
       Get.dialog(ModuleDialog(callback: () {
         saveData(address, fromSignUp, route, canRoute, isDesktop);
       }), barrierDismissible: false, barrierColor: Colors.black.withOpacity(0.7));
     } else {
-      saveData(address, fromSignUp, route, canRoute, isDesktop);
+      saveData(address!, fromSignUp, route, canRoute, isDesktop);
     }
   }
 
-  void saveData(AddressModel address, bool fromSignUp, String route, bool canRoute, bool isDesktop) async {
+  void saveData(AddressModel address, bool fromSignUp, String? route, bool canRoute, bool isDesktop) async {
     if(!GetPlatform.isWeb) {
       if (Get.find<LocationController>().getUserAddress() != null) {
-        if(Get.find<LocationController>().getUserAddress().zoneIds != null) {
-          for(int zoneID in Get.find<LocationController>().getUserAddress().zoneIds) {
+        if(Get.find<LocationController>().getUserAddress()!.zoneIds != null) {
+          for(int zoneID in Get.find<LocationController>().getUserAddress()!.zoneIds!) {
             FirebaseMessaging.instance.unsubscribeFromTopic('zone_${zoneID}_customer');
           }
         }else {
-          FirebaseMessaging.instance.unsubscribeFromTopic('zone_${Get.find<LocationController>().getUserAddress().zoneId}_customer');
+          FirebaseMessaging.instance.unsubscribeFromTopic('zone_${Get.find<LocationController>().getUserAddress()!.zoneId}_customer');
         }
       } else {
         FirebaseMessaging.instance.subscribeToTopic('zone_${address.zoneId}_customer');
       }
       if(address.zoneIds != null) {
-        for(int zoneID in address.zoneIds) {
+        for(int zoneID in address.zoneIds!) {
           FirebaseMessaging.instance.subscribeToTopic('zone_${zoneID}_customer');
         }
       }else {
@@ -406,21 +406,21 @@ class LocationController extends GetxController implements GetxService {
     }
   }
 
-  Future<AddressModel> setLocation(String placeID, String address, GoogleMapController mapController) async {
+  Future<AddressModel> setLocation(String? placeID, String? address, GoogleMapController? mapController) async {
     _loading = true;
     update();
 
-    LatLng _latLng = LatLng(0, 0);
+    LatLng latLng = const LatLng(0, 0);
     Response response = await locationRepo.getPlaceDetails(placeID);
     if(response.statusCode == 200) {
-      PlaceDetailsModel _placeDetails = PlaceDetailsModel.fromJson(response.body);
-      if(_placeDetails.status == 'OK') {
-        _latLng = LatLng(_placeDetails.result.geometry.location.lat, _placeDetails.result.geometry.location.lng);
+      PlaceDetailsModel placeDetails = PlaceDetailsModel.fromJson(response.body);
+      if(placeDetails.status == 'OK') {
+        latLng = LatLng(placeDetails.result!.geometry!.location!.lat!, placeDetails.result!.geometry!.location!.lng!);
       }
     }
 
     _pickPosition = Position(
-      latitude: _latLng.latitude, longitude: _latLng.longitude,
+      latitude: latLng.latitude, longitude: latLng.longitude,
       timestamp: DateTime.now(), accuracy: 1, altitude: 1, heading: 1, speed: 1, speedAccuracy: 1,
     );
 
@@ -428,7 +428,7 @@ class LocationController extends GetxController implements GetxService {
     _changeAddress = false;
 
     if(mapController != null) {
-      mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: _latLng, zoom: 17)));
+      mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: latLng, zoom: 17)));
     }
     _loading = false;
     update();
@@ -453,7 +453,7 @@ class LocationController extends GetxController implements GetxService {
 
   void setUpdateAddress(AddressModel address){
     _position = Position(
-      latitude: double.parse(address.latitude), longitude: double.parse(address.longitude), timestamp: DateTime.now(),
+      latitude: double.parse(address.latitude!), longitude: double.parse(address.longitude!), timestamp: DateTime.now(),
       altitude: 1, heading: 1, speed: 1, speedAccuracy: 1, floor: 1, accuracy: 1,
     );
     _address = address.address;
@@ -471,17 +471,17 @@ class LocationController extends GetxController implements GetxService {
 
   Future<String> getAddressFromGeocode(LatLng latLng) async {
     Response response = await locationRepo.getAddressFromGeocode(latLng);
-    String _address = 'Unknown Location Found';
+    String address = 'Unknown Location Found';
     if(response.statusCode == 200 && response.body['status'] == 'OK') {
-      _address = response.body['results'][0]['formatted_address'].toString();
+      address = response.body['results'][0]['formatted_address'].toString();
     }else {
       showCustomSnackBar(response.body['error_message'] ?? response.bodyString);
     }
-    return _address;
+    return address;
   }
 
   Future<List<PredictionModel>> searchLocation(BuildContext context, String text) async {
-    if(text != null && text.isNotEmpty) {
+    if(text.isNotEmpty) {
       Response response = await locationRepo.searchLocation(text);
       if (response.statusCode == 200 && response.body['status'] == 'OK') {
         _predictionList = [];
@@ -505,7 +505,7 @@ class LocationController extends GetxController implements GetxService {
     if(permission == LocationPermission.denied) {
       showCustomSnackBar('you_have_to_allow'.tr);
     }else if(permission == LocationPermission.deniedForever) {
-      Get.dialog(PermissionDialog());
+      Get.dialog(const PermissionDialog());
     }else {
       onTap();
     }

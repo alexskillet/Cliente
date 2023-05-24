@@ -12,7 +12,7 @@ import 'package:sixam_mart/view/base/menu_drawer.dart';
 class AllStoreScreen extends StatefulWidget {
   final bool isPopular;
   final bool isFeatured;
-  AllStoreScreen({@required this.isPopular, @required this.isFeatured});
+  const AllStoreScreen({Key? key, required this.isPopular, required this.isFeatured}) : super(key: key);
 
   @override
   State<AllStoreScreen> createState() => _AllStoreScreenState();
@@ -37,9 +37,9 @@ class _AllStoreScreenState extends State<AllStoreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: widget.isFeatured ? 'featured_stores'.tr :  widget.isPopular
-          ? Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
-          ? 'popular_restaurants'.tr : 'popular_stores'.tr : '${'new_on'.tr} ${AppConstants.APP_NAME}'),
-      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+          ? Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText!
+          ? 'popular_restaurants'.tr : 'popular_stores'.tr : '${'new_on'.tr} ${AppConstants.appName}'),
+      endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: RefreshIndicator(
         onRefresh: () async {
           if(widget.isFeatured) {
@@ -55,12 +55,12 @@ class _AllStoreScreenState extends State<AllStoreScreen> {
           }
         },
         child: Scrollbar(child: SingleChildScrollView(child: FooterView(child: SizedBox(
-          width: Dimensions.WEB_MAX_WIDTH,
+          width: Dimensions.webMaxWidth,
           child: GetBuilder<StoreController>(builder: (storeController) {
             return ItemsView(
               isStore: true, items: null, isFeatured: widget.isFeatured,
-              noDataText: widget.isFeatured ? 'no_store_available'.tr : Get.find<SplashController>().configModel.moduleConfig
-                  .module.showRestaurantText ? 'no_restaurant_available'.tr : 'no_store_available'.tr,
+              noDataText: widget.isFeatured ? 'no_store_available'.tr : Get.find<SplashController>().configModel!.moduleConfig!
+                  .module!.showRestaurantText! ? 'no_restaurant_available'.tr : 'no_store_available'.tr,
               stores: widget.isFeatured ? storeController.featuredStoreList : widget.isPopular ? storeController.popularStoreList
                   : storeController.latestStoreList,
               type: widget.isFeatured ? null : storeController.type, onVegFilterTap: (String type) {

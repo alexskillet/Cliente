@@ -14,7 +14,7 @@ import 'package:sixam_mart/view/base/my_text_field.dart';
 
 class ReceiverDetailsBottomSheet extends StatefulWidget {
   final ParcelCategoryModel category;
-  const ReceiverDetailsBottomSheet({Key key, @required this.category}) : super(key: key);
+  const ReceiverDetailsBottomSheet({Key? key, required this.category}) : super(key: key);
 
   @override
   State<ReceiverDetailsBottomSheet> createState() => _ReceiverDetailsBottomSheetState();
@@ -36,9 +36,9 @@ class _ReceiverDetailsBottomSheetState extends State<ReceiverDetailsBottomSheet>
   void initState() {
     super.initState();
 
-    _streetNumberController.text = Get.find<ParcelController>().destinationAddress.streetNumber;
-    _houseController.text = Get.find<ParcelController>().destinationAddress.house;
-    _floorController.text = Get.find<ParcelController>().destinationAddress.floor;
+    _streetNumberController.text = Get.find<ParcelController>().destinationAddress!.streetNumber!;
+    _houseController.text = Get.find<ParcelController>().destinationAddress!.house!;
+    _floorController.text = Get.find<ParcelController>().destinationAddress!.floor!;
   }
 
   @override
@@ -54,23 +54,23 @@ class _ReceiverDetailsBottomSheetState extends State<ReceiverDetailsBottomSheet>
   Widget build(BuildContext context) {
     return Container(
       width: 550,
-      padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+      padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.background,
-        borderRadius: ResponsiveHelper.isDesktop(context) ? BorderRadius.all(Radius.circular(Dimensions.RADIUS_EXTRA_LARGE))
-            : BorderRadius.vertical(top: Radius.circular(Dimensions.RADIUS_EXTRA_LARGE)),
+        borderRadius: ResponsiveHelper.isDesktop(context) ? const BorderRadius.all(Radius.circular(Dimensions.radiusExtraLarge))
+            : const BorderRadius.vertical(top: Radius.circular(Dimensions.radiusExtraLarge)),
       ),
       child: SingleChildScrollView(
         child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
 
           Center(child: Text('receiver_details'.tr, style: robotoMedium)),
-          SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+          const SizedBox(height: Dimensions.paddingSizeDefault),
 
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+              borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
               color: Theme.of(context).cardColor,
-              boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], spreadRadius: 1, blurRadius: 5)],
+              boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5)],
             ),
             child: MyTextField(
               hintText: 'receiver_name'.tr,
@@ -81,7 +81,7 @@ class _ReceiverDetailsBottomSheetState extends State<ReceiverDetailsBottomSheet>
               capitalization: TextCapitalization.words,
             ),
           ),
-          SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+          const SizedBox(height: Dimensions.paddingSizeDefault),
 
           MyTextField(
             hintText: 'receiver_phone_number'.tr,
@@ -90,7 +90,7 @@ class _ReceiverDetailsBottomSheetState extends State<ReceiverDetailsBottomSheet>
             nextFocus: _streetNode,
             controller: _phoneController,
           ),
-          SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+          const SizedBox(height: Dimensions.paddingSizeDefault),
 
           MyTextField(
             hintText: "${'street_number'.tr} (${'optional'.tr})",
@@ -99,7 +99,7 @@ class _ReceiverDetailsBottomSheetState extends State<ReceiverDetailsBottomSheet>
             nextFocus: _houseNode,
             controller: _streetNumberController,
           ),
-          SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+          const SizedBox(height: Dimensions.paddingSizeDefault),
 
           MyTextField(
             hintText: "${'house'.tr} (${'optional'.tr})",
@@ -108,7 +108,7 @@ class _ReceiverDetailsBottomSheetState extends State<ReceiverDetailsBottomSheet>
             nextFocus: _floorNode,
             controller: _houseController,
           ),
-          SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+          const SizedBox(height: Dimensions.paddingSizeDefault),
 
           MyTextField(
             hintText: "${'floor'.tr} (${'optional'.tr})",
@@ -117,46 +117,46 @@ class _ReceiverDetailsBottomSheetState extends State<ReceiverDetailsBottomSheet>
             inputAction: TextInputAction.done,
             controller: _floorController,
           ),
-          SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+          const SizedBox(height: Dimensions.paddingSizeLarge),
 
           CustomButton(
             buttonText: 'confirm_receiver_details'.tr,
             onPressed: () {
-              String _name = _nameController.text.trim();
-              String _phone = _phoneController.text.trim();
-              String _streetNumber = _streetNumberController.text.trim();
-              String _house = _houseController.text.trim();
-              String _floor = _floorController.text.trim();
+              String name = _nameController.text.trim();
+              String phone = _phoneController.text.trim();
+              String streetNumber = _streetNumberController.text.trim();
+              String house = _houseController.text.trim();
+              String floor = _floorController.text.trim();
 
               // String _additional = _additionalController.text.trim();
-              if(_name.isEmpty) {
+              if(name.isEmpty) {
                 showCustomSnackBar('enter_receiver_name'.tr);
-              }else if(_phone.isEmpty) {
+              }else if(phone.isEmpty) {
                 showCustomSnackBar('enter_receiver_phone_number'.tr);
               }else {
-                AddressModel _address = Get.find<ParcelController>().destinationAddress;
-                _address.contactPersonName = _name;
-                _address.contactPersonNumber = _phone;
-                _address.streetNumber = _streetNumber;
-                _address.house = _house;
-                _address.floor = _floor;
+                AddressModel address = Get.find<ParcelController>().destinationAddress!;
+                address.contactPersonName = name;
+                address.contactPersonNumber = phone;
+                address.streetNumber = streetNumber;
+                address.house = house;
+                address.floor = floor;
 
                 // _address.additionalAddress = _additional;
-                Get.find<ParcelController>().setDestinationAddress(_address);
-                AddressModel _pickedAddress = Get.find<ParcelController>().pickupAddress;
-                if((_pickedAddress.contactPersonName == null || _pickedAddress.contactPersonName.isEmpty)
+                Get.find<ParcelController>().setDestinationAddress(address);
+                AddressModel pickedAddress = Get.find<ParcelController>().pickupAddress!;
+                if((pickedAddress.contactPersonName == null || pickedAddress.contactPersonName!.isEmpty)
                     && Get.find<UserController>().userInfoModel != null) {
-                  _pickedAddress.contactPersonName = '${Get.find<UserController>().userInfoModel.fName}'
-                      ' ${Get.find<UserController>().userInfoModel.lName}';
+                  pickedAddress.contactPersonName = '${Get.find<UserController>().userInfoModel!.fName}'
+                      ' ${Get.find<UserController>().userInfoModel!.lName}';
                 }
-                if((_pickedAddress.contactPersonNumber == null || _pickedAddress.contactPersonNumber.isEmpty)
+                if((pickedAddress.contactPersonNumber == null || pickedAddress.contactPersonNumber!.isEmpty)
                     && Get.find<UserController>().userInfoModel != null) {
-                  _pickedAddress.contactPersonNumber = Get.find<UserController>().userInfoModel.phone;
+                  pickedAddress.contactPersonNumber = Get.find<UserController>().userInfoModel!.phone;
                 }
                 Get.toNamed(RouteHelper.getParcelRequestRoute(
                   widget.category,
-                  Get.find<ParcelController>().pickupAddress,
-                  Get.find<ParcelController>().destinationAddress,
+                  Get.find<ParcelController>().pickupAddress!,
+                  Get.find<ParcelController>().destinationAddress!,
                 ));
               }
             },

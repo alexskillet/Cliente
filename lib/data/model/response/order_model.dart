@@ -5,10 +5,10 @@ import 'package:sixam_mart/data/model/response/parcel_category_model.dart';
 import 'package:sixam_mart/data/model/response/store_model.dart';
 
 class PaginatedOrderModel {
-  int totalSize;
-  String limit;
-  int offset;
-  List<OrderModel> orders;
+  int? totalSize;
+  String? limit;
+  int? offset;
+  List<OrderModel>? orders;
 
   PaginatedOrderModel({this.totalSize, this.limit, this.offset, this.orders});
 
@@ -19,18 +19,18 @@ class PaginatedOrderModel {
     if (json['orders'] != null) {
       orders = [];
       json['orders'].forEach((v) {
-        orders.add(new OrderModel.fromJson(v));
+        orders!.add(OrderModel.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['total_size'] = this.totalSize;
-    data['limit'] = this.limit;
-    data['offset'] = this.offset;
-    if (this.orders != null) {
-      data['orders'] = this.orders.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['total_size'] = totalSize;
+    data['limit'] = limit;
+    data['offset'] = offset;
+    if (orders != null) {
+      data['orders'] = orders!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -38,52 +38,52 @@ class PaginatedOrderModel {
 }
 
 class OrderModel {
-  int id;
-  int userId;
-  double orderAmount;
-  double couponDiscountAmount;
-  String couponDiscountTitle;
-  String paymentStatus;
-  String orderStatus;
-  double totalTaxAmount;
-  String paymentMethod;
-  String couponCode;
-  String orderNote;
-  String orderType;
-  String createdAt;
-  String updatedAt;
-  double deliveryCharge;
-  String scheduleAt;
-  String otp;
-  String pending;
-  String accepted;
-  String confirmed;
-  String processing;
-  String handover;
-  String pickedUp;
-  String delivered;
-  String canceled;
-  String refundRequested;
-  String refunded;
-  int scheduled;
-  double storeDiscountAmount;
-  String failed;
-  int detailsCount;
-  List<String> orderAttachment;
-  String chargePayer;
-  String moduleType;
-  DeliveryMan deliveryMan;
-  Store store;
-  AddressModel deliveryAddress;
-  AddressModel receiverDetails;
-  ParcelCategoryModel parcelCategory;
-  double dmTips;
-  String refundCancellationNote;
-  String refundCustomerNote;
-  Refund refund;
-  bool prescriptionOrder;
-  bool taxStatus;
-  String cancellationReason;
+  int? id;
+  int? userId;
+  double? orderAmount;
+  double? couponDiscountAmount;
+  String? couponDiscountTitle;
+  String? paymentStatus;
+  String? orderStatus;
+  double? totalTaxAmount;
+  String? paymentMethod;
+  String? couponCode;
+  String? orderNote;
+  String? orderType;
+  String? createdAt;
+  String? updatedAt;
+  double? deliveryCharge;
+  String? scheduleAt;
+  String? otp;
+  String? pending;
+  String? accepted;
+  String? confirmed;
+  String? processing;
+  String? handover;
+  String? pickedUp;
+  String? delivered;
+  String? canceled;
+  String? refundRequested;
+  String? refunded;
+  int? scheduled;
+  double? storeDiscountAmount;
+  String? failed;
+  int? detailsCount;
+  List<String?>? orderAttachment;
+  String? chargePayer;
+  String? moduleType;
+  DeliveryMan? deliveryMan;
+  Store? store;
+  AddressModel? deliveryAddress;
+  AddressModel? receiverDetails;
+  ParcelCategoryModel? parcelCategory;
+  double? dmTips;
+  String? refundCancellationNote;
+  String? refundCustomerNote;
+  Refund? refund;
+  bool? prescriptionOrder;
+  bool? taxStatus;
+  String? cancellationReason;
 
   OrderModel(
       {this.id,
@@ -170,106 +170,106 @@ class OrderModel {
       if(json['order_attachment'].toString().startsWith('["')){
         orderAttachment = [];
         jsonDecode(json['order_attachment']).forEach((v) {
-          orderAttachment.add(v);
+          orderAttachment!.add(v);
         });
       }else{
         orderAttachment = [];
-        orderAttachment.add(json['order_attachment']);
+        orderAttachment!.add(json['order_attachment']);
       }
     }
     chargePayer = json['charge_payer'];
     moduleType = json['module_type'];
-    deliveryMan = json['delivery_man'] != null ? new DeliveryMan.fromJson(json['delivery_man']) : null;
-    store = json['store'] != null ? new Store.fromJson(json['store']) : null;
-    deliveryAddress = json['delivery_address'] != null ? new AddressModel.fromJson(json['delivery_address']) : null;
-    receiverDetails = json['receiver_details'] != null ? new AddressModel.fromJson(json['receiver_details']) : null;
-    parcelCategory = json['parcel_category'] != null ? new ParcelCategoryModel.fromJson(json['parcel_category']) : null;
+    deliveryMan = json['delivery_man'] != null ? DeliveryMan.fromJson(json['delivery_man']) : null;
+    store = json['store'] != null ? Store.fromJson(json['store']) : null;
+    deliveryAddress = json['delivery_address'] != null ? AddressModel.fromJson(json['delivery_address']) : null;
+    receiverDetails = json['receiver_details'] != null ? AddressModel.fromJson(json['receiver_details']) : null;
+    parcelCategory = json['parcel_category'] != null ? ParcelCategoryModel.fromJson(json['parcel_category']) : null;
     dmTips = json['dm_tips'].toDouble();
     refundCancellationNote = json['refund_cancellation_note'];
     refundCustomerNote = json['refund_customer_note'];
-    refund = json['refund'] != null ? new Refund.fromJson(json['refund']) : null;
+    refund = json['refund'] != null ? Refund.fromJson(json['refund']) : null;
     prescriptionOrder = json['prescription_order'];
     taxStatus = json['tax_status'] == 'included' ? true : false;
     cancellationReason = json['cancellation_reason'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['user_id'] = this.userId;
-    data['order_amount'] = this.orderAmount;
-    data['coupon_discount_amount'] = this.couponDiscountAmount;
-    data['coupon_discount_title'] = this.couponDiscountTitle;
-    data['payment_status'] = this.paymentStatus;
-    data['order_status'] = this.orderStatus;
-    data['total_tax_amount'] = this.totalTaxAmount;
-    data['payment_method'] = this.paymentMethod;
-    data['coupon_code'] = this.couponCode;
-    data['order_note'] = this.orderNote;
-    data['order_type'] = this.orderType;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['delivery_charge'] = this.deliveryCharge;
-    data['schedule_at'] = this.scheduleAt;
-    data['otp'] = this.otp;
-    data['pending'] = this.pending;
-    data['accepted'] = this.accepted;
-    data['confirmed'] = this.confirmed;
-    data['processing'] = this.processing;
-    data['handover'] = this.handover;
-    data['picked_up'] = this.pickedUp;
-    data['delivered'] = this.delivered;
-    data['canceled'] = this.canceled;
-    data['refund_requested'] = this.refundRequested;
-    data['refunded'] = this.refunded;
-    data['scheduled'] = this.scheduled;
-    data['store_discount_amount'] = this.storeDiscountAmount;
-    data['failed'] = this.failed;
-    data['order_attachment'] = this.orderAttachment;
-    data['charge_payer'] = this.chargePayer;
-    data['module_type'] = this.moduleType;
-    data['details_count'] = this.detailsCount;
-    if (this.deliveryMan != null) {
-      data['delivery_man'] = this.deliveryMan.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['user_id'] = userId;
+    data['order_amount'] = orderAmount;
+    data['coupon_discount_amount'] = couponDiscountAmount;
+    data['coupon_discount_title'] = couponDiscountTitle;
+    data['payment_status'] = paymentStatus;
+    data['order_status'] = orderStatus;
+    data['total_tax_amount'] = totalTaxAmount;
+    data['payment_method'] = paymentMethod;
+    data['coupon_code'] = couponCode;
+    data['order_note'] = orderNote;
+    data['order_type'] = orderType;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['delivery_charge'] = deliveryCharge;
+    data['schedule_at'] = scheduleAt;
+    data['otp'] = otp;
+    data['pending'] = pending;
+    data['accepted'] = accepted;
+    data['confirmed'] = confirmed;
+    data['processing'] = processing;
+    data['handover'] = handover;
+    data['picked_up'] = pickedUp;
+    data['delivered'] = delivered;
+    data['canceled'] = canceled;
+    data['refund_requested'] = refundRequested;
+    data['refunded'] = refunded;
+    data['scheduled'] = scheduled;
+    data['store_discount_amount'] = storeDiscountAmount;
+    data['failed'] = failed;
+    data['order_attachment'] = orderAttachment;
+    data['charge_payer'] = chargePayer;
+    data['module_type'] = moduleType;
+    data['details_count'] = detailsCount;
+    if (deliveryMan != null) {
+      data['delivery_man'] = deliveryMan!.toJson();
     }
-    if (this.store != null) {
-      data['store'] = this.store.toJson();
+    if (store != null) {
+      data['store'] = store!.toJson();
     }
-    if (this.deliveryAddress != null) {
-      data['delivery_address'] = this.deliveryAddress.toJson();
+    if (deliveryAddress != null) {
+      data['delivery_address'] = deliveryAddress!.toJson();
     }
-    if (this.receiverDetails != null) {
-      data['receiver_details'] = this.receiverDetails.toJson();
+    if (receiverDetails != null) {
+      data['receiver_details'] = receiverDetails!.toJson();
     }
-    if (this.parcelCategory != null) {
-      data['parcel_category'] = this.parcelCategory.toJson();
+    if (parcelCategory != null) {
+      data['parcel_category'] = parcelCategory!.toJson();
     }
-    data['dm_tips'] = this.dmTips;
-    data['refund_cancellation_note'] = this.refundCancellationNote;
-    data['refund_customer_note'] = this.refundCustomerNote;
-    if (this.deliveryAddress != null) {
-      data['refund'] = this.refund.toJson();
+    data['dm_tips'] = dmTips;
+    data['refund_cancellation_note'] = refundCancellationNote;
+    data['refund_customer_note'] = refundCustomerNote;
+    if (deliveryAddress != null) {
+      data['refund'] = refund!.toJson();
     }
-    data['prescription_order'] = this.prescriptionOrder;
+    data['prescription_order'] = prescriptionOrder;
     return data;
   }
 }
 
 class DeliveryMan {
-  int id;
-  String fName;
-  String lName;
-  String phone;
-  String email;
-  String image;
-  int zoneId;
-  int active;
-  int available;
-  double avgRating;
-  int ratingCount;
-  String lat;
-  String lng;
-  String location;
+  int? id;
+  String? fName;
+  String? lName;
+  String? phone;
+  String? email;
+  String? image;
+  int? zoneId;
+  int? active;
+  int? available;
+  double? avgRating;
+  int? ratingCount;
+  String? lat;
+  String? lng;
+  String? location;
 
   DeliveryMan(
       {this.id,
@@ -306,21 +306,21 @@ class DeliveryMan {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['f_name'] = this.fName;
-    data['l_name'] = this.lName;
-    data['phone'] = this.phone;
-    data['email'] = this.email;
-    data['image'] = this.image;
-    data['zone_id'] = this.zoneId;
-    data['active'] = this.active;
-    data['available'] = this.available;
-    data['avg_rating'] = this.avgRating;
-    data['rating_count'] = this.ratingCount;
-    data['lat'] = this.lat;
-    data['lng'] = this.lng;
-    data['location'] = this.location;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['f_name'] = fName;
+    data['l_name'] = lName;
+    data['phone'] = phone;
+    data['email'] = email;
+    data['image'] = image;
+    data['zone_id'] = zoneId;
+    data['active'] = active;
+    data['available'] = available;
+    data['avg_rating'] = avgRating;
+    data['rating_count'] = ratingCount;
+    data['lat'] = lat;
+    data['lng'] = lng;
+    data['location'] = location;
     return data;
   }
 }

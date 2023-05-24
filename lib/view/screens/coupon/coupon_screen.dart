@@ -21,7 +21,7 @@ import 'package:get/get.dart';
 
 class CouponScreen extends StatefulWidget {
   final bool fromCheckout;
-  const CouponScreen({Key key, @required this.fromCheckout}) : super(key: key);
+  const CouponScreen({Key? key, required this.fromCheckout}) : super(key: key);
 
   @override
   State<CouponScreen> createState() => _CouponScreenState();
@@ -43,43 +43,43 @@ class _CouponScreenState extends State<CouponScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'coupon'.tr),
-      endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+      endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
       body: _isLoggedIn ? GetBuilder<CouponController>(builder: (couponController) {
-        return couponController.couponList != null ? couponController.couponList.length > 0 ? RefreshIndicator(
+        return couponController.couponList != null ? couponController.couponList!.isNotEmpty ? RefreshIndicator(
           onRefresh: () async {
             await couponController.getCouponList();
           },
           child: Scrollbar(child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Center(child: FooterView(
-              child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: GridView.builder(
+              child: SizedBox(width: Dimensions.webMaxWidth, child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: ResponsiveHelper.isDesktop(context) ? 3 : ResponsiveHelper.isTab(context) ? 2 : 1,
-                  mainAxisSpacing: Dimensions.PADDING_SIZE_SMALL, crossAxisSpacing: Dimensions.PADDING_SIZE_SMALL,
+                  mainAxisSpacing: Dimensions.paddingSizeSmall, crossAxisSpacing: Dimensions.paddingSizeSmall,
                   childAspectRatio: ResponsiveHelper.isMobile(context) ? 2.6 : 2.4,
                 ),
-                itemCount: couponController.couponList.length,
+                itemCount: couponController.couponList!.length,
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
                       if(widget.fromCheckout) {
-                        Get.back(result: couponController.couponList[index].code);
+                        Get.back(result: couponController.couponList![index].code);
                       }else{
-                        Clipboard.setData(ClipboardData(text: couponController.couponList[index].code));
+                        Clipboard.setData(ClipboardData(text: couponController.couponList![index].code));
                         showCustomSnackBar('coupon_code_copied'.tr, isError: false);
                       }
                     },
                     child: Stack(children: [
 
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                        borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                         child: Transform.rotate(
                           angle: Get.find<LocalizationController>().isLtr ? 0 : pi,
                           child: Image.asset(
-                            Images.coupon_bg,
+                            Images.couponBg,
                             height: ResponsiveHelper.isMobilePhone() ? 130 : 140, width: MediaQuery.of(context).size.width,
                             color: Theme.of(context).primaryColor, fit: BoxFit.cover,
                           ),
@@ -91,27 +91,27 @@ class _CouponScreenState extends State<CouponScreen> {
                         alignment: Alignment.center,
                         child: Row(children: [
 
-                          SizedBox(width: 30),
+                          const SizedBox(width: 30),
                           Image.asset(Images.coupon, height: 50, width: 50, color: Theme.of(context).cardColor),
 
-                          SizedBox(width: 40),
+                          const SizedBox(width: 40),
 
                           Expanded(
                             child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
 
                               Text(
-                                '${couponController.couponList[index].code} (${couponController.couponList[index].title})',
+                                '${couponController.couponList![index].code} (${couponController.couponList![index].title})',
                                 style: robotoRegular.copyWith(color: Theme.of(context).cardColor),
                                 maxLines: 1, overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                               Text(
-                                '${couponController.couponList[index].discount}${couponController.couponList[index].discountType == 'percent' ? '%'
-                                    : Get.find<SplashController>().configModel.currencySymbol} off',
+                                '${couponController.couponList![index].discount}${couponController.couponList![index].discountType == 'percent' ? '%'
+                                    : Get.find<SplashController>().configModel!.currencySymbol} off',
                                 style: robotoMedium.copyWith(color: Theme.of(context).cardColor),
                               ),
-                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                               Row(children: [
                                 Text(
@@ -119,9 +119,9 @@ class _CouponScreenState extends State<CouponScreen> {
                                   style: robotoRegular.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                                 Text(
-                                  couponController.couponList[index].expireDate,
+                                  couponController.couponList![index].expireDate!,
                                   style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
@@ -133,19 +133,19 @@ class _CouponScreenState extends State<CouponScreen> {
                                   style: robotoRegular.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                couponController.couponList[index].store == null ?  Flexible(child: Text(
-                                  couponController.couponList[index].couponType.tr + '${couponController.couponList[index].couponType
-                                      == 'store_wise' ? ' (${couponController.couponList[index].data})' : ''}',
+                                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                                couponController.couponList![index].store == null ?  Flexible(child: Text(
+                                  '${couponController.couponList![index].couponType!.tr}${couponController.couponList![index].couponType
+                                      == 'store_wise' ? ' (${couponController.couponList![index].data})' : ''}',
                                   style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
-                                )) : SizedBox(),
+                                )) : const SizedBox(),
 
-                                couponController.couponList[index].store != null ? Flexible(child: Text(
-                                  couponController.couponList[index].couponType.tr + ' (${couponController.couponList[index].store.name})',
+                                couponController.couponList![index].store != null ? Flexible(child: Text(
+                                  '${couponController.couponList![index].couponType!.tr} (${couponController.couponList![index].store!.name})',
                                   style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 2, overflow: TextOverflow.ellipsis,
-                                )) : SizedBox(),
+                                )) : const SizedBox(),
                               ]),
 
                               Row(children: [
@@ -154,9 +154,9 @@ class _CouponScreenState extends State<CouponScreen> {
                                   style: robotoRegular.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                                 Text(
-                                  PriceConverter.convertPrice(couponController.couponList[index].minPurchase),
+                                  PriceConverter.convertPrice(couponController.couponList![index].minPurchase),
                                   style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis, textDirection: TextDirection.ltr,
                                 ),
@@ -168,9 +168,9 @@ class _CouponScreenState extends State<CouponScreen> {
                                   style: robotoRegular.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                                 Text(
-                                  PriceConverter.convertPrice(couponController.couponList[index].maxDiscount),
+                                  PriceConverter.convertPrice(couponController.couponList![index].maxDiscount),
                                   style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis, textDirection: TextDirection.ltr,
                                 ),
@@ -188,8 +188,8 @@ class _CouponScreenState extends State<CouponScreen> {
               )),
             )),
           )),
-        ) : NoDataScreen(text: 'no_coupon_found'.tr, showFooter: true) : Center(child: CircularProgressIndicator());
-      }) : NotLoggedInScreen(),
+        ) : NoDataScreen(text: 'no_coupon_found'.tr, showFooter: true) : const Center(child: CircularProgressIndicator());
+      }) : const NotLoggedInScreen(),
     );
   }
 }

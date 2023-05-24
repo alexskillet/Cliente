@@ -11,16 +11,16 @@ import 'package:sixam_mart/view/screens/taxi_booking/select_map_location/widgets
 
 class TripHistoryItem extends StatelessWidget {
   final Data trip;
-  const TripHistoryItem({Key key, @required this.trip}) : super(key: key);
+  const TripHistoryItem({Key? key, required this.trip}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL) : null,
-      margin: ResponsiveHelper.isDesktop(context) ? EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL) : null,
+      padding: ResponsiveHelper.isDesktop(context) ? const EdgeInsets.all(Dimensions.paddingSizeSmall) : null,
+      margin: ResponsiveHelper.isDesktop(context) ? const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall) : null,
       decoration: ResponsiveHelper.isDesktop(context) ? BoxDecoration(
-        color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-        boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], blurRadius: 5, spreadRadius: 1)],
+        color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+        boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, blurRadius: 5, spreadRadius: 1)],
       ) : null,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -34,27 +34,27 @@ class TripHistoryItem extends StatelessWidget {
           Container(
             height: 70, width: 70, alignment: Alignment.center,
             decoration:  BoxDecoration(
-              borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+              borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
               border: Border.all(color: Theme.of(context).primaryColor)
             ) ,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-              child: CustomImage(
+              borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+              child: const CustomImage(
                 height: 70, width: 70,
                 image: ''),
             ),
           ),
-          SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+          const SizedBox(width: Dimensions.paddingSizeSmall),
 
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
                 Text('${ 'order_id'.tr}:', style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault)),
-                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
                 Text('#${trip.id}', style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault)),
               ]),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -72,7 +72,7 @@ class TripHistoryItem extends StatelessWidget {
                                 width: 13,
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Theme.of(context).primaryColor),
-                                  borderRadius: BorderRadius.all(Radius.circular(2)),
+                                  borderRadius: const BorderRadius.all(Radius.circular(2)),
                                 ),
                               ),
                               Container(
@@ -80,7 +80,7 @@ class TripHistoryItem extends StatelessWidget {
                                 width: 4,
                                 decoration: BoxDecoration(
                                     color: Theme.of(context).primaryColor,
-                                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                                    borderRadius: const BorderRadius.all(Radius.circular(20))),
                               ),
                             ],
                           ),
@@ -96,17 +96,17 @@ class TripHistoryItem extends StatelessWidget {
                             color: Theme.of(context).primaryColor,),
                         ],
                       ),
-                      SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT,),
+                      const SizedBox(width: Dimensions.paddingSizeDefault,),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(trip.deliveryAddress?? '', style: robotoMedium.copyWith(
-                              fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.7)),
+                              fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.7)),
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           Text("Dhanmondi 32",style: robotoMedium.copyWith(
                               fontSize: Dimensions.fontSizeSmall,
-                              color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.7)
+                              color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.7)
                           ),),
                         ],
                       ),
@@ -117,19 +117,19 @@ class TripHistoryItem extends StatelessWidget {
 
             ]),
           ),
-          SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+          const SizedBox(width: Dimensions.paddingSizeSmall),
 
           Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            Text(PriceConverter.convertPrice(trip.trip.estimatedFare), style: robotoMedium.copyWith(
-              fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).textTheme.bodyLarge.color,
+            Text(PriceConverter.convertPrice(trip.trip!.estimatedFare), style: robotoMedium.copyWith(
+              fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).textTheme.bodyLarge!.color,
             )),
-            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+            const SizedBox(height: Dimensions.paddingSizeSmall),
 
-            Text(trip.trip.tripStatus, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor)),
+            Text(trip.trip!.tripStatus!, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor)),
           ]),
 
         ]),
-        SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+        const SizedBox(height: Dimensions.paddingSizeDefault,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -143,8 +143,8 @@ class TripHistoryItem extends StatelessWidget {
             Row(
               children: [
                 TextButton(
-                  style: TextButton.styleFrom(minimumSize: Size(1, 28), shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), side: BorderSide(width: 2, color: Theme.of(context).primaryColor),
+                  style: TextButton.styleFrom(minimumSize: const Size(1, 28), shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall), side: BorderSide(width: 2, color: Theme.of(context).primaryColor),
                   )),
                   onPressed: () {
 
@@ -153,7 +153,7 @@ class TripHistoryItem extends StatelessWidget {
                     color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeDefault,
                   )),
                 ),
-                SizedBox(width: Dimensions.PADDING_SIZE_SMALL,),
+                const SizedBox(width: Dimensions.paddingSizeSmall,),
                 CustomButton(
                     width: 90,
                     height: 30,
@@ -166,11 +166,11 @@ class TripHistoryItem extends StatelessWidget {
             )
           ],
         ),
-          SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+          const SizedBox(height: Dimensions.paddingSizeDefault,),
           Divider(
             height: 1,
-            color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.4)),
-          SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+            color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.4)),
+          const SizedBox(height: Dimensions.paddingSizeDefault,),
         ],
       ),
     );

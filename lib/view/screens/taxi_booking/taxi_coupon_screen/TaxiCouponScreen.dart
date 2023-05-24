@@ -19,7 +19,7 @@ import 'package:sixam_mart/view/base/menu_drawer.dart';
 import 'package:sixam_mart/view/base/no_data_screen.dart';
 import 'package:sixam_mart/view/base/not_logged_in_screen.dart';
 class TaxiCouponScreen extends StatefulWidget {
-  const TaxiCouponScreen({Key key}) : super(key: key);
+  const TaxiCouponScreen({Key? key}) : super(key: key);
 
   @override
   State<TaxiCouponScreen> createState() => _TaxiCouponScreenState();
@@ -39,39 +39,39 @@ class _TaxiCouponScreenState extends State<TaxiCouponScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'taxi_coupon'.tr),
-      endDrawer: MenuDrawer(), endDrawerEnableOpenDragGesture: false,
+      endDrawer: const MenuDrawer(), endDrawerEnableOpenDragGesture: false,
       body: _isLoggedIn ? GetBuilder<CouponController>(builder: (couponController) {
-        return couponController.taxiCouponList != null ? couponController.taxiCouponList.length > 0 ? RefreshIndicator(
+        return couponController.taxiCouponList != null ? couponController.taxiCouponList!.isNotEmpty ? RefreshIndicator(
           onRefresh: () async {
             await couponController.getTaxiCouponList();
           },
           child: Scrollbar(child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Center(child: FooterView(
-              child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: GridView.builder(
+              child: SizedBox(width: Dimensions.webMaxWidth, child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: ResponsiveHelper.isDesktop(context) ? 3 : ResponsiveHelper.isTab(context) ? 2 : 1,
-                  mainAxisSpacing: Dimensions.PADDING_SIZE_SMALL, crossAxisSpacing: Dimensions.PADDING_SIZE_SMALL,
+                  mainAxisSpacing: Dimensions.paddingSizeSmall, crossAxisSpacing: Dimensions.paddingSizeSmall,
                   childAspectRatio: ResponsiveHelper.isMobile(context) ? 2.6 : 2.4,
                 ),
-                itemCount: couponController.taxiCouponList.length,
+                itemCount: couponController.taxiCouponList!.length,
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
-                      Clipboard.setData(ClipboardData(text: couponController.taxiCouponList[index].code));
+                      Clipboard.setData(ClipboardData(text: couponController.taxiCouponList![index].code));
                       showCustomSnackBar('coupon_code_copied'.tr, isError: false);
                     },
                     child: Stack(children: [
 
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                        borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                         child: Transform.rotate(
                           angle: Get.find<LocalizationController>().isLtr ? 0 : pi,
                           child: Image.asset(
-                            Images.coupon_bg,
+                            Images.couponBg,
                             height: ResponsiveHelper.isMobilePhone() ? 130 : 140, width: MediaQuery.of(context).size.width,
                             color: Theme.of(context).primaryColor, fit: BoxFit.cover,
                           ),
@@ -83,27 +83,27 @@ class _TaxiCouponScreenState extends State<TaxiCouponScreen> {
                         alignment: Alignment.center,
                         child: Row(children: [
 
-                          SizedBox(width: 30),
+                          const SizedBox(width: 30),
                           Image.asset(Images.coupon, height: 50, width: 50, color: Theme.of(context).cardColor),
 
-                          SizedBox(width: 40),
+                          const SizedBox(width: 40),
 
                           Expanded(
                             child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
 
                               Text(
-                                '${couponController.taxiCouponList[index].code} (${couponController.taxiCouponList[index].title})',
+                                '${couponController.taxiCouponList![index].code} (${couponController.taxiCouponList![index].title})',
                                 style: robotoRegular.copyWith(color: Theme.of(context).cardColor),
                                 maxLines: 1, overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                               Text(
-                                '${couponController.taxiCouponList[index].discount}${couponController.taxiCouponList[index].discountType == 'percent' ? '%'
-                                    : Get.find<SplashController>().configModel.currencySymbol} off',
+                                '${couponController.taxiCouponList![index].discount}${couponController.taxiCouponList![index].discountType == 'percent' ? '%'
+                                    : Get.find<SplashController>().configModel!.currencySymbol} off',
                                 style: robotoMedium.copyWith(color: Theme.of(context).cardColor),
                               ),
-                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                               Row(children: [
                                 Text(
@@ -111,9 +111,9 @@ class _TaxiCouponScreenState extends State<TaxiCouponScreen> {
                                   style: robotoRegular.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                                 Text(
-                                  couponController.taxiCouponList[index].expireDate,
+                                  couponController.taxiCouponList![index].expireDate!,
                                   style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
@@ -125,10 +125,10 @@ class _TaxiCouponScreenState extends State<TaxiCouponScreen> {
                                   style: robotoRegular.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                                 Flexible(child: Text(
-                                  couponController.taxiCouponList[index].couponType.tr + '${couponController.taxiCouponList[index].couponType
-                                      == 'store_wise' ? ' (${couponController.taxiCouponList[index].data})' : ''}',
+                                  '${couponController.taxiCouponList![index].couponType!.tr}${couponController.taxiCouponList![index].couponType
+                                      == 'store_wise' ? ' (${couponController.taxiCouponList![index].data})' : ''}',
                                   style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 )),
@@ -140,9 +140,9 @@ class _TaxiCouponScreenState extends State<TaxiCouponScreen> {
                                   style: robotoRegular.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                                 Text(
-                                  PriceConverter.convertPrice(couponController.taxiCouponList[index].minPurchase),
+                                  PriceConverter.convertPrice(couponController.taxiCouponList![index].minPurchase),
                                   style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
@@ -154,9 +154,9 @@ class _TaxiCouponScreenState extends State<TaxiCouponScreen> {
                                   style: robotoRegular.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                                 Text(
-                                  PriceConverter.convertPrice(couponController.taxiCouponList[index].maxDiscount),
+                                  PriceConverter.convertPrice(couponController.taxiCouponList![index].maxDiscount),
                                   style: robotoMedium.copyWith(color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis,
                                 ),
@@ -174,8 +174,8 @@ class _TaxiCouponScreenState extends State<TaxiCouponScreen> {
               )),
             )),
           )),
-        ) : NoDataScreen(text: 'no_coupon_found'.tr, showFooter: true) : Center(child: CircularProgressIndicator());
-      }) : NotLoggedInScreen(),
+        ) : NoDataScreen(text: 'no_coupon_found'.tr, showFooter: true) : const Center(child: CircularProgressIndicator());
+      }) : const NotLoggedInScreen(),
     );
   }
 }

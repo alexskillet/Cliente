@@ -22,7 +22,7 @@ import 'package:sixam_mart/view/screens/taxi_booking/select_map_location/widgets
 class BookingDetailsInfo extends StatefulWidget {
   final Vehicles vehicle;
   final UserInformationBody filterBody;
-  const BookingDetailsInfo({Key key, @required this.vehicle, @required this.filterBody}) : super(key: key);
+  const BookingDetailsInfo({Key? key, required this.vehicle, required this.filterBody}) : super(key: key);
 
   @override
   State<BookingDetailsInfo> createState() => _BookingDetailsInfoState();
@@ -42,43 +42,43 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
   Widget build(BuildContext context) {
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
       child: GetBuilder<BookingCheckoutController>(
         builder: (bookingCheckoutController) {
 
-          double _subTotalPrice = widget.filterBody.distance * (widget.filterBody.fareCategory == 'hourly' ? widget.vehicle.insidePerHourCharge : widget.vehicle.insidePerKmCharge);
-          double _vatTax = widget.vehicle.provider.tax.toDouble();
-          double _serviceFee = widget.vehicle.provider.comission.toDouble();
+          double subTotalPrice = widget.filterBody.distance! * (widget.filterBody.fareCategory == 'hourly' ? widget.vehicle.insidePerHourCharge! : widget.vehicle.insidePerKmCharge!);
+          double vatTax = widget.vehicle.provider!.tax!.toDouble();
+          double serviceFee = widget.vehicle.provider!.comission!.toDouble();
 
           // double _totalPrice = (_subTotalPrice - bookingCheckoutController.couponDiscount) + _vatTax + _serviceFee;
 
           return Column(
             children: [
               Container(
-                padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
                   color: Theme.of(context).cardColor,
-                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300], blurRadius: 5, spreadRadius: 1,)],),
+                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300]!, blurRadius: 5, spreadRadius: 1,)],),
                 child: Row(
                   children: [
                     CustomImage(
                       width: 48, height: 46,
-                      image: '${Get.find<SplashController>().configModel.baseUrls.vehicleImageUrl}/${widget.vehicle.carImages.isNotEmpty ? widget.vehicle.carImages[0] : ''}',
+                      image: '${Get.find<SplashController>().configModel!.baseUrls!.vehicleImageUrl}/${widget.vehicle.carImages!.isNotEmpty ? widget.vehicle.carImages![0] : ''}',
                     ),
-                    SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
+                    const SizedBox(width: Dimensions.paddingSizeDefault),
 
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(widget.vehicle.name, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault),),
+                        Text(widget.vehicle.name!, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault),),
                         Row(
                           children: [
                             CustomImage(
                               width: 20, height: 20,
-                              image: '${Get.find<SplashController>().configModel.baseUrls.vehicleBrandImageUrl}/${''}',
+                              image: '${Get.find<SplashController>().configModel!.baseUrls!.vehicleBrandImageUrl}/${''}',
                             ),
-                            Text(widget.vehicle.categoryName, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall))
+                            Text(widget.vehicle.categoryName!, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall))
                           ],
                         )
                       ],
@@ -87,28 +87,28 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                 ),
 
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+              const SizedBox(height: Dimensions.paddingSizeDefault),
 
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
                   color: Theme.of(context).cardColor,
-                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300], blurRadius: 5, spreadRadius: 1)]),
+                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300]!, blurRadius: 5, spreadRadius: 1)]),
                 child: Padding(
-                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                   child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(DateConverter.isoStringToReadableString(widget.filterBody.rentTime), style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault)),
+                          Text(DateConverter.isoStringToReadableString(widget.filterBody.rentTime!), style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault)),
 
                           Image.asset(Images.edit, width: 16, height: 16),
                         ],
                       ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                      const SizedBox(height: Dimensions.paddingSizeDefault),
 
-                      Container(
+                      SizedBox(
                         height: 90,
                         child: Row(
                           children: [
@@ -118,7 +118,7 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                                   height: 33,
                                   width: 33,
                                   alignment: Alignment.center,
-                                  decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.08)),
+                                  decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.08)),
                                   child: Stack(
                                     alignment: AlignmentDirectional.center,
                                     children: [
@@ -127,7 +127,7 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                                         width: 18,
                                         decoration: BoxDecoration(
                                           color: Theme.of(context).primaryColor,
-                                          borderRadius: BorderRadius.all(Radius.circular(2)),
+                                          borderRadius: const BorderRadius.all(Radius.circular(2)),
                                         ),
                                       ),
                                       Container(
@@ -135,7 +135,7 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                                         width: 4,
                                         decoration: BoxDecoration(
                                             color: Theme.of(context).cardColor,
-                                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                                            borderRadius: const BorderRadius.all(Radius.circular(20))),
                                       ),
                                     ],
                                   ),
@@ -150,12 +150,12 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                                 Container(
                                   height: 33,
                                   width: 33, alignment: Alignment.center,
-                                  decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.08)),
+                                  decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.08)),
                                   child: Icon(Icons.location_on_sharp,color: Theme.of(context).primaryColor,),
                                 ),
                               ],
                             ),
-                            SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
+                            const SizedBox(width: Dimensions.paddingSizeDefault),
                             Expanded(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -164,7 +164,7 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 5),
                                     child: RideAddressInfo(
-                                      title: widget.filterBody.from.address,
+                                      title: widget.filterBody.from!.address,
                                       subTitle: 'Road 9/a,house-666,Dhaka',
                                       isInsideCity:true,
                                     ),
@@ -172,7 +172,7 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 5),
                                     child: RideAddressInfo(
-                                      title: widget.filterBody.to.address,
+                                      title: widget.filterBody.to!.address,
                                       subTitle: 'Road 9/a,house-666,Dhaka',
                                       isInsideCity:true,
                                     ),
@@ -183,17 +183,17 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                           ],
                         ),
                       ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                      const SizedBox(height: Dimensions.paddingSizeDefault),
 
                       Row(
                         children: [
                           Container(
                             height: 33,
                             width: 33, alignment: Alignment.center,
-                            decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.08)),
-                            child: Image.asset(Images.hour_cost,width: 20,height: 20,),
+                            decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.08)),
+                            child: Image.asset(Images.hourCost,width: 20,height: 20,),
                           ),
-                          SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT,),
+                          const SizedBox(width: Dimensions.paddingSizeDefault,),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -203,16 +203,16 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                           )
                         ],
                       ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+                      const SizedBox(height: Dimensions.paddingSizeDefault,),
                       Row(
                         children: [
                           Container(
                             height: 33,
                             width: 33, alignment: Alignment.center,
-                            decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.08)),
-                            child: Image.asset(Images.ride_return,width: 20,height: 20,),
+                            decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.08)),
+                            child: Image.asset(Images.rideReturn,width: 20,height: 20,),
                           ),
-                          SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT,),
+                          const SizedBox(width: Dimensions.paddingSizeDefault,),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -228,14 +228,14 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                 ),
 
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+              const SizedBox(height: Dimensions.paddingSizeDefault,),
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
                   color: Theme.of(context).cardColor,
-                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300], blurRadius: 5, spreadRadius: 1,)],),
+                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300]!, blurRadius: 5, spreadRadius: 1,)],),
                 child: Padding(
-                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                   child: GetBuilder<CouponController>(
                     builder: (couponController) {
                       return Column(
@@ -258,11 +258,11 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                               ),
                             ],
                           ),
-                          SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                          const SizedBox(height: Dimensions.paddingSizeDefault),
 
                           bookingCheckoutController.showCouponSection ? Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(Dimensions.RADIUS_DEFAULT),
+                              borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                               border: Border.all(color: Theme.of(context).primaryColor),
                             ),
                             child: Row(children: [
@@ -292,18 +292,17 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  String _couponCode = _couponTextController.text.trim();
-                                  print('---------discount : ${couponController.discount}');
-                                  if(couponController.discount < 1) {
-                                    if(_couponCode.isNotEmpty && !couponController.isLoading) {
-                                      couponController.applyTaxiCoupon(_couponCode, widget.filterBody.distance * (widget.filterBody.fareCategory == 'hourly'
-                                          ? widget.vehicle.insidePerHourCharge : widget.vehicle.insidePerKmCharge), widget.vehicle.providerId).then((discount) {
-                                        if (discount > 0) {
+                                  String couponCode = _couponTextController.text.trim();
+                                  if(couponController.discount! < 1) {
+                                    if(couponCode.isNotEmpty && !couponController.isLoading) {
+                                      couponController.applyTaxiCoupon(couponCode, widget.filterBody.distance! * (widget.filterBody.fareCategory == 'hourly'
+                                          ? widget.vehicle.insidePerHourCharge! : widget.vehicle.insidePerKmCharge!), widget.vehicle.providerId).then((discount) {
+                                        if (discount! > 0) {
                                           bookingCheckoutController.setCouponDiscount(discount);
                                           showCustomSnackBar('${'you_got_discount_of'.tr} ${PriceConverter.convertPrice(discount)}', isError: false,);
                                         }
                                       });
-                                    } else if(_couponCode.isEmpty) {
+                                    } else if(couponCode.isEmpty) {
                                       showCustomSnackBar('enter_a_coupon_code'.tr);
                                     }
                                   } else {
@@ -321,44 +320,44 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                                       right: Radius.circular(Get.find<LocalizationController>().isLtr ? 10 : 0),
                                     ),
                                   ),
-                                  child: (couponController.discount <= 0) ? !couponController.isLoading ? Text(
+                                  child: (couponController.discount! <= 0) ? !couponController.isLoading ? Text(
                                     'apply'.tr,
                                     style: robotoMedium.copyWith(color: Theme.of(context).cardColor),
-                                  ) : CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
-                                      : Icon(Icons.clear, color: Colors.white),
+                                  ) : const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+                                      : const Icon(Icons.clear, color: Colors.white),
                                 ),
                               ),
                             ]),
-                          ) : SizedBox(),
+                          ) : const SizedBox(),
                         ],
                       );
                     }
                   ),
                 ),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+              const SizedBox(height: Dimensions.paddingSizeDefault),
 
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
                   color: Theme.of(context).cardColor,
-                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300], blurRadius: 5, spreadRadius: 1,)],),
+                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300]!, blurRadius: 5, spreadRadius: 1,)],),
                 child: Padding(
-                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                   child:Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('add_special_note'.tr,style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault),),
-                      SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                      const SizedBox(height: Dimensions.paddingSizeDefault),
 
                       Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                          border: Border.all(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.09))
+                          borderRadius: const BorderRadius.all(Radius.circular(8)),
+                          border: Border.all(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.09))
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          borderRadius: const BorderRadius.all(Radius.circular(8)),
                           child: CustomTextField(
                             controller: _noteTextController,
                             hintText: 'type_here'.tr,
@@ -372,39 +371,39 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
 
                 ),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+              const SizedBox(height: Dimensions.paddingSizeDefault,),
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
                   color: Theme.of(context).cardColor,
-                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300], blurRadius: 5, spreadRadius: 1,)],),
+                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300]!, blurRadius: 5, spreadRadius: 1,)],),
                 child: Padding(
-                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                   child:Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('bill_details'.tr,style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault),),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                            billDetailsItem('subtotal'.tr, PriceConverter.convertPrice(_subTotalPrice)),
-                            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                            const SizedBox(height: Dimensions.paddingSizeSmall),
+                            billDetailsItem('subtotal'.tr, PriceConverter.convertPrice(subTotalPrice)),
+                            const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                            billDetailsItem('vat'.tr, '(+) ' + PriceConverter.convertPrice(_vatTax)),
-                            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                            billDetailsItem('vat'.tr, '(+) ${PriceConverter.convertPrice(vatTax)}'),
+                            const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                            billDetailsItem('service_fee'.tr, '(+) ' + PriceConverter.convertPrice(_serviceFee)),
-                            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                            billDetailsItem('service_fee'.tr, '(+) ${PriceConverter.convertPrice(serviceFee)}'),
+                            const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                            billDetailsItem('coupon_discount'.tr, '(-) ' + PriceConverter.convertPrice(bookingCheckoutController.couponDiscount)),
-                            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                            billDetailsItem('coupon_discount'.tr, '(-) ${PriceConverter.convertPrice(bookingCheckoutController.couponDiscount)}'),
+                            const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                            billDetailsItem('advance_booking_fee'.tr, '(+) ' + PriceConverter.convertPrice(30), isPrimary: true),
+                            billDetailsItem('advance_booking_fee'.tr, '(+) ${PriceConverter.convertPrice(30)}', isPrimary: true),
                           ],
                         ),
                       ),
@@ -412,40 +411,40 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                   ),
                 ),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+              const SizedBox(height: Dimensions.paddingSizeDefault),
 
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
                   color: Theme.of(context).cardColor,
-                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300], blurRadius: 5, spreadRadius: 1,)],),
+                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300]!, blurRadius: 5, spreadRadius: 1,)],),
                 child: Padding(
-                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_LARGE),
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeExtraLarge),
                   child: Column(
                     children: [
                       Row(
                         children: [
                           Icon(Icons.star,color: Theme.of(context).primaryColor,size: 8,),
-                          SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT,),
+                          const SizedBox(width: Dimensions.paddingSizeDefault,),
                           Expanded(child: Text('advanced_booking_free_should_be_pay'.tr,style: robotoRegular.copyWith(
                             fontSize: Dimensions.fontSizeSmall,
-                            color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5)
+                            color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5)
                           ),))
                         ],
                       ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL,),
+                      const SizedBox(height: Dimensions.paddingSizeSmall,),
                       Row(
                         children: [
                           Icon(Icons.star,color: Theme.of(context).primaryColor,size: 8,),
-                          SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT,),
+                          const SizedBox(width: Dimensions.paddingSizeDefault,),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('by_placing_the_order_you'.tr,style: robotoRegular.copyWith(
                                 fontSize: Dimensions.fontSizeSmall,
-                                color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5)
+                                color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5)
                               ),),
                               Row(
                                 children: [
@@ -463,7 +462,7 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                   ),
                 ),
               ),
-              SizedBox(height: 100),
+              const SizedBox(height: 100),
             ],
           );
         }
@@ -479,13 +478,13 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
           billName,
           style: robotoRegular.copyWith(
               fontSize: Dimensions.fontSizeDefault,
-              color:isPrimary ? Theme.of(Get.context).primaryColor : Theme.of(Get.context).textTheme.bodyLarge.color),
+              color:isPrimary ? Theme.of(Get.context!).primaryColor : Theme.of(Get.context!).textTheme.bodyLarge!.color),
         ),
         Text(
           price,
           style: robotoRegular.copyWith(
               fontSize: Dimensions.fontSizeDefault,
-              color:isPrimary ? Theme.of(Get.context).primaryColor : Theme.of(Get.context).textTheme.bodyLarge.color),
+              color:isPrimary ? Theme.of(Get.context!).primaryColor : Theme.of(Get.context!).textTheme.bodyLarge!.color),
         ),
       ],
     );

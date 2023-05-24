@@ -1,8 +1,8 @@
 enum HtmlType {
-  TERMS_AND_CONDITION,
-  ABOUT_US,
-  PRIVACY_POLICY,
-  SHIPPING_POLICY,
-  CANCELATION,
-  REFUND
+  termsAndCondition,
+  aboutUs,
+  privacyPolicy,
+  shippingPolicy,
+  cancellation,
+  refund
 }

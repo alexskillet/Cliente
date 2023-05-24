@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sixam_mart/util/dimensions.dart';
 
 class RippleButton extends StatelessWidget {
-  const RippleButton({Key key, @required this.onTap, this.radius = Dimensions.RADIUS_DEFAULT}) : super(key: key);
+  const RippleButton({Key? key, required this.onTap, this.radius = Dimensions.radiusDefault}) : super(key: key);
   final GestureTapCallback onTap;
   final double radius;
 

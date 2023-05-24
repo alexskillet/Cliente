@@ -21,7 +21,7 @@ import 'package:get/get.dart';
 
 class WebHomeScreen extends StatelessWidget {
   final ScrollController scrollController;
-  WebHomeScreen({@required this.scrollController});
+  const WebHomeScreen({Key? key, required this.scrollController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,83 +34,83 @@ class WebHomeScreen extends StatelessWidget {
 
         SingleChildScrollView(
           controller: scrollController,
-          physics: AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(children: [
 
             GetBuilder<BannerController>(builder: (bannerController) {
               return bannerController.bannerImageList == null ? WebBannerView(bannerController: bannerController)
-                  : bannerController.bannerImageList.length == 0 ? SizedBox() : WebBannerView(bannerController: bannerController);
+                  : bannerController.bannerImageList!.isEmpty ? const SizedBox() : WebBannerView(bannerController: bannerController);
             }),
 
-            FooterView(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            FooterView(child: SizedBox(width: Dimensions.webMaxWidth, child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
               GetBuilder<CategoryController>(builder: (categoryController) {
                 return categoryController.categoryList == null ? WebCategoryView(categoryController: categoryController)
-                    : categoryController.categoryList.length == 0 ? SizedBox() : WebCategoryView(categoryController: categoryController);
+                    : categoryController.categoryList!.isEmpty ? const SizedBox() : WebCategoryView(categoryController: categoryController);
               }),
-              SizedBox(width: Dimensions.PADDING_SIZE_LARGE),
+              const SizedBox(width: Dimensions.paddingSizeLarge),
 
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
                   GetBuilder<StoreController>(builder: (storeController) {
                     return storeController.popularStoreList == null ? WebPopularStoreView(storeController: storeController, isPopular: true)
-                        : storeController.popularStoreList.length == 0 ? SizedBox() : WebPopularStoreView(storeController: storeController, isPopular: true);
+                        : storeController.popularStoreList!.isEmpty ? const SizedBox() : WebPopularStoreView(storeController: storeController, isPopular: true);
                   }),
 
                   GetBuilder<CampaignController>(builder: (campaignController) {
                     return campaignController.itemCampaignList == null ? WebCampaignView(campaignController: campaignController)
-                        : campaignController.itemCampaignList.length == 0 ? SizedBox() : WebCampaignView(campaignController: campaignController);
+                        : campaignController.itemCampaignList!.isEmpty ? const SizedBox() : WebCampaignView(campaignController: campaignController);
                   }),
 
                   GetBuilder<ItemController>(builder: (itemController) {
                     return itemController.popularItemList == null ? WebPopularItemView(itemController: itemController, isPopular: true)
-                        : itemController.popularItemList.length == 0 ? SizedBox() : WebPopularItemView(itemController: itemController, isPopular: true);
+                        : itemController.popularItemList!.isEmpty ? const SizedBox() : WebPopularItemView(itemController: itemController, isPopular: true);
                   }),
 
                   GetBuilder<StoreController>(builder: (storeController) {
                     return storeController.latestStoreList == null ? WebPopularStoreView(storeController: storeController, isPopular: false)
-                        : storeController.latestStoreList.length == 0 ? SizedBox() : WebPopularStoreView(storeController: storeController, isPopular: false);
+                        : storeController.latestStoreList!.isEmpty ? const SizedBox() : WebPopularStoreView(storeController: storeController, isPopular: false);
                   }),
 
                   GetBuilder<ItemController>(builder: (itemController) {
                     return itemController.reviewedItemList == null ? WebPopularItemView(itemController: itemController, isPopular: false)
-                        : itemController.reviewedItemList.length == 0 ? SizedBox() : WebPopularItemView(itemController: itemController, isPopular: false);
+                        : itemController.reviewedItemList!.isEmpty ? const SizedBox() : WebPopularItemView(itemController: itemController, isPopular: false);
                   }),
 
                   Padding(
-                    padding: EdgeInsets.fromLTRB(10, 20, 0, 5),
+                    padding: const EdgeInsets.fromLTRB(10, 20, 0, 5),
                     child: GetBuilder<StoreController>(builder: (storeController) {
                       return Row(children: [
                         Expanded(child: Text(
-                          Get.find<SplashController>().configModel.moduleConfig.module.showRestaurantText
+                          Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText!
                               ? 'all_restaurants'.tr : 'all_stores'.tr,
                           style: robotoMedium.copyWith(fontSize: 24),
                         )),
                         storeController.storeModel != null ? PopupMenuButton(
                           itemBuilder: (context) {
                             return [
-                              PopupMenuItem(value: 'all', child: Text('all'.tr), textStyle: robotoMedium.copyWith(
+                              PopupMenuItem(value: 'all', textStyle: robotoMedium.copyWith(
                                 color: storeController.storeType == 'all'
-                                    ? Theme.of(context).textTheme.bodyLarge.color : Theme.of(context).disabledColor,
-                              )),
-                              PopupMenuItem(value: 'take_away', child: Text('take_away'.tr), textStyle: robotoMedium.copyWith(
+                                    ? Theme.of(context).textTheme.bodyLarge!.color : Theme.of(context).disabledColor,
+                              ), child: Text('all'.tr)),
+                              PopupMenuItem(value: 'take_away', textStyle: robotoMedium.copyWith(
                                 color: storeController.storeType == 'take_away'
-                                    ? Theme.of(context).textTheme.bodyLarge.color : Theme.of(context).disabledColor,
-                              )),
-                              PopupMenuItem(value: 'delivery', child: Text('delivery'.tr), textStyle: robotoMedium.copyWith(
+                                    ? Theme.of(context).textTheme.bodyLarge!.color : Theme.of(context).disabledColor,
+                              ), child: Text('take_away'.tr)),
+                              PopupMenuItem(value: 'delivery', textStyle: robotoMedium.copyWith(
                                 color: storeController.storeType == 'delivery'
-                                    ? Theme.of(context).textTheme.bodyLarge.color : Theme.of(context).disabledColor,
-                              )),
+                                    ? Theme.of(context).textTheme.bodyLarge!.color : Theme.of(context).disabledColor,
+                              ), child: Text('delivery'.tr)),
                             ];
                           },
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
                             child: Icon(Icons.filter_list),
                           ),
-                          onSelected: (value) => storeController.setStoreType(value),
-                        ) : SizedBox(),
+                          onSelected: (dynamic value) => storeController.setStoreType(value),
+                        ) : const SizedBox(),
                       ]);
                     }),
                   ),
@@ -118,15 +118,15 @@ class WebHomeScreen extends StatelessWidget {
                   GetBuilder<StoreController>(builder: (storeController) {
                     return PaginatedListView(
                       scrollController: scrollController,
-                      totalSize: storeController.storeModel != null ? storeController.storeModel.totalSize : null,
-                      offset: storeController.storeModel != null ? storeController.storeModel.offset : null,
-                      onPaginate: (int offset) async => await storeController.getStoreList(offset, false),
+                      totalSize: storeController.storeModel != null ? storeController.storeModel!.totalSize : null,
+                      offset: storeController.storeModel != null ? storeController.storeModel!.offset : null,
+                      onPaginate: (int? offset) async => await storeController.getStoreList(offset!, false),
                       itemView: ItemsView(
                         isStore: true, items: null,
-                        stores: storeController.storeModel != null ? storeController.storeModel.stores : null,
+                        stores: storeController.storeModel != null ? storeController.storeModel!.stores : null,
                         padding: EdgeInsets.symmetric(
-                          horizontal: ResponsiveHelper.isDesktop(context) ? Dimensions.PADDING_SIZE_EXTRA_SMALL : Dimensions.PADDING_SIZE_SMALL,
-                          vertical: ResponsiveHelper.isDesktop(context) ? Dimensions.PADDING_SIZE_EXTRA_SMALL : 0,
+                          horizontal: ResponsiveHelper.isDesktop(context) ? Dimensions.paddingSizeExtraSmall : Dimensions.paddingSizeSmall,
+                          vertical: ResponsiveHelper.isDesktop(context) ? Dimensions.paddingSizeExtraSmall : 0,
                         ),
                       ),
                     );
@@ -139,7 +139,7 @@ class WebHomeScreen extends StatelessWidget {
           ]),
         ),
 
-        Positioned(right: 0, top: 0, bottom: 0, child: Center(child: ModuleWidget())),
+        const Positioned(right: 0, top: 0, bottom: 0, child: Center(child: ModuleWidget())),
 
       ]);
     });
@@ -149,7 +149,7 @@ class WebHomeScreen extends StatelessWidget {
 class SliverDelegate extends SliverPersistentHeaderDelegate {
   Widget child;
 
-  SliverDelegate({@required this.child});
+  SliverDelegate({required this.child});
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {

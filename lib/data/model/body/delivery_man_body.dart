@@ -1,14 +1,14 @@
 class DeliveryManBody {
-  String fName;
-  String lName;
-  String phone;
-  String email;
-  String password;
-  String identityType;
-  String identityNumber;
-  String earning;
-  String zoneId;
-  String vehicleId;
+  String? fName;
+  String? lName;
+  String? phone;
+  String? email;
+  String? password;
+  String? identityType;
+  String? identityNumber;
+  String? earning;
+  String? zoneId;
+  String? vehicleId;
 
   DeliveryManBody(
       {this.fName,
@@ -37,17 +37,17 @@ class DeliveryManBody {
   }
 
   Map<String, String> toJson() {
-    final Map<String, String> data = new Map<String, String>();
-    data['f_name'] = this.fName;
-    data['l_name'] = this.lName;
-    data['phone'] = this.phone;
-    data['email'] = this.email;
-    data['password'] = this.password;
-    data['identity_type'] = this.identityType;
-    data['identity_number'] = this.identityNumber;
-    data['earning'] = this.earning;
-    data['zone_id'] = this.zoneId;
-    data['vehicle_id'] = this.vehicleId;
+    final Map<String, String> data = <String, String>{};
+    data['f_name'] = fName!;
+    data['l_name'] = lName!;
+    data['phone'] = phone!;
+    data['email'] = email!;
+    data['password'] = password!;
+    data['identity_type'] = identityType!;
+    data['identity_number'] = identityNumber!;
+    data['earning'] = earning!;
+    data['zone_id'] = zoneId!;
+    data['vehicle_id'] = vehicleId!;
     return data;
   }
 }

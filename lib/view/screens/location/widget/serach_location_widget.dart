@@ -7,12 +7,12 @@ import 'package:sixam_mart/util/styles.dart';
 import 'package:sixam_mart/view/screens/location/widget/location_search_dialog.dart';
 
 class SearchLocationWidget extends StatelessWidget {
-  final GoogleMapController mapController;
-  final String pickedAddress;
-  final bool isEnabled;
-  final bool isPickedUp;
-  final String hint;
-  const SearchLocationWidget({@required this.mapController, @required this.pickedAddress, @required this.isEnabled, this.isPickedUp, this.hint});
+  final GoogleMapController? mapController;
+  final String? pickedAddress;
+  final bool? isEnabled;
+  final bool? isPickedUp;
+  final String? hint;
+  const SearchLocationWidget({Key? key, required this.mapController, required this.pickedAddress, required this.isEnabled, this.isPickedUp, this.hint}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,23 +25,23 @@ class SearchLocationWidget extends StatelessWidget {
       },
       child: Container(
         height: 50,
-        padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
           border: isEnabled != null ? Border.all(
-            color: isEnabled ? Theme.of(context).primaryColor : Theme.of(context).disabledColor, width: isEnabled ? 2 : 1,
+            color: isEnabled! ? Theme.of(context).primaryColor : Theme.of(context).disabledColor, width: isEnabled! ? 2 : 1,
           ) : null,
         ),
         child: Row(children: [
           Icon(
             Icons.location_on, size: 25,
-            color: (isEnabled == null || isEnabled) ? Theme.of(context).primaryColor : Theme.of(context).disabledColor,
+            color: (isEnabled == null || isEnabled!) ? Theme.of(context).primaryColor : Theme.of(context).disabledColor,
           ),
-          SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+          const SizedBox(width: Dimensions.paddingSizeExtraSmall),
           Expanded(
-            child: (pickedAddress != null && pickedAddress.isNotEmpty) ? Text(
-              pickedAddress,
+            child: (pickedAddress != null && pickedAddress!.isNotEmpty) ? Text(
+              pickedAddress!,
               style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge), maxLines: 1, overflow: TextOverflow.ellipsis,
             ) : Text(
               hint ?? '',
@@ -49,8 +49,8 @@ class SearchLocationWidget extends StatelessWidget {
               maxLines: 1, overflow: TextOverflow.ellipsis,
             ),
           ),
-          SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-          Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyLarge.color),
+          const SizedBox(width: Dimensions.paddingSizeSmall),
+          Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyLarge!.color),
         ]),
       ),
     );

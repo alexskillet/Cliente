@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 
 class ItemView extends StatelessWidget {
   final bool isItem;
-  ItemView({@required this.isItem});
+  const ItemView({Key? key, required this.isItem}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class ItemView extends StatelessWidget {
       body: GetBuilder<SearchController>(builder: (searchController) {
         return SingleChildScrollView(
           child: FooterView(
-            child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: ItemsView(
+            child: SizedBox(width: Dimensions.webMaxWidth, child: ItemsView(
               isStore: isItem, items: searchController.searchItemList, stores: searchController.searchStoreList,
             )),
           ),

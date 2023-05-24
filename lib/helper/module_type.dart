@@ -7,7 +7,7 @@ enum ModuleType {
 
 extension CatExtension on ModuleType {
 
-  String get type {
+  String? get type {
     switch (this) {
       case ModuleType.food:
         return 'item';

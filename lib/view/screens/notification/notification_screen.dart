@@ -17,7 +17,7 @@ import 'package:get/get.dart';
 
 class NotificationScreen extends StatefulWidget {
   final bool fromNotification;
-  const NotificationScreen({this.fromNotification = false});
+  const NotificationScreen({Key? key, this.fromNotification = false}) : super(key: key);
 
   @override
   State<NotificationScreen> createState() => _NotificationScreenState();
@@ -62,64 +62,64 @@ class _NotificationScreenState extends State<NotificationScreen> {
             Get.back();
           }
         }),
-        endDrawer: MenuDrawer(),endDrawerEnableOpenDragGesture: false,
+        endDrawer: const MenuDrawer(),endDrawerEnableOpenDragGesture: false,
         body: Get.find<AuthController>().isLoggedIn() ? GetBuilder<NotificationController>(builder: (notificationController) {
           if(notificationController.notificationList != null) {
-            notificationController.saveSeenNotificationCount(notificationController.notificationList.length);
+            notificationController.saveSeenNotificationCount(notificationController.notificationList!.length);
           }
-          List<DateTime> _dateTimeList = [];
-          return notificationController.notificationList != null ? notificationController.notificationList.length > 0 ? RefreshIndicator(
+          List<DateTime> dateTimeList = [];
+          return notificationController.notificationList != null ? notificationController.notificationList!.isNotEmpty ? RefreshIndicator(
             onRefresh: () async {
               await notificationController.getNotificationList(true);
             },
             child: Scrollbar(child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               child: FooterView(
-                child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: ListView.builder(
-                  itemCount: notificationController.notificationList.length,
-                  padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                  physics: NeverScrollableScrollPhysics(),
+                child: SizedBox(width: Dimensions.webMaxWidth, child: ListView.builder(
+                  itemCount: notificationController.notificationList!.length,
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    DateTime _originalDateTime = DateConverter.dateTimeStringToDate(notificationController.notificationList[index].createdAt);
-                    DateTime _convertedDate = DateTime(_originalDateTime.year, _originalDateTime.month, _originalDateTime.day);
-                    bool _addTitle = false;
-                    if(!_dateTimeList.contains(_convertedDate)) {
-                      _addTitle = true;
-                      _dateTimeList.add(_convertedDate);
+                    DateTime originalDateTime = DateConverter.dateTimeStringToDate(notificationController.notificationList![index].createdAt!);
+                    DateTime convertedDate = DateTime(originalDateTime.year, originalDateTime.month, originalDateTime.day);
+                    bool addTitle = false;
+                    if(!dateTimeList.contains(convertedDate)) {
+                      addTitle = true;
+                      dateTimeList.add(convertedDate);
                     }
                     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
-                      _addTitle ? Padding(
-                        padding: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                        child: Text(DateConverter.dateTimeStringToDateOnly(notificationController.notificationList[index].createdAt)),
-                      ) : SizedBox(),
+                      addTitle ? Padding(
+                        padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeExtraSmall),
+                        child: Text(DateConverter.dateTimeStringToDateOnly(notificationController.notificationList![index].createdAt!)),
+                      ) : const SizedBox(),
 
                       InkWell(
                         onTap: () {
                           showDialog(context: context, builder: (BuildContext context) {
-                            return NotificationDialog(notificationModel: notificationController.notificationList[index]);
+                            return NotificationDialog(notificationModel: notificationController.notificationList![index]);
                           });
                         },
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                          padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
                           child: Row(children: [
 
                             ClipOval(child: CustomImage(
                               isNotification: true,
                               height: 40, width: 40, fit: BoxFit.cover,
-                              image: '${Get.find<SplashController>().configModel.baseUrls.notificationImageUrl}'
-                                  '/${notificationController.notificationList[index].data.image}',
+                              image: '${Get.find<SplashController>().configModel!.baseUrls!.notificationImageUrl}'
+                                  '/${notificationController.notificationList![index].data!.image}',
                             )),
-                            SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                            const SizedBox(width: Dimensions.paddingSizeSmall),
 
                             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                               Text(
-                                notificationController.notificationList[index].data.title ?? '', maxLines: 1, overflow: TextOverflow.ellipsis,
+                                notificationController.notificationList![index].data!.title ?? '', maxLines: 1, overflow: TextOverflow.ellipsis,
                                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
                               ),
                               Text(
-                                notificationController.notificationList[index].data.description ?? '', maxLines: 1, overflow: TextOverflow.ellipsis,
+                                notificationController.notificationList![index].data!.description ?? '', maxLines: 1, overflow: TextOverflow.ellipsis,
                                 style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
                               ),
                             ])),
@@ -129,7 +129,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ),
 
                       Padding(
-                        padding: EdgeInsets.only(left: 50),
+                        padding: const EdgeInsets.only(left: 50),
                         child: Divider(color: Theme.of(context).disabledColor, thickness: 1),
                       ),
 
@@ -138,8 +138,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 )),
               ),
             )),
-          ) : NoDataScreen(text: 'no_notification_found'.tr, showFooter: true) : Center(child: CircularProgressIndicator());
-        }) : NotLoggedInScreen(),
+          ) : NoDataScreen(text: 'no_notification_found'.tr, showFooter: true) : const Center(child: CircularProgressIndicator());
+        }) : const NotLoggedInScreen(),
       ),
     );
   }

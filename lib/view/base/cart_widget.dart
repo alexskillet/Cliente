@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CartWidget extends StatelessWidget {
-  final Color color;
+  final Color? color;
   final double size;
   final bool fromStore;
-  CartWidget({@required this.color, @required this.size, this.fromStore = false});
+  const CartWidget({Key? key, required this.color, required this.size, this.fromStore = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class CartWidget extends StatelessWidget {
         color: color,
       ),
       GetBuilder<CartController>(builder: (cartController) {
-        return cartController.cartList.length > 0 /*&& Get.find<SplashController>().module != null*/ ? Positioned(
+        return cartController.cartList.isNotEmpty /*&& Get.find<SplashController>().module != null*/ ? Positioned(
           top: -5, right: -5,
           child: Container(
             height: size < 20 ? 10 : size/2, width: size < 20 ? 10 : size/2, alignment: Alignment.center,
@@ -33,7 +33,7 @@ class CartWidget extends StatelessWidget {
               ),
             ),
           ),
-        ) : SizedBox();
+        ) : const SizedBox();
       }),
     ]);
   }

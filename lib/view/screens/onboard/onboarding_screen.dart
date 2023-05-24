@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OnBoardingScreen extends StatefulWidget {
+  const OnBoardingScreen({Key? key}) : super(key: key);
+
   @override
   State<OnBoardingScreen> createState() => _OnBoardingScreenState();
 }
@@ -27,15 +29,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
+      appBar: ResponsiveHelper.isDesktop(context) ? const WebMenuBar() : null,
       body: GetBuilder<OnBoardingController>(
-        builder: (onBoardingController) => onBoardingController.onBoardingList.length > 0 ? SafeArea(
-          child: Center(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Column(children: [
+        builder: (onBoardingController) => onBoardingController.onBoardingList.isNotEmpty ? SafeArea(
+          child: Center(child: SizedBox(width: Dimensions.webMaxWidth, child: Column(children: [
 
             Expanded(child: PageView.builder(
               itemCount: onBoardingController.onBoardingList.length,
               controller: _pageController,
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
 
@@ -52,7 +54,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   SizedBox(height: context.height*0.025),
 
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
                     child: Text(
                       onBoardingController.onBoardingList[index].description,
                       style: robotoRegular.copyWith(fontSize: context.height*0.015, color: Theme.of(context).disabledColor),
@@ -74,9 +76,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             SizedBox(height: context.height*0.05),
 
             Padding(
-              padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
               child: Row(children: [
-                onBoardingController.selectedIndex == 2 ? SizedBox() : Expanded(
+                onBoardingController.selectedIndex == 2 ? const SizedBox() : Expanded(
                   child: CustomButton(
                     transparent: true,
                     onPressed: () {
@@ -91,7 +93,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     buttonText: onBoardingController.selectedIndex != 2 ? 'next'.tr : 'get_started'.tr,
                     onPressed: () {
                       if(onBoardingController.selectedIndex != 2) {
-                        _pageController.nextPage(duration: Duration(seconds: 1), curve: Curves.ease);
+                        _pageController.nextPage(duration: const Duration(seconds: 1), curve: Curves.ease);
                       }else {
                         Get.find<SplashController>().disableIntro();
                         Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.onBoarding));
@@ -103,20 +105,20 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             ),
 
           ]))),
-        ) : SizedBox(),
+        ) : const SizedBox(),
       ),
     );
   }
 
   List<Widget> _pageIndicators(OnBoardingController onBoardingController, BuildContext context) {
-    List<Container> _indicators = [];
+    List<Container> indicators = [];
 
     for (int i = 0; i < onBoardingController.onBoardingList.length; i++) {
-      _indicators.add(
+      indicators.add(
         Container(
           width: 7,
           height: 7,
-          margin: EdgeInsets.only(right: 10),
+          margin: const EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
             color: i == onBoardingController.selectedIndex ? Theme.of(context).primaryColor : Theme.of(context).disabledColor,
             borderRadius: i == onBoardingController.selectedIndex ? BorderRadius.circular(50) : BorderRadius.circular(25),
@@ -124,6 +126,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         ),
       );
     }
-    return _indicators;
+    return indicators;
   }
 }

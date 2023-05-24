@@ -12,7 +12,7 @@ import 'package:sixam_mart/view/screens/taxi_booking/select_map_location/widgets
 import 'package:sixam_mart/view/screens/taxi_booking/select_map_location/widgets/pick_and_destination_address_info.dart';
 
 class OrderStatusScreen extends StatefulWidget {
-  const OrderStatusScreen({Key key}) : super(key: key);
+  const OrderStatusScreen({Key? key}) : super(key: key);
 
   @override
   State<OrderStatusScreen> createState() => _OrderStatusScreenState();
@@ -25,45 +25,44 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
       appBar: CustomAppBar(title: 'order'.tr,),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
+          padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
           child: Column(
             children: [
-              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE,),
+              const SizedBox(height: Dimensions.paddingSizeExtraLarge,),
               InkWell(
                   onTap: (){
-                    print("tapped_inside_complete_screen");
                     Get.toNamed(RouteHelper.getTripHistoryScreen());
                   },
-                  child: Image.asset(Images.booking_complete_car,width: 109,height: 83,)),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
-              Container(
+                  child: Image.asset(Images.bookingCompleteCar,width: 109,height: 83,)),
+              const SizedBox(height: Dimensions.paddingSizeDefault,),
+              SizedBox(
                 width: Get.width * .6,
                 child: RichText(text: TextSpan(
                     children: [
                       TextSpan(
                           text: ' ${'10 - 5 '}',
                           style: robotoMedium.copyWith(
-                              fontSize:Dimensions.PADDING_SIZE_DEFAULT,
+                              fontSize:Dimensions.paddingSizeDefault,
                               color: Theme.of(context).primaryColor)),
                       TextSpan(
                           text: 'min_left_to_reach'.tr,
                           style: robotoRegular.copyWith(
-                              color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.5))
+                              color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.5))
                       ),]),
                     textAlign: TextAlign.center),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
               Stack(
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
                       color: Theme.of(context).primaryColor.withOpacity(.1),
                     ),
                     child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: Dimensions.PADDING_SIZE_SMALL,
-                        vertical: Dimensions.PADDING_SIZE_SMALL),
+                        horizontal: Dimensions.paddingSizeSmall,
+                        vertical: Dimensions.paddingSizeSmall),
                       child: Text(
                         'track_on_map'.tr,
                         style: robotoRegular.copyWith(
@@ -72,35 +71,35 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                   ),),
                   Positioned.fill(child: RippleButton(onTap: () {
                     Get.toNamed(RouteHelper.getSelectRideMapLocationRoute('willArrived', null, null));
-                  }, radius: Dimensions.RADIUS_DEFAULT))
+                  }, radius: Dimensions.radiusDefault))
                 ],
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE,),
+              const SizedBox(height: Dimensions.paddingSizeExtraLarge,),
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
                   color: Theme.of(context).cardColor,
-                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300], blurRadius: 5, spreadRadius: 1,)],),
+                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300]!, blurRadius: 5, spreadRadius: 1,)],),
                 child: Padding(
-                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                   child: Row(
                     children: [
                       ClipRRect(
-                        borderRadius:BorderRadius.all(Radius.circular(8)),
+                        borderRadius:const BorderRadius.all(Radius.circular(8)),
                         child: Image.asset(
-                          Images.demo_car,
+                          Images.demoCar,
                           width: 120,
                           fit: BoxFit.fitHeight,
                           height: 120,),
                       ),
-                      SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT,),
+                      const SizedBox(width: Dimensions.paddingSizeDefault,),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Range Rover-2020',style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault),),
                           Row(
                             children: [
-                              Image.asset(Images.demo_brand_car),
+                              Image.asset(Images.demoBrandCar),
                               Text("ABC rent a car",style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall),)
                             ],
                           ),
@@ -112,17 +111,17 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                               Text('B 45 55 23',style:  robotoBold.copyWith(fontSize: Dimensions.fontSizeExtraSmall),),
                             ],
                           ),
-                          SizedBox(height: Dimensions.PADDING_SIZE_SMALL,),
+                          const SizedBox(height: Dimensions.paddingSizeSmall,),
                           Text(
                             'contact_with_provider'.tr,
                             style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, ),),
-                          SizedBox(height: Dimensions.PADDING_SIZE_SMALL,),
+                          const SizedBox(height: Dimensions.paddingSizeSmall,),
                           Row(
                             children: [
                               Row(
                                 children: [
-                                  Image.asset(Images.rider_call_icon,scale: 2.2,),
-                                  SizedBox(width: Dimensions.PADDING_SIZE_SMALL,),
+                                  Image.asset(Images.riderCallIcon,scale: 2.2,),
+                                  const SizedBox(width: Dimensions.paddingSizeSmall,),
                                   Text(
                                     'call_now'.tr,
                                     style: robotoRegular.copyWith(
@@ -132,11 +131,11 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                                   ),)
                                 ],
                               ),
-                              SizedBox(width: Dimensions.PADDING_SIZE_SMALL,),
+                              const SizedBox(width: Dimensions.paddingSizeSmall,),
                               Row(
                                 children: [
-                                  Image.asset(Images.rider_chat_icon,scale: 2.2,),
-                                  SizedBox(width: Dimensions.PADDING_SIZE_SMALL,),
+                                  Image.asset(Images.riderChatIcon,scale: 2.2,),
+                                  const SizedBox(width: Dimensions.paddingSizeSmall,),
                                   Text(
                                     'chat_now'.tr,
                                     style: robotoRegular.copyWith(
@@ -154,14 +153,14 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+              const SizedBox(height: Dimensions.paddingSizeDefault,),
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
                   color: Theme.of(context).cardColor,
-                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300], blurRadius: 5, spreadRadius: 1,)],),
+                  boxShadow: [BoxShadow(color: Colors.grey[Get.find<ThemeController>().darkTheme ? 800 : 300]!, blurRadius: 5, spreadRadius: 1,)],),
                 child: Padding(
-                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                   child: Column(
                     children: [
                       Row(
@@ -174,8 +173,8 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                             height: 16,),
                         ],
                       ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
-                      Container(
+                      const SizedBox(height: Dimensions.paddingSizeDefault,),
+                      SizedBox(
                         height: 90,
                         child: Row(
                           children: [
@@ -185,7 +184,7 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                                   height: 33,
                                   width: 33,
                                   alignment: Alignment.center,
-                                  decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.08)),
+                                  decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.08)),
                                   child: Stack(
                                     alignment: AlignmentDirectional.center,
                                     children: [
@@ -194,7 +193,7 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                                         width: 18,
                                         decoration: BoxDecoration(
                                           color: Theme.of(context).primaryColor,
-                                          borderRadius: BorderRadius.all(Radius.circular(2)),
+                                          borderRadius: const BorderRadius.all(Radius.circular(2)),
                                         ),
                                       ),
                                       Container(
@@ -202,7 +201,7 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                                         width: 4,
                                         decoration: BoxDecoration(
                                             color: Theme.of(context).cardColor,
-                                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                                            borderRadius: const BorderRadius.all(Radius.circular(20))),
                                       ),
                                     ],
                                   ),
@@ -217,17 +216,17 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                                 Container(
                                   height: 33,
                                   width: 33, alignment: Alignment.center,
-                                  decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.08)),
+                                  decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.08)),
                                   child: Icon(Icons.location_on_sharp,color: Theme.of(context).primaryColor,),
                                 ),
                               ],
                             ),
-                            SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT,),
+                            const SizedBox(width: Dimensions.paddingSizeDefault,),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
+                              children: const [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 5),
+                                  padding: EdgeInsets.only(top: 5),
                                   child: RideAddressInfo(
                                     title: "Mirpur DOHS",
                                     subTitle: 'Road 9/a,house-666,Dhaka',
@@ -235,7 +234,7 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 5),
+                                  padding: EdgeInsets.only(bottom: 5),
                                   child: RideAddressInfo(
                                     title: "Mirpur DOHS",
                                     subTitle: 'Road 9/a,house-666,Dhaka',
@@ -247,16 +246,16 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+                      const SizedBox(height: Dimensions.paddingSizeDefault,),
                       Row(
                         children: [
                           Container(
                             height: 33,
                             width: 33, alignment: Alignment.center,
-                            decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.08)),
-                            child: Image.asset(Images.hour_cost,width: 20,height: 20,),
+                            decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.08)),
+                            child: Image.asset(Images.hourCost,width: 20,height: 20,),
                           ),
-                          SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT,),
+                          const SizedBox(width: Dimensions.paddingSizeDefault,),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -266,16 +265,16 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                           )
                         ],
                       ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
+                      const SizedBox(height: Dimensions.paddingSizeDefault,),
                       Row(
                         children: [
                           Container(
                             height: 33,
                             width: 33, alignment: Alignment.center,
-                            decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(.08)),
-                            child: Image.asset(Images.ride_return,width: 20,height: 20,),
+                            decoration: riderContainerDecoration.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(.08)),
+                            child: Image.asset(Images.rideReturn,width: 20,height: 20,),
                           ),
-                          SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT,),
+                          const SizedBox(width: Dimensions.paddingSizeDefault,),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -289,21 +288,21 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE,),
+              const SizedBox(height: Dimensions.paddingSizeExtraLarge,),
               Stack(
                 children: [
                   Container(
-                    child: Center(child: Text('cancel_booking'.tr,style: robotoRegular.copyWith(color: Theme.of(context).cardColor),)),
                     width: 175,
                     height: 45,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                       color: Theme.of(context).colorScheme.error.withOpacity(.5),
                     ),
+                    child: Center(child: Text('cancel_booking'.tr,style: robotoRegular.copyWith(color: Theme.of(context).cardColor),)),
                   ),
                   Positioned.fill(child: RippleButton(onTap: () {
                     Get.dialog(CancellationDialog(
-                      icon: Images.cancellation_icon,
+                      icon: Images.cancellationIcon,
                       title: 'do_you_want_to_cancel_this_booking'.tr,
                       onYesPressed: (){
                       },
@@ -314,7 +313,7 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
                   }))
                 ],
               ),
-              SizedBox(height: 200),
+              const SizedBox(height: 200),
             ],
           ),
         ),
