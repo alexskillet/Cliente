@@ -3,9 +3,10 @@ import 'package:sixam_mart/data/model/response/language_model.dart';
 import 'package:sixam_mart/util/images.dart';
 
 class AppConstants {
-  static const String appName = '6amMart';
-  static const double appVersion = 2.1;
+  static const String APP_NAME = 'LavaGo';
+  static const double APP_VERSION = 2.1;
 
+  static const String BASE_URL = 'https://socio.lavago.app';
   static const String baseUrl = "https://6ammart-admin.6amtech.com";
   static const String categoryUri = '/api/v1/categories';
   static const String bannerUri = '/api/v1/banners';
@@ -160,8 +161,6 @@ class AppConstants {
   static const String vendor = 'vendor';
 
   static List<LanguageModel> languages = [
-    LanguageModel(imageUrl: Images.english, languageName: 'English', countryCode: 'US', languageCode: 'en'),
-    LanguageModel(imageUrl: Images.arabic, languageName: 'عربى', countryCode: 'SA', languageCode: 'ar'),
     LanguageModel(imageUrl: Images.arabic, languageName: 'Spanish', countryCode: 'ES', languageCode: 'es'),
   ];
 }
