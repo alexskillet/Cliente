@@ -3,8 +3,8 @@ import 'package:sixam_mart/data/model/response/language_model.dart';
 import 'package:sixam_mart/util/images.dart';
 
 class AppConstants {
-  static const String APP_NAME = 'LavaGo';
-  static const double APP_VERSION = 2.1;
+  static const String appName = 'LavaGo';
+  static const double appVersion = 2.1;
 
   static const String baseUrl = "https://socio.lavago.app";
   static const String categoryUri = '/api/v1/categories';
