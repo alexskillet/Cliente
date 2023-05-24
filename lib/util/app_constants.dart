@@ -6,8 +6,7 @@ class AppConstants {
   static const String APP_NAME = 'LavaGo';
   static const double APP_VERSION = 2.1;
 
-  static const String BASE_URL = 'https://socio.lavago.app';
-  static const String baseUrl = "https://6ammart-admin.6amtech.com";
+  static const String baseUrl = "https://socio.lavago.app";
   static const String categoryUri = '/api/v1/categories';
   static const String bannerUri = '/api/v1/banners';
   static const String storeItemUri = '/api/v1/items/latest';
@@ -161,6 +160,6 @@ class AppConstants {
   static const String vendor = 'vendor';
 
   static List<LanguageModel> languages = [
-    LanguageModel(imageUrl: Images.arabic, languageName: 'Spanish', countryCode: 'ES', languageCode: 'es'),
+    LanguageModel(imageUrl: Images.arabic, languageName: 'Español', countryCode: 'ES', languageCode: 'es'),
   ];
 }
